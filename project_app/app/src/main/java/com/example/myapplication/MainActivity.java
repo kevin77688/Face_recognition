@@ -1,18 +1,19 @@
 package com.example.myapplication;
 
-import android.graphics.Rect;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Button;
-import android.content.Intent;
+import android.widget.Toast;
+
+import com.chaquo.python.PyObject;
+import com.chaquo.python.Python;
+import com.chaquo.python.android.AndroidPlatform;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,6 +33,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         Button logInBtn = (Button)findViewById(R.id.login_button);
+
+        initPython();
+        Toast toast = Toast.makeText(getApplicationContext(), pyFile(), Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     public void clickToLogin(View v) {
@@ -54,5 +59,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    private void initPython(){
+        if (!Python.isStarted()){
+            Python.start(new AndroidPlatform(this));
+        }
+    }
+
+    private String pyFile(){
+        Python python = Python.getInstance();
+        PyObject pythonFile = python.getModule("testFile");
+        return pythonFile.callAttr("helloWorld").toString();
     }
 }
