@@ -9,11 +9,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
-
-import com.chaquo.python.PyObject;
-import com.chaquo.python.Python;
-import com.chaquo.python.android.AndroidPlatform;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,23 +22,31 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
-        Button logInBtn = (Button)findViewById(R.id.login_button);
 
-        initPython();
-        Toast toast = Toast.makeText(getApplicationContext(), pyFile(), Toast.LENGTH_SHORT);
-        toast.show();
+        cameraButton();
+
     }
 
     public void clickToLogin(View v) {
         Intent intent = new Intent();
-        intent.setClass(this , login_page.class);
+        intent.setClass(this, login_page.class);
 
         startActivity(intent);
+    }
+
+    public void cameraButton() {
+        Button camButton = findViewById(R.id.cameraButton);
+        camButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, cameraView.class));
+            }
+        });
     }
 
     @Override
@@ -62,15 +65,5 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void initPython(){
-        if (!Python.isStarted()){
-            Python.start(new AndroidPlatform(this));
-        }
-    }
 
-    private String pyFile(){
-        Python python = Python.getInstance();
-        PyObject pythonFile = python.getModule("testFile");
-        return pythonFile.callAttr("helloWorld").toString();
-    }
 }
