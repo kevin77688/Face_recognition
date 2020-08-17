@@ -1,8 +1,5 @@
 <resources>
     <string name="app_name">My Application</string>
-    <string name="action_settings">Settings</string>
-    <string name="title">拍照點名系統</string>
-    <string name="title_activity_login_page">login_page</string>
     <string name="main_activity_background_description">main background</string>
     <string name="login_button">登入</string>
     <string name="camera_test">相機測試</string>
@@ -14,5 +11,4 @@
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.
     -->
-    <string name="hello_world">Hello Square World!</string>
 </resources>
