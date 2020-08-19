@@ -11,8 +11,6 @@ import org.opencv.android.JavaCameraView;
 public class cameraView extends AppCompatActivity {
 
     private JavaCameraView mJavaCameraView;
-    private faceDetector mFaceDetector;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,9 +18,7 @@ public class cameraView extends AppCompatActivity {
         setContentView(R.layout.activity_camera_view);
 
         mJavaCameraView = findViewById(R.id.javaCamView);
-
-        mFaceDetector = new faceDetector(this);
-        mJavaCameraView.setCvCameraViewListener(mFaceDetector);
+        mJavaCameraView.setCvCameraViewListener(new faceDetector(this));
         mJavaCameraView.enableView();
     }
 
