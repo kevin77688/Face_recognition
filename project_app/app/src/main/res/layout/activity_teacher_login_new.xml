@@ -14,6 +14,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/teacher_login" />
 
     <Button
@@ -39,51 +40,44 @@
         android:text="密碼"
         android:textAlignment="center"
         android:textColor="@color/colorPrimary"
-        app:layout_constraintEnd_toEndOf="@+id/imageView3"
-        app:layout_constraintHorizontal_bias="0.491"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/editText_teacher_name"
         app:layout_constraintTop_toBottomOf="@+id/editText_teacher_name" />
 
     <Button
         android:id="@+id/button_teacher_forget_passward"
         android:layout_width="109dp"
         android:layout_height="43dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="24dp"
         android:background="@drawable/button_border_lightblue"
         android:text="忘記密碼"
         android:textAlignment="center"
         android:textColor="@color/colorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.749"
-        app:layout_constraintStart_toStartOf="@+id/imageView3"
+        app:layout_constraintEnd_toEndOf="@+id/editText_teacher_passward"
         app:layout_constraintTop_toBottomOf="@+id/editText_teacher_passward" />
 
     <Button
         android:id="@+id/button_teacher_login"
         android:layout_width="109dp"
         android:layout_height="43dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="24dp"
         android:background="@drawable/button_border_lightblue"
         android:onClick="clickToTeacherOperation"
         android:text="登入"
         android:textAlignment="center"
         android:textColor="@color/colorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.254"
-        app:layout_constraintStart_toStartOf="@+id/imageView3"
+        app:layout_constraintStart_toStartOf="@+id/editText_teacher_passward"
         app:layout_constraintTop_toBottomOf="@+id/editText_teacher_passward" />
 
     <Button
         android:id="@+id/return_button"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="668dp"
+        android:layout_height="93dp"
+        android:layout_marginBottom="32dp"
         android:background="@drawable/return_back"
         android:onClick="clickToReturn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView3" />
+        app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+        app:layout_constraintEnd_toEndOf="@+id/imageView3"
+        app:layout_constraintStart_toStartOf="@+id/imageView3" />
 
     <EditText
         android:id="@+id/editText_teacher_name"
@@ -95,8 +89,7 @@
         android:hint="請輸入教師代號"
         android:inputType="textPassword"
         android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/button_teacher_name"
         app:layout_constraintTop_toBottomOf="@+id/button_teacher_name" />
 
     <EditText
@@ -109,7 +102,6 @@
         android:hint="請輸入密碼"
         android:inputType="textPassword"
         android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/button_passward"
         app:layout_constraintTop_toBottomOf="@+id/button_passward" />
 </android.support.constraint.ConstraintLayout>

@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".teacher_operation_which_mask_mode"></activity>
+        <activity android:name=".loginTest"></activity>
+        <activity android:name=".teacher_operation_which_mask_mode" />
         <activity android:name=".teacher_operation" />
         <activity android:name=".teacher_login_new" />
         <activity android:name=".login_page" />

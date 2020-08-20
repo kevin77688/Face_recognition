@@ -8,62 +8,6 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <Button
-        android:id="@+id/login_button"
-        android:layout_width="225dp"
-        android:layout_height="44dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/button_white"
-        android:onClick="clickToLogin"
-        android:text="登入"
-        app:layout_constraintBottom_toTopOf="@+id/enroll_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.597"
-        app:layout_constraintStart_toStartOf="@+id/imageView" />
-
-    <Button
-        android:id="@+id/enroll_button"
-        android:layout_width="222dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/button_white"
-        android:text="註冊"
-        app:layout_constraintBottom_toTopOf="@+id/detail_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.607"
-        app:layout_constraintStart_toStartOf="@+id/imageView" />
-
-    <Button
-        android:id="@+id/detail_button"
-        android:layout_width="221dp"
-        android:layout_height="44dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/button_border_darkblue"
-        android:text="使用說明"
-        app:layout_constraintBottom_toTopOf="@+id/tellus_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/tellus_button"
-        android:layout_width="223dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="56dp"
-        android:background="@drawable/button_border_darkblue"
-        android:text="聯絡我們"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.505"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="504dp"
@@ -73,5 +17,60 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/menu" />
+
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="225dp"
+        android:layout_height="44dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/button_white"
+        android:onClick="clickToLogin"
+        android:text="登入"
+        app:layout_constraintBottom_toTopOf="@+id/enroll_button"
+        app:layout_constraintStart_toStartOf="@+id/enroll_button" />
+
+    <Button
+        android:id="@+id/login_button_test"
+        android:layout_width="225dp"
+        android:layout_height="44dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/button_white"
+        android:onClick="loginTestView"
+        android:text="登入測試"
+        app:layout_constraintBottom_toTopOf="@+id/login_button"
+        app:layout_constraintStart_toStartOf="@+id/login_button" />
+
+    <Button
+        android:id="@+id/enroll_button"
+        android:layout_width="222dp"
+        android:layout_height="43dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/button_white"
+        android:text="註冊"
+        app:layout_constraintBottom_toTopOf="@+id/detail_button"
+        app:layout_constraintStart_toStartOf="@+id/detail_button" />
+
+    <Button
+        android:id="@+id/detail_button"
+        android:layout_width="221dp"
+        android:layout_height="44dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/button_border_darkblue"
+        android:text="使用說明"
+        app:layout_constraintBottom_toTopOf="@+id/tellus_button"
+        app:layout_constraintStart_toStartOf="@+id/tellus_button" />
+
+    <Button
+        android:id="@+id/tellus_button"
+        android:layout_width="223dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="120dp"
+        android:background="@drawable/button_border_darkblue"
+        android:text="聯絡我們"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
