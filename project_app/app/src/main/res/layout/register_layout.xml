@@ -39,15 +39,5 @@
         app:met_primaryColor="@color/wordColor"
         app:met_textColor="@color/wordColor" />
 
-    <Button
-        android:id="@+id/btn_reg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:background="#431F63"
-        android:text="REGISTER"
-        android:textColor="@android:color/white"
-        android:textSize="20sp" />
-
 
 </LinearLayout>

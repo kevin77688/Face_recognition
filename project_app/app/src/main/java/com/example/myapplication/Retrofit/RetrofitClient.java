@@ -6,7 +6,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class RetrofitClient {
 
-    private static Retrofit instance;
+    private static Retrofit instance = null;
 
     public static Retrofit getInstance() {
         if (instance == null)
