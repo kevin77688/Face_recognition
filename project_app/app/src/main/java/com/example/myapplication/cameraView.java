@@ -18,6 +18,7 @@ public class cameraView extends AppCompatActivity {
         setContentView(R.layout.activity_camera_view);
 
         mJavaCameraView = findViewById(R.id.javaCamView);
+        mJavaCameraView.setCameraIndex(1);
         mJavaCameraView.setCvCameraViewListener(new faceDetector(this));
         mJavaCameraView.enableView();
     }

@@ -1,12 +1,14 @@
 package com.example.myapplication;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
 import org.opencv.core.Point;
@@ -20,6 +22,9 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 
 public class faceDetector implements CameraBridgeViewBase.CvCameraViewListener2 {
+
+    private long timer;
+    private MatOfRect faceDetections;
 
     private CascadeClassifier faceDetector;
     private Mat mRgba, mGray;
@@ -57,14 +62,16 @@ public class faceDetector implements CameraBridgeViewBase.CvCameraViewListener2 
                 default:
                     super.onManagerConnected(status);
             }
-
         }
     };
 
-    @Override
-    public void onCameraViewStarted(int width, int height) {
-        mRgba = new Mat();
-        mGray = new Mat();
+    public faceDetector(AppCompatActivity activity) {
+        mActivity = activity;
+
+        if (!OpenCVLoader.initDebug())
+            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_4_0, mActivity, baseCallback);
+        else
+            baseCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
     }
 
     @Override
@@ -73,23 +80,25 @@ public class faceDetector implements CameraBridgeViewBase.CvCameraViewListener2 
         mGray.release();
     }
 
-    public faceDetector(AppCompatActivity activity) {
-        mActivity = activity;
-
-        if (!OpenCVLoader.initDebug())
-            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, mActivity, baseCallback);
-        else
-            baseCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+    @Override
+    public void onCameraViewStarted(int width, int height) {
+        mRgba = new Mat();
+        mGray = new Mat();
+        timer = System.currentTimeMillis();
+        faceDetections = new MatOfRect();
     }
 
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
 
-        Imgproc.cvtColor(inputFrame.rgba(), mRgba, Imgproc.COLOR_BGR2RGB);
-        mGray = inputFrame.gray();
+        mRgba = inputFrame.rgba().t();
+        Core.flip(mRgba, mRgba, -1);
 
-        MatOfRect faceDetections = new MatOfRect();
-        faceDetector.detectMultiScale(mGray, faceDetections);
+        if ((System.currentTimeMillis() - timer) > 1000) {
+            new DetectFace().execute(mRgba);
+            timer = System.currentTimeMillis();
+        }
+
         for (Rect rect : faceDetections.toArray()) {
             Imgproc.rectangle(
                     mRgba,
@@ -97,6 +106,20 @@ public class faceDetector implements CameraBridgeViewBase.CvCameraViewListener2 
                     new Point(rect.x + rect.width, rect.y + rect.height),
                     new Scalar(255, 0, 0));
         }
+
+
         return mRgba;
     }
+
+    private class DetectFace extends AsyncTask<Mat, Integer, MatOfRect> {
+
+        @Override
+        protected MatOfRect doInBackground(Mat... mats) {
+            faceDetections = new MatOfRect();
+            faceDetector.detectMultiScale(mRgba, faceDetections);
+            return faceDetections;
+        }
+    }
 }
+
+
