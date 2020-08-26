@@ -1,9 +1,11 @@
 package com.example.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -122,7 +124,6 @@ public class loginTest extends AppCompatActivity {
                         Toast.makeText(loginTest.this, "" + response, Toast.LENGTH_SHORT).show();
                     }
                 }));
-
     }
 
     private void loginUser(String email, String password) {
@@ -143,7 +144,19 @@ public class loginTest extends AppCompatActivity {
                     @Override
                     public void accept(String response) throws Exception {
                         Toast.makeText(loginTest.this, "" + response, Toast.LENGTH_SHORT).show();
+                        Log.e("tag", response);
+                        if("\"Login student\"".equals(response)){
+                            goToPage(teacher_operation.class);
+                        }else if("\"Login teacher\"".equals(response)){
+                            goToPage(teacher_operation_which_mask_mode.class);
+                        }
+
                     }
                 }));
+    }
+    private void goToPage(Class page) {
+        Intent intent = new Intent();
+        intent.setClass(this , page);
+        startActivity(intent);
     }
 }

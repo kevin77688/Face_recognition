@@ -66,7 +66,8 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
                 'email': email,
                 'password': password,
                 'salt': salt,
-                'name': name
+                'name': name,
+                'identification': "student"
             };
 
             var db = client.db('nodejsTest');
@@ -109,8 +110,13 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
                                 var salt = user.salt;
                                 var hashed_password = checkHashPassword(userPassword, salt).passwordHash;
                                 var encryped_password = user.password;
+                                var identification = user.identification;
                                 if(hashed_password == encryped_password){
-                                    response.json('Login success');
+                                    if(identification == "student"){
+                                        response.json('Login student');
+                                    }else{
+                                        response.json('Login teacher');
+                                    }
                                     console.log('Login success');
                                 }
                                 else{
