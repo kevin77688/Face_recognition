@@ -61,13 +61,14 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 
             var name = post_data.name;
             var email = post_data.email;
-
+            var identification = post_data.identification;
+            console.log("has identification");
             var insertJson = {
                 'email': email,
                 'password': password,
                 'salt': salt,
                 'name': name,
-                'identification': "student"
+                'identification': identification
             };
 
             var db = client.db('nodejsTest');

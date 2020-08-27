@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +33,6 @@ public class loginTest extends AppCompatActivity {
     private MaterialEditText edt_login_email, edt_login_password;
     private Button btn_login;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-
     @Override
     protected void onStop() {
         compositeDisposable.clear();
@@ -81,11 +81,14 @@ public class loginTest extends AppCompatActivity {
                         })
                         .setPositiveText("REGISTER")
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
+
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                final boolean[] count = {false};
                                 MaterialEditText edt_register_email = register_layout.findViewById(R.id.edt_email);
                                 MaterialEditText edt_register_name = register_layout.findViewById(R.id.edt_name);
                                 MaterialEditText edt_register_password = register_layout.findViewById(R.id.edt_password);
+                                String edt_register_identification;
 
                                 if (TextUtils.isEmpty(edt_register_email.getText().toString())) {
                                     Toast.makeText(loginTest.this, "Email cannot be null or empty", Toast.LENGTH_SHORT).show();
@@ -101,11 +104,17 @@ public class loginTest extends AppCompatActivity {
                                     Toast.makeText(loginTest.this, "Password cannot be null or empty", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
+                                edt_register_identification = edt_register_name.getText().toString();
+                                if("a".equals(edt_register_identification.substring(0, 1)))
+                                    edt_register_identification = "teacher";
+                                else
+                                    edt_register_identification = "student";
 
                                 registerUser(
                                         edt_register_email.getText().toString(),
                                         edt_register_name.getText().toString(),
-                                        edt_register_password.getText().toString()
+                                        edt_register_password.getText().toString(),
+                                        edt_register_identification
                                 );
                             }
                         }).show();
@@ -114,8 +123,8 @@ public class loginTest extends AppCompatActivity {
 
     }
 
-    private void registerUser(String email, String name, String password) {
-        compositeDisposable.add(iMyService.registerUser(email, name, password)
+    private void registerUser(String email, String name, String password, String identification) {
+        compositeDisposable.add(iMyService.registerUser(email, name, password, identification)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
