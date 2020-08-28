@@ -42,6 +42,7 @@
         android:onClick="onclick"
         android:text="拍照點名"
         android:textColor="#4196E3"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"

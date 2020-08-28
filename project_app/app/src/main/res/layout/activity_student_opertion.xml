@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".student_opertion">
+
+    <TextView
+        android:id="@+id/wel_text"
+        android:layout_width="234dp"
+        android:layout_height="59dp"
+        android:text="歡迎同學"
+        android:textAlignment="center"
+        android:textColor="@color/md_material_blue_600"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="@+id/upview_text"
+        app:layout_constraintStart_toStartOf="@+id/upview_text"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="27dp" />
+
+    <TextView
+        android:id="@+id/upview_text"
+        android:layout_width="414dp"
+        android:layout_height="86dp"
+        app:layout_constraintBottom_toBottomOf="@+id/wel_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/downview_text"
+        android:layout_width="412dp"
+        android:layout_height="646dp"
+        android:background="?attr/colorButtonNormal"
+        android:textColor="@android:color/darker_gray"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/upview_text"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/myphone_img"
+        android:layout_width="36dp"
+        android:layout_height="57dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/wel_text"
+        app:layout_constraintEnd_toStartOf="@+id/wel_text"
+        app:layout_constraintStart_toStartOf="@+id/upview_text"
+        app:layout_constraintTop_toTopOf="@+id/upview_text"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/myphone" />
+
+    <Button
+        android:id="@+id/dcchect_photo_button"
+        android:layout_width="236dp"
+        android:layout_height="53dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/button_white"
+        android:text="查看照片"
+        android:textColor="@android:color/holo_blue_bright"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/update_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.514"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/wel_text"
+        app:layout_constraintVertical_bias="0.647" />
+
+    <Button
+        android:id="@+id/update_button"
+        android:layout_width="236dp"
+        android:layout_height="53dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/button_white"
+        android:text="上傳照片"
+        android:textColor="@android:color/holo_blue_bright"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/check_presentation_record_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/check_presentation_record_button"
+        android:layout_width="236dp"
+        android:layout_height="53dp"
+        android:layout_marginBottom="320dp"
+        android:background="@drawable/button_white"
+        android:text="查看出缺席紀錄"
+        android:textColor="@android:color/holo_blue_bright"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/downview_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

@@ -155,9 +155,9 @@ public class loginTest extends AppCompatActivity {
                         Toast.makeText(loginTest.this, "" + response, Toast.LENGTH_SHORT).show();
                         Log.e("tag", response);
                         if("\"Login student\"".equals(response)){
-                            goToPage(teacher_operation.class);
+                            goToPage(student_opertion.class);
                         }else if("\"Login teacher\"".equals(response)){
-                            goToPage(teacher_operation_which_mask_mode.class);
+                            goToPage(teacher_operation.class);
                         }
 
                     }
