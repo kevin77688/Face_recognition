@@ -21,4 +21,10 @@ public interface IMyService {
             @Field("email") String email,
             @Field("password") String password
     );
+
+    @POST("findUserName")
+    @FormUrlEncoded
+    Observable<String> findName(
+            @Field("email") String email
+    );
 }

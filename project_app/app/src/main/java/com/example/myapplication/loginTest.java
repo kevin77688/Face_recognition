@@ -124,6 +124,19 @@ public class loginTest extends AppCompatActivity {
 
     }
 
+    private void findUser(String email) {
+        compositeDisposable.add(iMyService.findName(email)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String response) throws Exception {
+                        GlobalVariable userdata = (GlobalVariable)getApplicationContext();
+                        userdata.setName(response);
+                    }
+                }));
+    }
+
     private void registerUser(String email, String name, String password, String identification) {
         compositeDisposable.add(iMyService.registerUser(email, name, password, identification)
                 .subscribeOn(Schedulers.io())
@@ -150,6 +163,7 @@ public class loginTest extends AppCompatActivity {
         GlobalVariable userdata = (GlobalVariable)getApplicationContext();
         userdata.setEmail(email);
         userdata.setPassword(password);
+        findUser(email);
 
         compositeDisposable.add(iMyService.loginUser(email, password)
                 .subscribeOn(Schedulers.io())

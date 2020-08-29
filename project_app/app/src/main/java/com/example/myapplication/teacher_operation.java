@@ -12,8 +12,8 @@ public class teacher_operation extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_operation);
-        Intent intent = this.getIntent();
-        teacher_name = intent.getStringExtra("teacher_name");
+        GlobalVariable userdata = (GlobalVariable)getApplicationContext();
+        teacher_name = userdata.getName();
         TextView textView_show_teacher_name = (TextView)findViewById(R.id.textView_show_teacher_name);
         textView_show_teacher_name.setText("歡迎" + teacher_name + "教授");
     }

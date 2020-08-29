@@ -14,7 +14,13 @@ public class GlobalVariable extends Application {
     public void setEmail(String Email){
         this.Email = Email;
     }
+    public void setName(String Name){
+        this.Name = Name;
+    }
     public String getEmail() {
         return Email;
+    }
+    public String getName() {
+        return Name;
     }
 }

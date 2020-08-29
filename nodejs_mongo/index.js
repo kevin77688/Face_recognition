@@ -129,6 +129,18 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
                 })
         });
 
+        app.post('/findUserName', (request, response, next)=>{
+            var post_data = request.body;
+            var email = post_data.email;
+            var db = client.db('nodejsTest');
+
+            db.collection('user')
+                            .findOne({'email': email}, function(err, user){
+                                console.log(user.name);
+                                response.json(user.name);
+                            })
+        });
+
         //Web server
         app.listen(3000, ()=>{
             console.log('Connected to MongoDB server with port 3000')
