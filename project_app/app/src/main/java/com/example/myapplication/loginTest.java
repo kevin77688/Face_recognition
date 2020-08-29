@@ -27,12 +27,13 @@ import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 
 public class loginTest extends AppCompatActivity {
-
+    public static String user_email;
     private IMyService iMyService;
     private TextView txt_create_account;
     private MaterialEditText edt_login_email, edt_login_password;
     private Button btn_login;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
+
     @Override
     protected void onStop() {
         compositeDisposable.clear();
@@ -145,6 +146,10 @@ public class loginTest extends AppCompatActivity {
             Toast.makeText(this, "Password cannot be null or empty", Toast.LENGTH_SHORT).show();
             return;
         }
+        //交使用者資料儲存成全域變數
+        GlobalVariable userdata = (GlobalVariable)getApplicationContext();
+        userdata.setEmail(email);
+        userdata.setPassword(password);
 
         compositeDisposable.add(iMyService.loginUser(email, password)
                 .subscribeOn(Schedulers.io())
