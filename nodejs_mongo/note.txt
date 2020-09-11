@@ -1,0 +1,4 @@
+Q: Cannot find module './lib/core'
+A: 
+rm -rf node_modules
+npm install

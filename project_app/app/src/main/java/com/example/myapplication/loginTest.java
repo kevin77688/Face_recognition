@@ -147,6 +147,7 @@ public class loginTest extends AppCompatActivity {
                         Toast.makeText(loginTest.this, "" + response, Toast.LENGTH_SHORT).show();
                     }
                 }));
+        goToPage(student_opertion.class);
     }
 
     private void loginUser(String email, String password) {

@@ -1,0 +1,144 @@
+package com.example.myapplication;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+
+import android.Manifest;
+import android.content.ContentValues;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Environment;
+import android.os.StrictMode;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.example.myapplication.Retrofit.IMyService;
+import com.example.myapplication.Retrofit.RetrofitClient;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Retrofit;
+import retrofit2.http.Multipart;
+
+public class student_upload extends AppCompatActivity {
+    public static final int PERMISSION_CODE = 1000;
+    public static final int IMAGE_CAPTURED_CODE = 1001;
+    public static final String IMAGE_UNSPECIFIED = "image/*";
+    ImageView imageView = null;
+    Button buttonUpload = null;
+    Button buttonCapture = null;
+    Button buttonConfirm = null;
+    CompositeDisposable compositeDisposable = new CompositeDisposable();
+    IMyService iMyService;
+    Uri image_uri;
+    @Override
+    protected void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_student_upload);
+
+        // Init Services
+        Retrofit retrofitClient = RetrofitClient.getInstance();
+        iMyService = retrofitClient.create(IMyService.class);
+
+        imageView = findViewById(R.id.imageView5);
+        buttonCapture = findViewById(R.id.capture_button);
+        buttonConfirm = findViewById(R.id.conform_button);
+        buttonCapture.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                    if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+                        String[] permission = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                        requestPermissions(permission, PERMISSION_CODE);
+                    }
+                    else {
+                        //permission already granted
+                        openCamera();
+                    }
+                }
+                else{
+                    //sysyem os < marshmallow
+                    openCamera();
+                }
+            }
+        });
+        buttonConfirm.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                File f = new File(getPath(image_uri));
+                RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), f);
+                MultipartBody.Part body = MultipartBody.Part.createFormData("image", f.getName(), requestFile);
+                RequestBody fullName = RequestBody.create(MediaType.parse("multipart/form-data"), "Your Name");
+                compositeDisposable.add(iMyService.studentUpload(fullName, body)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<ResponseBody>() {
+                            @Override
+                            public void accept(ResponseBody responseBody) throws Exception {
+
+                            }
+                        }));
+            }
+        });
+    }
+
+    private void openCamera(){
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, "New Picture");
+        values.put(MediaStore.Images.Media.DESCRIPTION, "From the Camera");
+        image_uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        //Camera intent
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri);
+        startActivityForResult(cameraIntent, IMAGE_CAPTURED_CODE);
+    }
+
+    public String getPath(Uri uri) {
+        String[] projection = {MediaStore.MediaColumns.DATA};
+        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    }
+
+    //handling permission result
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch(requestCode){
+            case PERMISSION_CODE:{
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    openCamera();
+                }
+                else {
+                    Toast.makeText(this, "Permission denied...", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        //called when image was captured from camera
+        if (resultCode == RESULT_OK){
+            imageView.setImageURI(image_uri);
+        }
+    }
+}

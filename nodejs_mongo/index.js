@@ -5,6 +5,8 @@ var crypto = require('crypto');
 var express = require('express');
 var bodyParser = require('body-parser');
 const { request, response } = require('express');
+const multer = require('multer');
+const upload = multer({dest: "./temp/"});
 
 //password crypto
 var getRandomString = function(length){
@@ -140,6 +142,17 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
                                 response.json(user.name);
                             })
         });
+		
+		// student upload images
+		app.post('/studentUpload', upload.single('image'), async(request, response, next)=>{
+			console.log(request.body);
+			console.log(request.file);
+			var db = client.db('nodejsTest');
+			db.collection('testUri').insertOne({'image': request.file}, function(error, res){
+                                response.json('Upload success');
+                                console.log('Upload success');
+                            })
+		});
 
         //Web server
         app.listen(3000, ()=>{
