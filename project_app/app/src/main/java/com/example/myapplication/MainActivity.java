@@ -31,13 +31,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void clickToLogin(View v) {
-        Intent intent = new Intent();
-        intent.setClass(this, login_page.class);
-
-        startActivity(intent);
-    }
-
     public void loginTestView(View v) {
         Intent intent = new Intent();
         intent.setClass(this, loginTest.class);

@@ -25,22 +25,21 @@ public class teacher_operation extends AppCompatActivity {
                 intent.setClass(this , teacher_operation_which_mask_mode.class);
                 break;
             case R.id.button_take_photo:
-                intent.setClass(this , teacher_login_new.class);
                 break;
             case R.id.button_check_absence_record:
-                intent.setClass(this , teacher_login_new.class);
+//                intent.setClass(this , teacher_login_new.class);
                 break;
             case R.id.button_add_student_photo:
-                intent.setClass(this , teacher_login_new.class);
+//                intent.setClass(this , teacher_login_new.class);
                 break;
             case R.id.button_remove_student_photo:
-                intent.setClass(this , teacher_login_new.class);
+                intent.setClass(this , loginTest.class);
                 break;
             case R.id.button_modify_and_add_seating:
-                intent.setClass(this , teacher_login_new.class);
+                intent.setClass(this , loginTest.class);
                 break;
             case R.id.button_mask_mode:
-                intent.setClass(this , teacher_login_new.class);
+                intent.setClass(this , loginTest.class);
                 break;
 
         }

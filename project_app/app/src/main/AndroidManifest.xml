@@ -20,8 +20,6 @@
         <activity android:name=".loginTest" />
         <activity android:name=".teacher_operation_which_mask_mode" />
         <activity android:name=".teacher_operation" />
-        <activity android:name=".teacher_login_new" />
-        <activity android:name=".login_page" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
