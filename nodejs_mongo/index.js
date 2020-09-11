@@ -6,7 +6,28 @@ var express = require('express');
 var bodyParser = require('body-parser');
 const { request, response } = require('express');
 const multer = require('multer');
-const upload = multer({dest: "./temp/"});
+var storage = multer.diskStorage(
+    {
+        destination: './uploads/',
+        filename: function ( req, file, cb ) {
+            //req.body is empty...
+            //How could I get the new_file_name property sent from client here?
+			if (file.originalname.match(/\.(jpg)$/)) {
+				cb( null, file.originalname+ '-' + Date.now()+".jpg");
+			}
+			else if (file.originalname.match(/\.(jpeg)$/)) {
+				cb( null, file.originalname+ '-' + Date.now()+".jpeg");
+			}
+			else if (file.originalname.match(/\.(png)$/)) {
+				cb( null, file.originalname+ '-' + Date.now()+".png");
+			}
+			else {
+				cb(new Error('Please upload an image'));
+			}
+        }
+    }
+);
+var upload = multer( { storage: storage } );
 
 //password crypto
 var getRandomString = function(length){
