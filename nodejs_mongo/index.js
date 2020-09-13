@@ -6,24 +6,15 @@ var express = require('express');
 var bodyParser = require('body-parser');
 const { request, response } = require('express');
 const multer = require('multer');
+
+//收到大頭貼時存到uploads資料夾
+var imageName;
 var storage = multer.diskStorage(
     {
         destination: './uploads/',
         filename: function ( req, file, cb ) {
-            //req.body is empty...
-            //How could I get the new_file_name property sent from client here?
-			if (file.originalname.match(/\.(jpg)$/)) {
-				cb( null, file.originalname+ '-' + Date.now()+".jpg");
-			}
-			else if (file.originalname.match(/\.(jpeg)$/)) {
-				cb( null, file.originalname+ '-' + Date.now()+".jpeg");
-			}
-			else if (file.originalname.match(/\.(png)$/)) {
-				cb( null, file.originalname+ '-' + Date.now()+".png");
-			}
-			else {
-				cb(new Error('Please upload an image'));
-			}
+			imageName = Date.now() + '_' + file.originalname;
+			cb(null, imageName);
         }
     }
 );
@@ -160,7 +151,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
             db.collection('user')
                             .findOne({'email': email}, function(err, user){
                                 console.log(user.name);
-                                response.json(user.name);
+                                response.json(user.name + "/" + user._id);
                             })
         });
 		
@@ -168,8 +159,9 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 		app.post('/studentUpload', upload.single('image'), async(request, response, next)=>{
 			console.log(request.body);
 			console.log(request.file);
+			console.log(request.file.originalname);
 			var db = client.db('nodejsTest');
-			db.collection('testUri').insertOne({'image': request.file}, function(error, res){
+			db.collection('avatar').insertOne({'userId': request.body._id, 'imageName': imageName}, function(error, res){
                                 response.json('Upload success');
                                 console.log('Upload success');
                             })
