@@ -20,28 +20,17 @@
         app:layout_constraintVertical_bias="0.527" />
 
     <TextView
-        android:id="@+id/wel_text"
-        android:layout_width="234dp"
-        android:layout_height="59dp"
+        android:id="@+id/upview_text"
+        android:layout_width="409dp"
+        android:layout_height="106dp"
         android:text="歡迎同學"
         android:textAlignment="center"
-        android:textColor="@color/md_material_blue_600"
+        android:textColor="#4196E3"
         android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="@+id/upview_text"
-        app:layout_constraintStart_toStartOf="@+id/upview_text"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="27dp" />
-
-    <TextView
-        android:id="@+id/upview_text"
-        android:layout_width="414dp"
-        android:layout_height="86dp"
-        app:layout_constraintBottom_toBottomOf="@+id/wel_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/downview_text"
@@ -61,11 +50,8 @@
         android:layout_width="36dp"
         android:layout_height="57dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/wel_text"
-        app:layout_constraintEnd_toStartOf="@+id/wel_text"
         app:layout_constraintStart_toStartOf="@+id/upview_text"
         app:layout_constraintTop_toTopOf="@+id/upview_text"
-        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/myphone" />
 
     <Button
@@ -80,13 +66,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.514"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/wel_text" />
+        app:layout_constraintTop_toBottomOf="@+id/upview_text" />
 
     <Button
         android:id="@+id/upload_button"
         android:layout_width="236dp"
         android:layout_height="53dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="36dp"
         android:background="@drawable/button_white"
         android:text="上傳照片"
         android:textColor="@android:color/holo_blue_dark"
@@ -100,7 +86,7 @@
         android:id="@+id/check_presentation_record_button"
         android:layout_width="236dp"
         android:layout_height="53dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="36dp"
         android:layout_marginBottom="356dp"
         android:background="@drawable/button_white"
         android:text="查看出缺席紀錄"

@@ -16,9 +16,9 @@ public class student_opertion extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_opertion);
         GlobalVariable userdata = (GlobalVariable) getApplicationContext();
-        TextView wel_text = (TextView) findViewById(R.id.wel_text);
+        TextView upview_text = (TextView) findViewById(R.id.upview_text);
         email = userdata.getEmail();
-        wel_text.setText("\n歡迎" + userdata.getName() + "學生");
+        upview_text.setText("\n歡迎" + userdata.getName() + "學生");
     }
     public void onclick(View v) {
         Intent intent = new Intent();

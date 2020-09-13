@@ -17,7 +17,8 @@ public interface IMyService {
             @Field("email") String email,
             @Field("name") String name,
             @Field("password") String password,
-            @Field("identification") String identification
+            @Field("identification") String identification,
+            @Field("_id") String _id
     );
 
     @POST("login")

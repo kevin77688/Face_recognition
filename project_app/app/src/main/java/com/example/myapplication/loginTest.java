@@ -89,6 +89,7 @@ public class loginTest extends AppCompatActivity {
                                 MaterialEditText edt_register_email = register_layout.findViewById(R.id.edt_email);
                                 MaterialEditText edt_register_name = register_layout.findViewById(R.id.edt_name);
                                 MaterialEditText edt_register_password = register_layout.findViewById(R.id.edt_password);
+                                MaterialEditText edt_register_id = register_layout.findViewById(R.id.edt_id);
                                 String edt_register_identification;
 
                                 if (TextUtils.isEmpty(edt_register_email.getText().toString())) {
@@ -105,6 +106,11 @@ public class loginTest extends AppCompatActivity {
                                     Toast.makeText(loginTest.this, "Password cannot be null or empty", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
+
+                                if (TextUtils.isEmpty(edt_register_id.getText().toString())) {
+                                    Toast.makeText(loginTest.this, "ID cannot be null or empty", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
                                 edt_register_identification = edt_register_name.getText().toString();
                                 if("a".equals(edt_register_identification.substring(0, 1)))
                                     edt_register_identification = "teacher";
@@ -115,7 +121,8 @@ public class loginTest extends AppCompatActivity {
                                         edt_register_email.getText().toString(),
                                         edt_register_name.getText().toString(),
                                         edt_register_password.getText().toString(),
-                                        edt_register_identification
+                                        edt_register_identification,
+                                        edt_register_id.getText().toString()
                                 );
                             }
                         }).show();
@@ -137,8 +144,8 @@ public class loginTest extends AppCompatActivity {
                 }));
     }
 
-    private void registerUser(String email, String name, String password, String identification) {
-        compositeDisposable.add(iMyService.registerUser(email, name, password, identification)
+    private void registerUser(String email, String name, String password, String identification, String _id) {
+        compositeDisposable.add(iMyService.registerUser(email, name, password, identification, _id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {

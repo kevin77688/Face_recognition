@@ -23,7 +23,7 @@
         android:layout_width="420dp"
         android:layout_height="94dp"
         android:background="#FFFFFF"
-        android:text="999999"
+        android:text="歡迎老師"
         android:textAlignment="center"
         android:textColor="#4196E3"
         android:textSize="24sp"
@@ -41,7 +41,7 @@
         android:layout_marginTop="180dp"
         android:background="@drawable/button_white"
         android:onClick="onclick"
-        android:text="拍照點名"
+        android:text="點名"
         android:textColor="#4196E3"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -49,24 +49,10 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button_take_photo"
-        android:layout_width="249dp"
-        android:layout_height="44dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/button_white"
-        android:onClick="onclick"
-        android:text="手動點名"
-        android:textColor="#4196E3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_take_photo_auto" />
-
-    <Button
         android:id="@+id/button_check_absence_record"
         android:layout_width="249dp"
         android:layout_height="44dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/button_white"
         android:onClick="onclick"
         android:text="查看出缺席紀錄"
@@ -74,13 +60,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_take_photo" />
+        app:layout_constraintTop_toBottomOf="@+id/button_take_photo_auto" />
 
     <Button
         android:id="@+id/button_add_student_photo"
         android:layout_width="249dp"
         android:layout_height="44dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/button_white"
         android:onClick="onclick"
         android:text="新增學生照片"
@@ -94,7 +80,7 @@
         android:id="@+id/button_remove_student_photo"
         android:layout_width="249dp"
         android:layout_height="44dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/button_white"
         android:onClick="onclick"
         android:text="刪除學生照片"
@@ -107,7 +93,7 @@
         android:id="@+id/button_modify_and_add_seating"
         android:layout_width="249dp"
         android:layout_height="44dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/button_white"
         android:onClick="onclick"
         android:text="新增和修改座位表"

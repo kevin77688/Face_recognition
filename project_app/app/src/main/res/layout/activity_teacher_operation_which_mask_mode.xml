@@ -33,23 +33,9 @@
         android:layout_marginTop="216dp"
         android:background="@drawable/button_white"
         android:onClick="onclick"
-        android:text="有口罩模式"
+        android:text="拍照"
         android:textColor="#41BCE3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/button_no_mask_mode"
-        android:layout_width="276dp"
-        android:layout_height="53dp"
-        android:layout_marginTop="304dp"
-        android:background="@drawable/button_white"
-        android:onClick="onclick"
-        android:text="無口罩模式"
-        android:textColor="#41BCE3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

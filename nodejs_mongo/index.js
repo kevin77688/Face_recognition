@@ -88,7 +88,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
             console.log("has identification");
             var insertJson = {
                 'email': email,
-                'password': password,
+                'password': plaint_password, //改成不加密
                 'salt': salt,
                 'name': name,
                 'identification': identification
@@ -135,18 +135,18 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
                                 var hashed_password = checkHashPassword(userPassword, salt).passwordHash;
                                 var encryped_password = user.password;
                                 var identification = user.identification;
-                                if(hashed_password == encryped_password){
+                                // if(hashed_password == encryped_password){
                                     if(identification == "student"){
                                         response.json('Login student');
                                     }else{
                                         response.json('Login teacher');
                                     }
                                     console.log('Login success');
-                                }
-                                else{
-                                    response.json('Login failed');
-                                    console.log('Login failed');
-                                }
+                                // }
+                                // else{
+                                //     response.json('Login failed');
+                                //     console.log('Login failed');
+                                // }
                             })
                     }
                 })

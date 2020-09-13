@@ -3,20 +3,20 @@ use nodejsTest
 db.student.drop();
 db.student.insertMany([ 
     //不能取class所以班級一樣先叫faculty
-    {_id: 106820051, name: "陳小一", faculty: "電資三", birthday: "1999/09/01", sex: "male", password: "000000", salt: "123456"},
-    {_id: 106820052, name: "王小二", faculty: "電資三", birthday: "1999/09/02", sex: "female", password: "000000", salt: "123456"},
-    {_id: 106820053, name: "李小三", faculty: "電資三", birthday: "1999/09/03", sex: "male", password: "000000", salt: "123456"},
-    {_id: 106820054, name: "許小四", faculty: "電資三", birthday: "1999/09/04", sex: "female", password: "000000", salt: "123456"},
-    {_id: 106820055, name: "鄭小五", faculty: "電資三", birthday: "1999/09/05", sex: "male", password: "000000", salt: "123456"}
+    {_id: 106820051, name: "陳小一", faculty: "電資三", birthday: "1999/09/01", sex: "male", salt: "123456"},
+    {_id: 106820052, name: "王小二", faculty: "電資三", birthday: "1999/09/02", sex: "female", salt: "123456"},
+    {_id: 106820053, name: "李小三", faculty: "電資三", birthday: "1999/09/03", sex: "male", salt: "123456"},
+    {_id: 106820054, name: "許小四", faculty: "電資三", birthday: "1999/09/04", sex: "female", salt: "123456"},
+    {_id: 106820055, name: "鄭小五", faculty: "電資三", birthday: "1999/09/05", sex: "male",  salt: "123456"}
 ]); 
 //建立教授資料
 db.professor.drop();
 db.professor.insertMany([ 
-    {_id: 00001, name: "陳大一", faculty: "資工系", birthday: "1979/09/01", sex: "male", password: "000000", salt: "123456"},
-    {_id: 00002, name: "王大二", faculty: "資工系", birthday: "1979/09/02", sex: "female", password: "000000", salt: "123456"},
-    {_id: 00003, name: "李大三", faculty: "資工系", birthday: "1979/09/03", sex: "male", password: "000000", salt: "123456"},
-    {_id: 00004, name: "許大四", faculty: "資工系", birthday: "1979/09/04", sex: "female", password: "000000", salt: "123456"},
-    {_id: 00005, name: "鄭大五", faculty: "資工系", birthday: "1979/09/05", sex: "male", password: "000000", salt: "123456"}
+    {_id: 00001, name: "陳大一", faculty: "資工系", birthday: "1979/09/01", sex: "male", salt: "123456"},
+    {_id: 00002, name: "王大二", faculty: "資工系", birthday: "1979/09/02", sex: "female", salt: "123456"},
+    {_id: 00003, name: "李大三", faculty: "資工系", birthday: "1979/09/03", sex: "male", salt: "123456"},
+    {_id: 00004, name: "許大四", faculty: "資工系", birthday: "1979/09/04", sex: "female", salt: "123456"},
+    {_id: 00005, name: "鄭大五", faculty: "資工系", birthday: "1979/09/05", sex: "male", salt: "123456"}
 ]);
 //建立課程資料
 db.course.drop();
@@ -52,4 +52,4 @@ db.studentCourse.insertMany([
     {studentId: 106820053, courseId: 269469, score: -1, attendance: 0},
     {studentId: 106820054, courseId: 269469, score: -1, attendance: 0},
     {studentId: 106820055, courseId: 269469, score: -1, attendance: 0},
-]);
+]);//建立學生課程關聯資料db.user.drop();db.user.insertMany([	{email: "b", password: "b", salt: "sha512", name: "陳小一", _id: 106820051, identification: "student"},		{email: "c", password: "c", salt: "sha512", name: "王小二", _id: 106820052, identification: "student"},		{email: "d", password: "d", salt: "sha512", name: "李小三", _id: 106820053, identification: "student"},		{email: "e", password: "e", salt: "sha512", name: "許小四", _id: 106820054, identification: "student"},		{email: "f", password: "f", salt: "sha512", name: "鄭小五", _id: 106820055, identification: "student"},		{email: "a1", password: "a1", salt: "sha512", name: "陳大一", _id: 00001, identification: "teacher"},		{email: "a2", password: "a2", salt: "sha512", name: "王大二", _id: 00002, identification: "teacher"},		{email: "a3", password: "a3", salt: "sha512", name: "李大三", _id: 00003, identification: "teacher"},		{email: "a4", password: "a4", salt: "sha512", name: "許大四", _id: 00004, identification: "teacher"},		{email: "a5", password: "a5", salt: "sha512", name: "鄭大五", _id: 00005, identification: "teacher"},]);
