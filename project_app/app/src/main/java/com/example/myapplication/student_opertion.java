@@ -17,20 +17,25 @@ public class student_opertion extends AppCompatActivity {
         setContentView(R.layout.activity_student_opertion);
         GlobalVariable userdata = (GlobalVariable) getApplicationContext();
         TextView wel_text = (TextView) findViewById(R.id.wel_text);
-        Button btn_upload = (Button)findViewById((R.id.upload_button));
         email = userdata.getEmail();
-        wel_text.setText("歡迎" + userdata.getName() + "學生");
-        btn_upload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ClickUpload();
-            }
-        });
+        wel_text.setText("\n歡迎" + userdata.getName() + "學生");
     }
-
-    protected  void ClickUpload(){
+    public void onclick(View v) {
         Intent intent = new Intent();
-        intent.setClass(this, student_upload.class);
+        switch(v.getId()){
+            case R.id.dcchect_photo_button:
+                intent.setClass(this , loginTest.class);
+                break;
+            case R.id.upload_button:
+                intent.setClass(this, student_upload.class);
+                break;
+            case R.id.check_presentation_record_button:
+//                intent.setClass(this , teacher_login_new.class);
+                break;
+            case R.id.return_button:
+                intent.setClass(this , loginTest.class);
+                break;
+        }
         startActivity(intent);
     }
 
