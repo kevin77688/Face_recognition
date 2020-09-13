@@ -15,7 +15,7 @@ public class teacher_operation extends AppCompatActivity {
         GlobalVariable userdata = (GlobalVariable)getApplicationContext();
         teacher_name = userdata.getName();
         TextView textView_show_teacher_name = (TextView)findViewById(R.id.textView_show_teacher_name);
-        textView_show_teacher_name.setText("歡迎" + teacher_name + "教授");
+        textView_show_teacher_name.setText("\n歡迎" + teacher_name + "教授");
     }
 
     public void onclick(View v) {
