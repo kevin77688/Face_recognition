@@ -27,6 +27,7 @@ public class student_opertion extends AppCompatActivity {
                 intent.setClass(this , loginTest.class);
                 break;
             case R.id.upload_button:
+                Log.e("sssss", "快跳轉");
                 intent.setClass(this, student_upload.class);
                 break;
             case R.id.check_presentation_record_button:

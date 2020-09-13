@@ -21,8 +21,7 @@ public class teacher_operation_which_mask_mode extends AppCompatActivity {
                 startActivity(intent);
 
                 break;
-            case R.id.button_no_mask_mode:
-                break;
+
             case R.id.gray_return_button:
                 intent.setClass(this , teacher_operation.class);
                 break;
