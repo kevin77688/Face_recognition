@@ -38,13 +38,14 @@ public class StudentUpload extends AppCompatActivity {
     public static final int PERMISSION_CODE = 1000;
     public static final int IMAGE_CAPTURED_CODE = 1001;
     public static final String IMAGE_UNSPECIFIED = "image/*";
-    ImageView imageView = null;
-    Button buttonUpload = null;
-    Button buttonCapture = null;
-    Button buttonConfirm = null;
-    CompositeDisposable compositeDisposable = new CompositeDisposable();
-    IMyService iMyService;
-    Uri image_uri;
+    private ImageView imageView = null;
+    private Button buttonUpload = null;
+    private Button buttonCapture = null;
+    private Button buttonConfirm = null;
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private IMyService iMyService;
+    private Uri image_uri;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -59,22 +60,17 @@ public class StudentUpload extends AppCompatActivity {
         buttonConfirm = findViewById(R.id.conform_button);
         buttonCapture.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
                     if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
                         String[] permission = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
                         requestPermissions(permission, PERMISSION_CODE);
                     }
-                    else {
-                        //permission already granted
-                        openCamera();
-                    }
-                }
-                else{
-                    //sysyem os < marshmallow
+                else
+                    //system os < marshmallow or permission already granted
                     openCamera();
-                }
             }
         });
+
         buttonConfirm.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 File f = new File(getPath(image_uri));
@@ -95,14 +91,17 @@ public class StudentUpload extends AppCompatActivity {
     }
 
     private void openCamera(){
-        ContentValues values = new ContentValues();
-        values.put(MediaStore.Images.Media.TITLE, "New Picture");
-        values.put(MediaStore.Images.Media.DESCRIPTION, "From the Camera");
-        image_uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-        //Camera intent
-        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri);
-        startActivityForResult(cameraIntent, IMAGE_CAPTURED_CODE);
+        Intent intent = new Intent();
+        intent.setClass(this, CameraCapture.class);
+        startActivity(intent);
+//        ContentValues values = new ContentValues();
+//        values.put(MediaStore.Images.Media.TITLE, "New Picture");
+//        values.put(MediaStore.Images.Media.DESCRIPTION, "From the Camera");
+//        image_uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+//        //Camera intent
+//        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri);
+//        startActivityForResult(cameraIntent, IMAGE_CAPTURED_CODE);
     }
 
     public String getPath(Uri uri) {
