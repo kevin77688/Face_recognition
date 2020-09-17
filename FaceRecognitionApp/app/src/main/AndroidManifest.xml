@@ -15,7 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".TeacherOperationWithMask"></activity>
+        <activity android:name=".CameraCapture"></activity>
+        <activity android:name=".TeacherOperationWithMask" />
         <activity android:name=".StudentUpload" />
         <activity android:name=".TeacherOperation" />
         <activity android:name=".StudentOperation" />
