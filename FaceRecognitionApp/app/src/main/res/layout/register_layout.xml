@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/edt_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        app:met_baseColor="@color/wordColor"
+        app:met_iconPadding="0dp"
+        app:met_primaryColor="@color/wordColor"
+        app:met_textColor="@color/wordColor" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/edt_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Name"
+        android:inputType="text"
+        app:met_baseColor="@color/wordColor"
+        app:met_iconPadding="0dp"
+        app:met_primaryColor="@color/wordColor"
+        app:met_textColor="@color/wordColor" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/edt_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:inputType="textPassword"
+        app:met_baseColor="@color/wordColor"
+        app:met_iconPadding="0dp"
+        app:met_primaryColor="@color/wordColor"
+        app:met_textColor="@color/wordColor" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/edt_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="ID"
+        android:inputType="textPassword"
+        app:met_baseColor="@color/wordColor"
+        app:met_iconPadding="0dp"
+        app:met_primaryColor="@color/wordColor"
+        app:met_textColor="@color/wordColor" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/teacher_login_button"
+            android:layout_width="104dp"
+            android:layout_height="89dp"
+            android:background="@drawable/home_white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</LinearLayout>
