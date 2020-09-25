@@ -147,11 +147,34 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
             var post_data = request.body;
             var email = post_data.email;
             var db = client.db('nodejsTest');
-
+            console.log(post_data.email);
             db.collection('user')
                             .findOne({'email': email}, function(err, user){
-                                console.log(user.name);
-                                response.json(user.name + "/" + user._id);
+                                console.log("findUserName：",user.name);
+                                var userData = {
+                                    'name': user.name,
+                                    'id': user._id
+                                };
+                                response.json(userData);
+                            })
+        });
+
+        app.post('/findUserClass', (request, response, next)=>{
+            var post_data = request.body;
+            var id =parseInt(post_data.id)  ;
+            var db = client.db('nodejsTest');
+            console.log("post findUserClass: 888888");
+            console.log(post_data);
+
+            db.collection('course')
+                            .findOne({'teacherId': id}, function(err, user){
+                                console.log("post findUserClass: ",user);
+                                // var userData = {
+                                //     'name': user.name,
+                                //     'id': user._id
+                                // };
+                                // response.json(userData);
+                                response.json(user.name);
                             })
         });
 		

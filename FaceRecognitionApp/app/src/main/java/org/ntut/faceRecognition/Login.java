@@ -18,6 +18,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import org.json.JSONObject;
 import org.ntut.faceRecognition.Retrofit.IMyService;
 import org.ntut.faceRecognition.Retrofit.RetrofitClient;
 
@@ -141,7 +142,13 @@ public class Login extends AppCompatActivity {
                     @Override
                     public void accept(String response) throws Exception {
                         GlobalVariable userdata = (GlobalVariable)getApplicationContext();
-                        userdata.setName(response);
+
+                        JSONObject jsonobj = new JSONObject(response);
+                        String name = jsonobj.getString("name");
+//                        Log.e("name", name);
+                        String id = jsonobj.getString("id");
+                        userdata.setName(name);
+                        userdata.setId(id);
                     }
                 }));
     }

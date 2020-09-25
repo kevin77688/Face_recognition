@@ -9,13 +9,22 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class TeacherOperationWithMask extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class TeacherOperationTakePhoto extends AppCompatActivity {
+
+    ArrayList<String> student_fake_name = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_teacher_operation_with_mask);
+        setContentView(R.layout.activity_teacher_operation_take_photo);
 
+        student_fake_name.add("陳小一");
+        student_fake_name.add("王小二");
+        student_fake_name.add("李小三");
+        student_fake_name.add("許小四");
+        
         LinearLayout mainLinerLayout = (LinearLayout) this.findViewById(R.id.roll_call_layout);
         for (int i = 0;i<50;i++){
             TextView textview=new TextView(this);

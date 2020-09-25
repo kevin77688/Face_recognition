@@ -33,6 +33,13 @@ public interface IMyService {
     Observable<String> findName(
             @Field("email") String email
     );
+
+    @POST("findUserClass")
+    @FormUrlEncoded
+    Observable<String> findClass(
+            @Field("id") Integer id
+    );
+
     @Multipart
     @POST("studentUpload")
     Observable<ResponseBody> studentUpload(

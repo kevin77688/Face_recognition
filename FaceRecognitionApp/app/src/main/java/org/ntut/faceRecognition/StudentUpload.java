@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -91,6 +92,7 @@ public class StudentUpload extends AppCompatActivity {
     }
 
     private void openCamera(){
+        Log.i("TAG", "faildddd: ");
         Intent intent = new Intent();
         intent.setClass(this, CameraCapture.class);
         startActivity(intent);
