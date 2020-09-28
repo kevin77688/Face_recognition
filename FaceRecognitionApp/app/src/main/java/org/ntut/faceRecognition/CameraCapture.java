@@ -1,8 +1,8 @@
 package org.ntut.faceRecognition;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.opencv.android.JavaCameraView;
 

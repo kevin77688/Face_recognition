@@ -14,10 +14,9 @@ public interface IMyService {
     @POST("register")
     @FormUrlEncoded
     Observable<String> registerUser(
-            @Field("email") String email,
-            @Field("name") String name,
+            @Field("username") String username,
             @Field("password") String password,
-            @Field("identification") String identification,
+            @Field("email") String email,
             @Field("_id") String _id
     );
 
@@ -26,12 +25,6 @@ public interface IMyService {
     Observable<String> loginUser(
             @Field("email") String email,
             @Field("password") String password
-    );
-
-    @POST("findUserName")
-    @FormUrlEncoded
-    Observable<String> findName(
-            @Field("email") String email
     );
 
     @POST("findUserClass")

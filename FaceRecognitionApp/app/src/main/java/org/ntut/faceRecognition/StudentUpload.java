@@ -1,11 +1,6 @@
 package org.ntut.faceRecognition;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.Manifest;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -18,6 +13,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.ntut.faceRecognition.Retrofit.IMyService;
 import org.ntut.faceRecognition.Retrofit.RetrofitClient;
@@ -48,7 +47,7 @@ public class StudentUpload extends AppCompatActivity {
     private Uri image_uri;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_upload);
 
@@ -59,21 +58,20 @@ public class StudentUpload extends AppCompatActivity {
         imageView = findViewById(R.id.imageView5);
         buttonCapture = findViewById(R.id.capture_button);
         buttonConfirm = findViewById(R.id.conform_button);
-        buttonCapture.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
+        buttonCapture.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                    if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+                    if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
                         String[] permission = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
                         requestPermissions(permission, PERMISSION_CODE);
-                    }
-                else
-                    //system os < marshmallow or permission already granted
-                    openCamera();
+                    } else
+                        //system os < marshmallow or permission already granted
+                        openCamera();
             }
         });
 
-        buttonConfirm.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
+        buttonConfirm.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
                 File f = new File(getPath(image_uri));
                 RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), f);
                 MultipartBody.Part body = MultipartBody.Part.createFormData("image", f.getName(), requestFile);
@@ -91,7 +89,7 @@ public class StudentUpload extends AppCompatActivity {
         });
     }
 
-    private void openCamera(){
+    private void openCamera() {
         Log.i("TAG", "faildddd: ");
         Intent intent = new Intent();
         intent.setClass(this, CameraCapture.class);
@@ -117,12 +115,11 @@ public class StudentUpload extends AppCompatActivity {
     //handling permission result
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch(requestCode){
-            case PERMISSION_CODE:{
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        switch (requestCode) {
+            case PERMISSION_CODE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     openCamera();
-                }
-                else {
+                } else {
                     Toast.makeText(this, "Permission denied...", Toast.LENGTH_SHORT).show();
                 }
             }
