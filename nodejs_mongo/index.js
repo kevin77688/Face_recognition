@@ -97,11 +97,14 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
                         userResponse.description = 'Email not exists';
                         userResponse.status = "401";
                         console.log('Email not exists');
+                        response.json(userResponse);
                     }else{
                         db.collection('user').findOne({'email': email}, function(err, user){
                             if (password != user.password){
                                 userResponse.description = 'Login error !';
                                 userResponse.status = "402";
+                                response.json(userResponse);
+                                
                             }
                             else{
                                 userResponse.description = 'Login success';
@@ -109,12 +112,14 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
                                     userResponse.status = "201";
                                 else if (user.identification == "teacher")
                                     userResponse.status = "202";
-                                userResponse.username = user.username;
+                                userResponse.username = user.name;
                                 userResponse.identification = user.identification;
-                                console.log("username : " + user.username + " login");
+                                console.log(user);
+                                console.log("username : " + user.name + " login");
+                                console.log(userResponse);
+                                response.json(userResponse);
                             }})
                     }
-                    response.json(userResponse);
         })});
 
         app.post('/findUserClass', (request, response, next)=>{

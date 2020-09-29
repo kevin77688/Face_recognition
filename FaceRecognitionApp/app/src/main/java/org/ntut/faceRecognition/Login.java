@@ -171,6 +171,7 @@ public class Login extends AppCompatActivity {
                         JSONObject jsonObject = new JSONObject(response);
                         int statusCode = parseInt(jsonObject.getString("status"));
                         Log.e("Status", String.valueOf(statusCode));
+                        showToast(jsonObject.getString("description"));
                         switch (statusCode) {
                             case 201:
                                 userName = jsonObject.getString("username");
@@ -183,13 +184,13 @@ public class Login extends AppCompatActivity {
                             case 402:
                                 break;
                         }
-                        showToast(jsonObject.getString("description"));
                         compositeDisposable.dispose();
                     }
                 }));
     }
 
     private void goToPage(Class page) {
+        Log.e("into","into");
         Intent intent = new Intent();
         intent.setClass(this, page);
         intent.putExtra("name", userName);
