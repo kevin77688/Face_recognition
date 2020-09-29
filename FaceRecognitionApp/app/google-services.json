@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "417463560343",
+    "firebase_url": "https://facedetection-cb90a.firebaseio.com",
+    "project_id": "facedetection-cb90a",
+    "storage_bucket": "facedetection-cb90a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:417463560343:android:47f4aa34ff86701958e1d2",
+        "android_client_info": {
+          "package_name": "org.ntut.faceRecognition"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "417463560343-cj84js7sjg5qo6m2d1aejmubavl9a7sr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnD3NM4y7ttEKRgJdj7GGe0TzeVLS-fEs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "417463560343-cj84js7sjg5qo6m2d1aejmubavl9a7sr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

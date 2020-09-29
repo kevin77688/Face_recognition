@@ -58,7 +58,6 @@ public class TeacherOperation extends AppCompatActivity {
                     @Override
                     public void accept(String response) throws Exception {
                         JSONObject jsonobj = new JSONObject(response);
-
                     }
                 }));
     }

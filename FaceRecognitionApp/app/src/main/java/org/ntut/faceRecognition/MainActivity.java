@@ -19,4 +19,10 @@ public class MainActivity extends AppCompatActivity {
         intent.setClass(this, Login.class);
         startActivity(intent);
     }
+
+    public void captureView(View v){
+        Intent intent = new Intent();
+        intent.setClass(this, CameraCapture.class);
+        startActivity(intent);
+    }
 }
