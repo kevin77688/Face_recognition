@@ -29,7 +29,7 @@
                 android:layout_width="117dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                android:text="+ 註冊帳號"
+                android:text="+ 註冊學生帳號"
                 android:textColor="@android:color/holo_blue_light"
                 android:textStyle="bold" />
 

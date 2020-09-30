@@ -17,9 +17,9 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 
-public class TeacherOperation extends AppCompatActivity {
+public class TeacherClass extends AppCompatActivity {
 
-    String teacher_name;
+    String teacher_name, class_name;
     private IMyService iMyService;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -32,7 +32,7 @@ public class TeacherOperation extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_teacher_operation);
+        setContentView(R.layout.activity_teacher_class);
         // Init Services
         Retrofit retrofitClient = RetrofitClient.getInstance();
         iMyService = retrofitClient.create(IMyService.class);
@@ -42,10 +42,12 @@ public class TeacherOperation extends AppCompatActivity {
         Log.e("name", userdata.getName());
         TextView textView_show_teacher_name = (TextView)findViewById(R.id.textView_show_teacher_name);
         textView_show_teacher_name.setText("\n歡迎" + userdata.getName() + "教授");
-        findClass(1);
-
+        Log.e("class", "class_name");
+        getClassInformation(1);
     }
-    private void findClass(Integer id) {
+
+    private void getClassInformation(Integer id) {
+//        final String[] class_name = new String[1];
         compositeDisposable.add(iMyService.findClass(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -55,7 +57,9 @@ public class TeacherOperation extends AppCompatActivity {
                         GlobalVariable userdata = (GlobalVariable)getApplicationContext();
 
                         JSONObject jsonobj = new JSONObject(response);
-
+                        Log.e("class", jsonobj.getString("name"));
+//                        class_name[0] = jsonobj.getString("name");
+                        class_name =  jsonobj.getString("name");
                     }
                 }));
     }

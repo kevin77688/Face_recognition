@@ -1,6 +1,7 @@
 // Inport package
 var mongodb = require('mongodb');
 var ObjectID = mongodb.ObjectID;
+var crypto = require('crypto');
 var express = require('express');
 var bodyParser = require('body-parser');
 const { request, response } = require('express');
@@ -19,6 +20,34 @@ var storage = multer.diskStorage(
 );
 var upload = multer( { storage: storage } );
 
+//password crypto
+var getRandomString = function(length){
+    return crypto.randomBytes(Math.ceil(length / 2))
+        .toString('hex')
+        .slice(0,length);
+};
+
+var sha512 = function(password, salt){
+    var hash = crypto.createHmac('sha512', salt);
+    hash.update(password);
+    var value = hash.digest('hex');
+    return {
+        salt:salt,
+        passwordHash:value
+    };
+};
+
+function saltHashPassword(userPassword){
+    var salt = getRandomString(16);
+    var passwordData = sha512(userPassword, salt);
+    return passwordData;
+}
+
+function checkHashPassword(userPassword, salt){
+    var passwordData = sha512(userPassword, salt);
+    return passwordData;
+}
+
 // Express services
 var app = express();
 app.use(bodyParser.json());
@@ -31,34 +60,28 @@ var MongoClient = mongodb.MongoClient;
 var url = 'mongodb://localhost:27017'
 
 MongoClient.connect(url, {useNewParser: true}, function(err, client){
-
-    // Response code : 
-    // Register success :   200
-    // Login student :      201
-    // Login teacher :      202
-    // Email exists :       400
-    // Login error :        401
-    // Login password wrong:402
-
     if (err)
         console.log('Unable to connect to MongoDB', err);
     else{
-        var userResponse = {};
         // Register
         app.post('/register', (request, response, next)=>{
             var post_data = request.body;
-            var username = post_data.username;
-            var password = post_data.password;
-            var email = post_data.email;
-            var identification = "student";
-            if (username.substring(0,1) == "a")
-                identification = "teacher"
 
+            var plaint_password = post_data.password;
+            var hash_data = saltHashPassword(plaint_password);
+
+            var password = hash_data.passwordHash;
+            var salt = hash_data.salt;
+
+            var name = post_data.name;
+            var email = post_data.email;
+            var identification = post_data.identification;
             console.log("has identification");
             var insertJson = {
-                'username': username,
-                'password': password,
                 'email': email,
+                'password': plaint_password, //改成不加密
+                'salt': salt,
+                'name': name,
                 'identification': identification
             };
 
@@ -67,78 +90,90 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
             db.collection('user')
                 .find({'email': email}).count(function(err, number){
                     if (number != 0){
-                        userResponse.description = "Email already exists";
-                        userResponse.status = "400";
+                        response.json('Email already exists');
                         console.log('Email already exists');
                     }
                     else{
                         // Insert Data
                         db.collection('user')
                             .insertOne(insertJson, function(error, res){
-                                userResponse.description = 'Registration success';
-                                userResponse.status = "200";
+                                response.json('Registration success');
                                 console.log('Registration success');
                             })
                     }
                 })
-            response.json(userResponse);
         });
 
         // Login
         app.post('/login', (request, response, next)=>{
             var post_data = request.body;
             var email = post_data.email;
-            var password = post_data.password;
+            var userPassword = post_data.password;
+
             var db = client.db('nodejsTest');
 
             db.collection('user')
                 .find({'email': email}).count(function(err, number){
                     if (number == 0){
-                        userResponse.description = 'Email not exists';
-                        userResponse.status = "401";
+                        response.json('Email not exists');
                         console.log('Email not exists');
-                        response.json(userResponse);
-                    }else{
-                        db.collection('user').findOne({'email': email}, function(err, user){
-                            if (password != user.password){
-                                userResponse.description = 'Login error !';
-                                userResponse.status = "402";
-                                response.json(userResponse);
-                                
-                            }
-                            else{
-                                userResponse.description = 'Login success';
-                                if (user.identification == "student")
-                                    userResponse.status = "201";
-                                else if (user.identification == "teacher")
-                                    userResponse.status = "202";
-                                userResponse.username = user.name;
-                                userResponse.identification = user.identification;
-                                console.log(user);
-                                console.log("username : " + user.name + " login");
-                                console.log(userResponse);
-                                response.json(userResponse);
-                            }})
                     }
-        })});
+                    else{
+                        // Insert Data
+                        db.collection('user')
+                            .findOne({'email': email}, function(err, user){
+                                var salt = user.salt;
+                                var hashed_password = checkHashPassword(userPassword, salt).passwordHash;
+                                var encryped_password = user.password;
+                                var identification = user.identification;
+                                // if(hashed_password == encryped_password){
+                                    if(identification == "student"){
+                                        response.json('Login student');
+                                    }else{
+                                        response.json('Login teacher');
+                                    }
+                                    console.log('Login success');
+                                // }
+                                // else{
+                                //     response.json('Login failed');
+                                //     console.log('Login failed');
+                                // }
+                            })
+                    }
+                })
+        });
+
+        app.post('/findUserName', (request, response, next)=>{
+            var post_data = request.body;
+            var email = post_data.email;
+            var db = client.db('nodejsTest');
+            console.log(post_data.email);
+            db.collection('user')
+                            .findOne({'email': email}, function(err, user){
+                                console.log("findUserName：",user.name);
+                                var userData = {
+                                    'name': user.name,
+                                    'id': user._id
+                                };
+                                response.json(userData);
+                            })
+        });
 
         app.post('/findUserClass', (request, response, next)=>{
-            // var post_data = request.body;
-            // var id =parseInt(post_data.id)  ;
-            // var db = client.db('nodejsTest');
-            // console.log("post findUserClass: 888888");
-            // console.log(post_data);
+            var post_data = request.body;
+            var id =parseInt(post_data.id)  ;
+            var db = client.db('nodejsTest');
+            console.log("post findUserClass: 888888");
+            console.log(post_data);
 
-            // db.collection('course')
-            //                 .findOne({'teacherId': id}, function(err, user){
-            //                     console.log("post findUserClass: ",user);
-            //                     // var userData = {
-            //                     //     'name': user.name,
-            //                     //     'id': user._id
-            //                     // };
-            //                     // response.json(userData);
-            //                     response.json(user.name);
-            //                 })
+            db.collection('course')
+                            .findOne({'teacherId': id}, function(err, user){
+                                console.log("post findUserClass: ",user);
+                                var userData = {
+                                    'name': user.name,
+                                };
+                                response.json(userData);
+                            })
         });
 		
 		// student upload images
