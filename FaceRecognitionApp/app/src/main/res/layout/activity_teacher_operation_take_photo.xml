@@ -12,6 +12,7 @@
         android:layout_height="116dp"
         android:layout_marginTop="576dp"
         android:background="@drawable/grayreturn_back"
+        android:onClick="_return"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -20,7 +21,8 @@
         android:id="@+id/gray_return_button"
         android:layout_width="755dp"
         android:layout_height="940dp"
-        android:background="#E5E5E5"
+        android:background="#C4C4C4"
+        android:onClick="onclick"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
