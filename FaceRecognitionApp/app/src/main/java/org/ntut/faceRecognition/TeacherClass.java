@@ -3,7 +3,10 @@ package org.ntut.faceRecognition;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.json.JSONObject;
@@ -31,6 +34,7 @@ public class TeacherClass extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_class);
         // Init Services
@@ -42,26 +46,17 @@ public class TeacherClass extends AppCompatActivity {
         Log.e("name", userdata.getName());
         TextView textView_show_teacher_name = (TextView)findViewById(R.id.textView_show_teacher_name);
         textView_show_teacher_name.setText("\n歡迎" + userdata.getName() + "教授");
-        Log.e("class", "class_name");
-        getClassInformation(1);
-    }
-
-    private void getClassInformation(Integer id) {
-//        final String[] class_name = new String[1];
-        compositeDisposable.add(iMyService.findClass(id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String response) throws Exception {
-                        GlobalVariable userdata = (GlobalVariable)getApplicationContext();
-
-                        JSONObject jsonobj = new JSONObject(response);
-                        Log.e("class", jsonobj.getString("name"));
-//                        class_name[0] = jsonobj.getString("name");
-                        class_name =  jsonobj.getString("name");
-                    }
-                }));
+        LinearLayout mainLinerLayout = (LinearLayout) this.findViewById(R.id.layout_teacher_class);
+        for (int i = 0;i<5;i++){
+            Button btn = new Button(this);
+            btn.setTextSize(30);
+            btn.setWidth(250);   //設定寬度
+            btn.setHeight(150);
+            btn.setGravity(Gravity.CENTER);
+            btn.setText(userdata.getClassName()+ i);
+            mainLinerLayout.addView(btn);
+        }
+//        getClass(1);
     }
 
     public void onclick(View v) {

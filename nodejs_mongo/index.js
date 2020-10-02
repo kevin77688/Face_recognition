@@ -170,8 +170,10 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
                             .findOne({'teacherId': id}, function(err, user){
                                 console.log("post findUserClass: ",user);
                                 var userData = {
-                                    'name': user.name,
+                                    'classInformation': user.name,
                                 };
+                                console.log('classInformation', userData);
+                                
                                 response.json(userData);
                             })
         });

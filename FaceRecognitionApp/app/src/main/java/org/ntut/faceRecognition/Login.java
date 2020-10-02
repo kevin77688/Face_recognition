@@ -152,6 +152,21 @@ public class Login extends AppCompatActivity {
                 }));
     }
 
+    public void getClassInformation(Integer id) {
+        compositeDisposable.add(iMyService.findClass(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String response) throws Exception {
+                        GlobalVariable userdata = (GlobalVariable)getApplicationContext();
+
+                        JSONObject jsonobj = new JSONObject(response);
+                        userdata.setClassName(jsonobj.getString("classInformation"));
+                    }
+                }));
+    }
+
     private void registerUser(String email, String name, String password, String identification, String _id) {
         compositeDisposable.add(iMyService.registerUser(email, name, password, identification, _id)
                 .subscribeOn(Schedulers.io())
@@ -192,6 +207,7 @@ public class Login extends AppCompatActivity {
                         if("\"Login student\"".equals(response)){
                             goToPage(StudentOperation.class);
                         }else if("\"Login teacher\"".equals(response)){
+                            getClassInformation(1);
                             goToPage(TeacherClass.class);
                         }
 
