@@ -61,7 +61,7 @@
         android:layout_width="90dp"
         android:layout_height="114dp"
         android:background="@drawable/home_gray"
-        android:onClick="onclick"
+        android:onClick="goToReturn"
         app:layout_constraintBottom_toBottomOf="@+id/background_all"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"

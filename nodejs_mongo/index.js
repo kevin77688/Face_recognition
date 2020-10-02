@@ -165,17 +165,25 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
             var db = client.db('nodejsTest');
             console.log("post findUserClass: 888888");
             console.log(post_data);
-
-            db.collection('course')
-                            .findOne({'teacherId': id}, function(err, user){
-                                console.log("post findUserClass: ",user);
-                                var userData = {
-                                    'classInformation': user.name,
-                                };
-                                console.log('classInformation', userData);
+            var userData = {};
+            userData.class = [];
+            db.collection("course").find({'teacherId': id}).toArray(function(err, result){
+                if (err) throw err;
+                for(let i=0;i<result.length;i++)
+                    userData.class.push(result[i].name)
+                console.log(userData);
+                response.json(userData);
+            });
+            // db.collection('course')
+            //                 .findOne({'teacherId': id}, function(err, user){
+            //                     console.log("post findUserClass: ",user);
+            //                     var userData = {
+            //                         'classInformation': user.name,
+            //                     };
+            //                     console.log('classInformation', userData);
                                 
-                                response.json(userData);
-                            })
+            //                     response.json(userData);
+            //                 })
         });
 		
 		// student upload images

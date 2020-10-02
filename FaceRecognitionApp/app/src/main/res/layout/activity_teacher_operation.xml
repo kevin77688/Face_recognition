@@ -21,22 +21,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView_show_teacher_name"
-        android:layout_width="420dp"
-        android:layout_height="94dp"
-        android:background="#FFFFFF"
-        android:text="歡迎老師"
-        android:textAlignment="center"
-        android:textColor="#4196E3"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/button_take_photo_auto"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.555"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
         android:id="@+id/background_all"
         android:layout_width="417dp"
         android:layout_height="734dp"
@@ -134,6 +118,22 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_modify_and_add_seating"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/textView_show_teacher_name"
+        android:layout_width="420dp"
+        android:layout_height="94dp"
+        android:background="@color/colorPrimary"
+        android:text="歡迎老師"
+        android:textAlignment="center"
+        android:textColor="#4196E3"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/button_take_photo_auto"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.555"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView

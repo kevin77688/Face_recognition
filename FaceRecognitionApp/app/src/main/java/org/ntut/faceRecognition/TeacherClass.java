@@ -47,39 +47,35 @@ public class TeacherClass extends AppCompatActivity {
         TextView textView_show_teacher_name = (TextView)findViewById(R.id.textView_show_teacher_name);
         textView_show_teacher_name.setText("\n歡迎" + userdata.getName() + "教授");
         LinearLayout mainLinerLayout = (LinearLayout) this.findViewById(R.id.layout_teacher_class);
-        for (int i = 0;i<5;i++){
+        String [] class_names = userdata.getClassName();
+        Log.e("json", String.valueOf(class_names.length));
+        for (int i = 0;i<class_names.length;i++){
             Button btn = new Button(this);
             btn.setTextSize(30);
             btn.setWidth(250);   //設定寬度
             btn.setHeight(150);
             btn.setGravity(Gravity.CENTER);
-            btn.setText(userdata.getClassName()+ i);
+            btn.setText(class_names[i].replace("\"", ""));
+            btn.setId((100 + i));
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Button button = (Button) v;
+                    goToPage((String) button.getText());
+                }
+            });
             mainLinerLayout.addView(btn);
         }
-//        getClass(1);
     }
-
-    public void onclick(View v) {
+    public void goToReturn(View v) {
         Intent intent = new Intent();
-        switch(v.getId()){
-            case R.id.button_take_photo_auto:
-                intent.setClass(this , TeacherOperationTakePhoto.class);
-                break;
-            case R.id.button_take_photo:
-                break;
-            case R.id.button_check_absence_record:
-//                intent.setClass(this , teacher_login_new.class);
-                break;
-            case R.id.button_add_student_photo:
-//                intent.setClass(this , teacher_login_new.class);
-                break;
-            case R.id.button_remove_student_photo:
-            case R.id.button_modify_and_add_seating:
-            case R.id.button_return:
-                intent.setClass(this , Login.class);
-                break;
-
-        }
+        intent.setClass(this , Login.class);
+        startActivity(intent);
+    }
+    private void goToPage(String button_text) {
+        Intent intent = new Intent();
+        intent.putExtra("class_name", button_text);
+        intent.setClass(this , TeacherOperation.class);
         startActivity(intent);
     }
 }

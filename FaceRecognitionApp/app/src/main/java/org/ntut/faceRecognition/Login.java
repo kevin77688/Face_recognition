@@ -15,6 +15,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.ntut.faceRecognition.Retrofit.IMyService;
 import org.ntut.faceRecognition.Retrofit.RetrofitClient;
@@ -160,9 +161,14 @@ public class Login extends AppCompatActivity {
                     @Override
                     public void accept(String response) throws Exception {
                         GlobalVariable userdata = (GlobalVariable)getApplicationContext();
+                        Log.e("json", response);
+                        JSONObject jsonarr = new JSONObject(response);
+                        String jsonOb = jsonarr.getString("class");
 
-                        JSONObject jsonobj = new JSONObject(response);
-                        userdata.setClassName(jsonobj.getString("classInformation"));
+                        String[] names = jsonOb.replaceAll("\\[", "")
+                                        .replaceAll("\\]", "").split(",");
+//                        Log.e("sssss", names[1]);
+                        userdata.setClassInformation(names);
                     }
                 }));
     }
@@ -207,7 +213,8 @@ public class Login extends AppCompatActivity {
                         if("\"Login student\"".equals(response)){
                             goToPage(StudentOperation.class);
                         }else if("\"Login teacher\"".equals(response)){
-                            getClassInformation(1);
+                            GlobalVariable userdata = (GlobalVariable)getApplicationContext();
+                            getClassInformation(Integer.valueOf(userdata.getId()));
                             goToPage(TeacherClass.class);
                         }
 

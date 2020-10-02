@@ -38,26 +38,15 @@ public class TeacherOperation extends AppCompatActivity {
         iMyService = retrofitClient.create(IMyService.class);
 
         GlobalVariable userdata = (GlobalVariable)getApplicationContext();
-        teacher_name = userdata.getName();
-        Log.e("name", userdata.getName());
+        String className = null;
+        Bundle extras = getIntent().getExtras();
+        if (extras != null)
+            className = extras.getString("class_name");
+        else
+            throw new RuntimeException("Login error ! Cannot find userName");
+
         TextView textView_show_teacher_name = (TextView)findViewById(R.id.textView_show_teacher_name);
-        textView_show_teacher_name.setText("\n歡迎" + userdata.getName() + "教授");
-        findClass(1);
-
-    }
-    private void findClass(Integer id) {
-        compositeDisposable.add(iMyService.findClass(id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String response) throws Exception {
-                        GlobalVariable userdata = (GlobalVariable)getApplicationContext();
-
-                        JSONObject jsonobj = new JSONObject(response);
-
-                    }
-                }));
+        textView_show_teacher_name.setText("\n" + className + "課程");
     }
 
     public void onclick(View v) {
@@ -77,7 +66,7 @@ public class TeacherOperation extends AppCompatActivity {
             case R.id.button_remove_student_photo:
             case R.id.button_modify_and_add_seating:
             case R.id.button_return:
-                intent.setClass(this , Login.class);
+                intent.setClass(this , TeacherClass.class);
                 break;
 
         }

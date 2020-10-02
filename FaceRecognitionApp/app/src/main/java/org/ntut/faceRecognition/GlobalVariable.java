@@ -2,9 +2,11 @@ package org.ntut.faceRecognition;
 
 import android.app.Application;
 
+import org.json.JSONObject;
+
 public class GlobalVariable extends Application {
     private String Name, Email,Password, id;     //User 名稱
-    private String Class_name;
+    private String []class_information;
     public void setPassword(String Password){
         this.Password = Password;
     }
@@ -20,11 +22,11 @@ public class GlobalVariable extends Application {
     public void setId(String id){
         this.id = id;
     }
-    public void setClassName(String Class){
-        this.Class_name = Class;
+    public void setClassInformation(String []Class){
+        this.class_information = Class;
     }
-    public String getClassName() {
-        return Class_name;
+    public String []getClassName() {
+        return class_information;
     }
     public String getEmail() {
         return Email;
