@@ -51,8 +51,6 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
 
     }
     public void _return(View v) {
-//        Intent intent = new Intent();
-//        intent.setClass(this , TeacherOperation.class);
-//        startActivity(intent);
+        TeacherOperationTakePhoto.this.finish();
     }
 }

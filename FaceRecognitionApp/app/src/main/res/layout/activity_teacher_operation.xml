@@ -112,7 +112,7 @@
         android:layout_height="114dp"
         android:layout_marginTop="70dp"
         android:background="@drawable/home_gray"
-        android:onClick="onclick"
+        android:onClick="_return"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"

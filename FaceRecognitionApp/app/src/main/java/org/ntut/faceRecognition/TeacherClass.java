@@ -67,10 +67,8 @@ public class TeacherClass extends AppCompatActivity {
             mainLinerLayout.addView(btn);
         }
     }
-    public void goToReturn(View v) {
-        Intent intent = new Intent();
-        intent.setClass(this , Login.class);
-        startActivity(intent);
+    public void _return(View v) {
+        TeacherClass.this.finish();
     }
     private void goToPage(String button_text) {
         Intent intent = new Intent();

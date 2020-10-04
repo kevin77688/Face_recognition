@@ -65,11 +65,12 @@ public class TeacherOperation extends AppCompatActivity {
                 break;
             case R.id.button_remove_student_photo:
             case R.id.button_modify_and_add_seating:
-            case R.id.button_return:
-                intent.setClass(this , TeacherClass.class);
                 break;
 
         }
         startActivity(intent);
+    }
+    public  void  _return(View v){
+        TeacherOperation.this.finish();
     }
 }
