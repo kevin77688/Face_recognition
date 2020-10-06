@@ -134,7 +134,7 @@ public class Login extends AppCompatActivity {
 
     }
 
-    private void findUser(String email) {
+    private synchronized void findUser(String email) {
         compositeDisposable.add(iMyService.findName(email)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -153,7 +153,7 @@ public class Login extends AppCompatActivity {
                 }));
     }
 
-    public void getClassInformation(Integer id) {
+    public synchronized  void getClassInformation(Integer id) {
         compositeDisposable.add(iMyService.findClass(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -167,10 +167,28 @@ public class Login extends AppCompatActivity {
 
                         String[] names = jsonOb.replaceAll("\\[", "")
                                         .replaceAll("\\]", "").split(",");
-//                        Log.e("sssss", names[1]);
                         userdata.setClassInformation(names);
                     }
                 }));
+    }
+
+    public synchronized void getClassDate(String class_name) {
+        Log.e("getClassDate", class_name);
+        compositeDisposable.add(iMyService.findClassDate(class_name)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String response) throws Exception {
+                        JSONObject jsonarr = new JSONObject(response);
+                        String jsonOb = jsonarr.getString("date");
+                        String[] names = jsonOb.replaceAll("\\[", "")
+                                .replaceAll("\\]", "").split(",");
+                        Log.e("names", names[1]);
+                        GlobalVariable userdata = (GlobalVariable)getApplicationContext();
+                        userdata.setClassDate(jsonarr.getString("name"), names);
+                    }
+}));
     }
 
     private void registerUser(String email, String name, String password, String identification, String _id) {
@@ -215,6 +233,8 @@ public class Login extends AppCompatActivity {
                         }else if("\"Login teacher\"".equals(response)){
                             GlobalVariable userdata = (GlobalVariable)getApplicationContext();
                             getClassInformation(Integer.valueOf(userdata.getId()));
+                            getClassDate("作業系統");
+                            Log.e("走囉", "走囉");
                             goToPage(TeacherClass.class);
                         }
 

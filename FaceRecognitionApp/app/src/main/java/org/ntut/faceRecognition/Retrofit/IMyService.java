@@ -40,6 +40,12 @@ public interface IMyService {
             @Field("id") Integer id
     );
 
+    @POST("findUserClassDate")
+    @FormUrlEncoded
+    Observable<String> findClassDate(
+            @Field("class_name") String class_name
+    );
+
     @Multipart
     @POST("studentUpload")
     Observable<ResponseBody> studentUpload(
