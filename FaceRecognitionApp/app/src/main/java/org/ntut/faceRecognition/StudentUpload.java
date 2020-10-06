@@ -96,14 +96,6 @@ public class StudentUpload extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setClass(this, CameraCapture.class);
         startActivity(intent);
-//        ContentValues values = new ContentValues();
-//        values.put(MediaStore.Images.Media.TITLE, "New Picture");
-//        values.put(MediaStore.Images.Media.DESCRIPTION, "From the Camera");
-//        image_uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-//        //Camera intent
-//        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri);
-//        startActivityForResult(cameraIntent, IMAGE_CAPTURED_CODE);
     }
 
     public String getPath(Uri uri) {

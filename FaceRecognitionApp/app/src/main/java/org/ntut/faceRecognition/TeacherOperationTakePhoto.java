@@ -10,21 +10,32 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.json.JSONObject;
+import org.ntut.faceRecognition.Retrofit.IMyService;
+import org.ntut.faceRecognition.Retrofit.RetrofitClient;
+
 import java.util.ArrayList;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.Retrofit;
 
 public class TeacherOperationTakePhoto extends AppCompatActivity {
 
     ArrayList<String> student_fake_name = new ArrayList<String>();
+    private IMyService iMyService;
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_operation_take_photo);
 
-        student_fake_name.add("陳小一");
-        student_fake_name.add("王小二");
-        student_fake_name.add("李小三");
-        student_fake_name.add("許小四");
+        Retrofit retrofitClient = RetrofitClient.getInstance();
+        iMyService = retrofitClient.create(IMyService.class);
+
         LinearLayout mainLinerLayout = (LinearLayout) this.findViewById(R.id.roll_call_layout);
         LinearLayout top = new LinearLayout(this);
         top.setOrientation(LinearLayout.HORIZONTAL);
@@ -124,21 +135,25 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
 
             mainLinerLayout.addView(li);
         }
+        findStudent("作業系統");
     }
     public void check() {
     }
+    synchronized private void findStudent(String class_name) {
+        compositeDisposable.add(iMyService.findStudent(class_name)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String response) throws Exception {
+//                        JSONObject jsonobj = new JSONObject(response);
+//                        String name = jsonobj.getString("name");
+////                        Log.e("name", name);
+//                        String id = jsonobj.getString("id");
+                    }
+                }));
+    }
     public void onclick(View v) {
-//        Intent intent = new Intent();
-//        intent.setAction("android.media.action.STILL_IMAGE_CAMERA");
-//        switch(v.getId()){
-//
-//
-//            case R.id.gray_return_button:
-//                intent.setClass(this , TeacherOperation.class);
-//                break;
-//        }
-//        startActivity(intent);
-
     }
     public void _return(View v) {
         TeacherOperationTakePhoto.this.finish();

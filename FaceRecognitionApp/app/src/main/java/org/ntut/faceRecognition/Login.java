@@ -244,10 +244,6 @@ public class Login extends AppCompatActivity {
                             GlobalVariable userdata = (GlobalVariable)getApplicationContext();
                             getClassInformation(Integer.valueOf(userdata.getId()));
 
-//                            for(Integer i = 0; i<name.size(); i++)
-//                            getClassDate(name.get(0));
-//                            Integer a=0;
-//                            getClassDate(a);
                             getClassDate("作業系統");
                             getClassDate("實務專題(二)");
                             getClassDate("財務管理");

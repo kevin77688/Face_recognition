@@ -28,6 +28,12 @@ public interface IMyService {
             @Field("password") String password
     );
 
+    @POST("findStudent")
+    @FormUrlEncoded
+    Observable<String> findStudent(
+            @Field("class_name") String class_name
+    );
+
     @POST("findUserName")
     @FormUrlEncoded
     Observable<String> findName(

@@ -159,6 +159,31 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
                             })
         });
 
+        app.post('/findStudent', (request, response, next)=>{
+            var post_data = request.body;
+            var class_name = post_data.class_name;
+            var db = client.db('nodejsTest');
+            console.log(class_name);
+            var data,student_list;
+            function findClassNumber(){
+                const  thing = db.collection("course").findOne({ name: class_name });
+                // console.log(thing);
+                return thing;
+            }
+            function findStudent(class_code) {
+                var thing = db.collection("studentCourse").find({'courseId': class_code}).toArray();
+                return thing;
+            }
+            async function find() {
+                data = await findClassNumber();
+                student_list = await findStudent(data._id);
+                console.log("data:",data._id);
+                console.log("student_list:",student_list);
+            }
+            find();
+            
+        });
+        
         app.post('/findUserClass', (request, response, next)=>{
             var post_data = request.body;
             var id =parseInt(post_data.id)  ;
