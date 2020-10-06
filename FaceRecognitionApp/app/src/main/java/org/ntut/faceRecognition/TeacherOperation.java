@@ -64,13 +64,6 @@ public class TeacherOperation extends AppCompatActivity {
             case R.id.button_check_absence_record:
 //                intent.setClass(this , teacher_login_new.class);
                 break;
-            case R.id.button_add_student_photo:
-//                intent.setClass(this , teacher_login_new.class);
-                break;
-            case R.id.button_remove_student_photo:
-            case R.id.button_modify_and_add_seating:
-                break;
-
         }
         startActivity(intent);
     }
