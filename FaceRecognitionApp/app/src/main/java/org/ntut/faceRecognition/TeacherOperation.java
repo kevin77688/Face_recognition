@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.json.JSONObject;
@@ -47,6 +48,9 @@ public class TeacherOperation extends AppCompatActivity {
 
         TextView textView_show_teacher_name = (TextView)findViewById(R.id.textView_show_teacher_name);
         textView_show_teacher_name.setText("\n" + className + "課程");
+
+        LinearLayout mainLinerLayout = (LinearLayout) this.findViewById(R.id.layout_teacher_class);
+
     }
 
     public void onclick(View v) {
