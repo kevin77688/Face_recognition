@@ -8,12 +8,13 @@
 
     <Button
         android:id="@+id/return_button"
-        android:layout_width="85dp"
-        android:layout_height="116dp"
-        android:layout_marginTop="576dp"
+        android:layout_width="70dp"
+        android:layout_height="89dp"
+        android:layout_marginTop="636dp"
         android:background="@drawable/grayreturn_back"
         android:onClick="_return"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.519"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -32,7 +33,7 @@
         android:id="@+id/button_return"
         android:layout_width="276dp"
         android:layout_height="53dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="24dp"
         android:background="@drawable/button_white"
         android:onClick="onclick"
         android:text="拍照"
@@ -42,15 +43,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-    <ScrollView
-        android:layout_width="401dp"
-        android:layout_height="294dp"
-        app:layout_constraintBottom_toTopOf="@+id/return_button"
+    <LinearLayout
+        android:id="@+id/show_top_linear"
+        android:layout_width="390dp"
+        android:layout_height="75dp"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintHorizontal_bias="0.476"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_return"
-        app:layout_constraintVertical_bias="0.759">
+        app:layout_constraintTop_toBottomOf="@+id/button_return"></LinearLayout>
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="385dp"
+        android:layout_height="297dp"
+        android:layout_marginTop="84dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_return">
 
         <LinearLayout
             android:id="@+id/roll_call_layout"
@@ -63,7 +74,7 @@
         android:id="@+id/textView"
         android:layout_width="56dp"
         android:layout_height="88dp"
-        android:layout_marginTop="72dp"
+        android:layout_marginTop="32dp"
         android:background="@drawable/myphone_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
