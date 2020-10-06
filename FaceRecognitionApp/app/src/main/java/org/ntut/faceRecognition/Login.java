@@ -22,6 +22,9 @@ import org.ntut.faceRecognition.Retrofit.RetrofitClient;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.ArrayList;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
@@ -134,7 +137,7 @@ public class Login extends AppCompatActivity {
 
     }
 
-    private synchronized void findUser(String email) {
+    synchronized private void findUser(String email) {
         compositeDisposable.add(iMyService.findName(email)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -153,7 +156,7 @@ public class Login extends AppCompatActivity {
                 }));
     }
 
-    public synchronized  void getClassInformation(Integer id) {
+    synchronized public void getClassInformation(Integer id) {
         compositeDisposable.add(iMyService.findClass(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -167,12 +170,19 @@ public class Login extends AppCompatActivity {
 
                         String[] names = jsonOb.replaceAll("\\[", "")
                                         .replaceAll("\\]", "").split(",");
-                        userdata.setClassInformation(names);
+                        ArrayList<String> name = new ArrayList<String>();
+                        for(Integer i =0; i<names.length;i++){
+                            name.add(names[i]);
+                            Log.e("getClassInformation", names[i]);
+//                            getClassDate(names[i]);
+                        }
+
+                        userdata.setClassInformation(name);
                     }
                 }));
     }
 
-    public synchronized void getClassDate(String class_name) {
+    synchronized public void getClassDate(String class_name) {
         Log.e("getClassDate", class_name);
         compositeDisposable.add(iMyService.findClassDate(class_name)
                 .subscribeOn(Schedulers.io())
@@ -204,7 +214,7 @@ public class Login extends AppCompatActivity {
         goToPage(StudentOperation.class);
     }
 
-    private void loginUser(String email, String password) {
+    synchronized private void loginUser(String email, String password) {
         if (TextUtils.isEmpty(email)) {
             Toast.makeText(this, "Email cannot be null or empty", Toast.LENGTH_SHORT).show();
             return;
@@ -233,8 +243,23 @@ public class Login extends AppCompatActivity {
                         }else if("\"Login teacher\"".equals(response)){
                             GlobalVariable userdata = (GlobalVariable)getApplicationContext();
                             getClassInformation(Integer.valueOf(userdata.getId()));
+
+//                            for(Integer i = 0; i<name.size(); i++)
+//                            getClassDate(name.get(0));
+//                            Integer a=0;
+//                            getClassDate(a);
                             getClassDate("作業系統");
-                            Log.e("走囉", "走囉");
+                            getClassDate("實務專題(二)");
+                            getClassDate("財務管理");
+                            getClassDate("物件導向程式設計實習");
+                            getClassDate("體育");
+                            getClassDate("設計樣式");
+                            getClassDate("智慧財產權");
+                            getClassDate("人工智慧概論");
+                            getClassDate("雲端應用實務");
+                            getClassDate("職涯進擊講座");
+                            getClassDate("國際觀培養講座");
+//                            Log.e("走囉", String.valueOf(userdata.class_information.size()));
                             goToPage(TeacherClass.class);
                         }
 
@@ -242,6 +267,8 @@ public class Login extends AppCompatActivity {
                 }));
     }
     private void goToPage(Class page) {
+        GlobalVariable userdata = (GlobalVariable)getApplicationContext();
+        Log.e("走囉", String.valueOf(userdata.class_information.size()));
         Intent intent = new Intent();
         intent.setClass(this , page);
         startActivity(intent);

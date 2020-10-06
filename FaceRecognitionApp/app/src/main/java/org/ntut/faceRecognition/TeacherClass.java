@@ -10,10 +10,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import org.json.JSONObject;
+import org.ntut.faceRecognition.Retrofit.IMyService;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class TeacherClass extends AppCompatActivity {
-
     String teacher_name;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -31,11 +37,12 @@ public class TeacherClass extends AppCompatActivity {
 
         GlobalVariable userdata = (GlobalVariable)getApplicationContext();
         teacher_name = userdata.getName();
-
+        Log.e("走囉", String.valueOf(userdata.class_information.size()));
+        Log.e("走囉", String.valueOf(userdata.class_information.get(0)));
         TextView textView_show_teacher_name = (TextView)findViewById(R.id.textView_show_teacher_name);
         textView_show_teacher_name.setText("\n歡迎" + userdata.getName() + "教授");
         LinearLayout mainLinerLayout = (LinearLayout) this.findViewById(R.id.layout_teacher_class);
-        String [] class_names = userdata.getClassName();
+        String [] class_names = userdata.getClassInformation().toArray(new String[0]);
         for (int i = 0;i<class_names.length;i++){
             Button btn = new Button(this);
             btn.setTextSize(30);
