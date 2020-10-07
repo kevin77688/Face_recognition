@@ -19,8 +19,7 @@ import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 
 public class TeacherOperation extends AppCompatActivity {
-
-    String teacher_name;
+    String className, classDate = null;
     private IMyService iMyService;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -39,15 +38,17 @@ public class TeacherOperation extends AppCompatActivity {
         iMyService = retrofitClient.create(IMyService.class);
 
         GlobalVariable userdata = (GlobalVariable)getApplicationContext();
-        String className = null;
+
         Bundle extras = getIntent().getExtras();
-        if (extras != null)
+        if (extras != null){
             className = extras.getString("class_name");
+            classDate = extras.getString("class_date");
+        }
         else
             throw new RuntimeException("Login error ! Cannot find userName");
 
         TextView textView_show_teacher_name = (TextView)findViewById(R.id.textView_show_teacher_name);
-        textView_show_teacher_name.setText("\n" + className + "課程");
+        textView_show_teacher_name.setText("\n" + className + "\n" + classDate + "課程");
 
         LinearLayout mainLinerLayout = (LinearLayout) this.findViewById(R.id.layout_teacher_class);
 
@@ -55,6 +56,7 @@ public class TeacherOperation extends AppCompatActivity {
 
     public void onclick(View v) {
         Intent intent = new Intent();
+        intent.putExtra("class_name", className);
         switch(v.getId()){
             case R.id.button_take_photo_auto:
                 intent.setClass(this , TeacherOperationTakePhoto.class);
