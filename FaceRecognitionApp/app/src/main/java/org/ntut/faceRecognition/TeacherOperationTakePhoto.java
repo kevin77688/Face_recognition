@@ -31,7 +31,7 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private String className = null;
     private String[] studentName;
-
+    ArrayList<CheckBox> cb_listb = new ArrayList<CheckBox>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +48,7 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
             throw new RuntimeException("Login error ! Cannot find userName");
         findStudent(className);
     }
-    public void check() {
-    }
+
     synchronized private void findStudent(String class_name) {
         compositeDisposable.add(iMyService.findStudent(class_name)
                 .subscribeOn(Schedulers.io())
@@ -72,8 +71,6 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
                         setButton();
                     }
                 }));
-    }
-    public void onclick(View v) {
     }
     public void setButton() {
 
@@ -125,7 +122,7 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
             textview.setWidth(330);   //設定寬度
             textview.setHeight(120);
             textview.setGravity(Gravity.CENTER);
-            textview.setText(studentName[i].replace("\"", ""));
+            textview.setText(studentName[i-1].replace("\"", ""));
 
             CheckBox bt1 = new CheckBox(this);
             bt1.setTextSize(30);
@@ -133,14 +130,7 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
             bt1.setHeight(150);
             bt1.setGravity(Gravity.CENTER);
             bt1.setText("+");
-            bt1.setId((i));
-            bt1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Button button = (Button) v;
-                    check();
-                }
-            });
+            bt1.setId((i*3-2));
 
             CheckBox bt2 = new CheckBox(this);
             bt2.setTextSize(30);
@@ -148,14 +138,7 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
             bt2.setHeight(150);
             bt2.setGravity(Gravity.CENTER);
             bt2.setText("-");
-            bt2.setId((i));
-            bt2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Button button = (Button) v;
-                    check();
-                }
-            });
+            bt2.setId((i*3-1));
 
             CheckBox bt3 = new CheckBox(this);
             bt3.setTextSize(30);
@@ -163,14 +146,11 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
             bt3.setHeight(150);
             bt3.setGravity(Gravity.CENTER);
             bt3.setText("X");
-            bt3.setId((i));
-            bt3.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Button button = (Button) v;
-                    check();
-                }
-            });
+            bt3.setId((i*3));
+
+            cb_listb.add(bt1);
+            cb_listb.add(bt2);
+            cb_listb.add(bt3);
 
             li.addView(textview);
             li.addView(bt1);
@@ -178,6 +158,38 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
             li.addView(bt3);
 
             mainLinerLayout.addView(li);
+        }
+        for(int i=0;i<cb_listb.size();i++){
+            CheckBox cb = cb_listb.get(i);
+            cb.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CheckBox delBtn =  (CheckBox)v; //在new 出所按下的按鈕
+                    int id = delBtn.getId();//獲取被點擊的按鈕的id
+                    Log.e("ss",String.valueOf(id));
+                    if(delBtn.isChecked()){
+                        check((id));
+                    }
+                }
+            });
+        }
+    }
+    public void check(Integer i) {
+        switch (i%3){
+            case 0:
+                cb_listb.get(i-1-1).setChecked(false);
+                cb_listb.get(i-2-1).setChecked(false);
+                break;
+            case 1:
+                cb_listb.get(i+1-1).setChecked(false);
+                cb_listb.get(i+2-1).setChecked(false);
+                break;
+            case 2:
+                cb_listb.get(i+1-1).setChecked(false);
+                cb_listb.get(i-1-1).setChecked(false);
+                break;
+            default:
+                break;
         }
     }
     public void _return(View v) {

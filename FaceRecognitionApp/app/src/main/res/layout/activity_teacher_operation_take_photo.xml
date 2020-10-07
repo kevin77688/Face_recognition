@@ -23,7 +23,7 @@
         android:layout_width="755dp"
         android:layout_height="940dp"
         android:background="#C4C4C4"
-        android:onClick="onclick"
+        android:onClick="_return"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,14 +31,13 @@
 
     <Button
         android:id="@+id/button_return"
-        android:layout_width="276dp"
-        android:layout_height="53dp"
+        android:layout_width="146dp"
+        android:layout_height="56dp"
         android:layout_marginTop="24dp"
         android:background="@drawable/button_white"
-        android:onClick="onclick"
         android:text="拍照"
         android:textColor="#41BCE3"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -80,5 +79,18 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="147dp"
+        android:layout_height="58dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="44dp"
+        android:background="@drawable/button_white"
+        android:onClick="_return"
+        android:text="確定"
+        android:textColor="#41BCE3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
