@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -114,7 +115,7 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
         show_top_linear.addView(tx3);
         show_top_linear.addView(tx4);
         Log.e("ne", studentName[0]);
-        for (int i = 0;i<studentName.length;i++){
+        for (int i = 1;i<=studentName.length;i++){
             LinearLayout li = new LinearLayout(this);
             li.setOrientation(LinearLayout.HORIZONTAL);
 
@@ -125,13 +126,13 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
             textview.setGravity(Gravity.CENTER);
             textview.setText(studentName[i].replace("\"", ""));
 
-            Button bt1 = new Button(this);
+            CheckBox bt1 = new CheckBox(this);
             bt1.setTextSize(30);
             bt1.setWidth(230);   //設定寬度
             bt1.setHeight(150);
             bt1.setGravity(Gravity.CENTER);
             bt1.setText("+");
-            bt1.setId((100 + i));
+            bt1.setId((i));
             bt1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -140,13 +141,13 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
                 }
             });
 
-            Button bt2 = new Button(this);
+            CheckBox bt2 = new CheckBox(this);
             bt2.setTextSize(30);
             bt2.setWidth(230);   //設定寬度
             bt2.setHeight(150);
             bt2.setGravity(Gravity.CENTER);
             bt2.setText("-");
-            bt2.setId((100 + i));
+            bt2.setId((i));
             bt2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -155,13 +156,13 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
                 }
             });
 
-            Button bt3 = new Button(this);
+            CheckBox bt3 = new CheckBox(this);
             bt3.setTextSize(30);
             bt3.setWidth(230);   //設定寬度
             bt3.setHeight(150);
             bt3.setGravity(Gravity.CENTER);
             bt3.setText("X");
-            bt3.setId((100 + i));
+            bt3.setId((i));
             bt3.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
