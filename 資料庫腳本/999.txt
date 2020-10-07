@@ -147,7 +147,20 @@ db.studentCourse.insertMany([
     {studentId: 106820051, courseId: 269469, score: -1, attendance: 0},
     {studentId: 106820052, courseId: 269469, score: -1, attendance: 0},
     {studentId: 106820053, courseId: 269469, score: -1, attendance: 0},
-    {studentId: 106820055, courseId: 269469, score: -1, attendance: 0}
+    {studentId: 106820055, courseId: 269469, score: -1, attendance: 0},
+
+	{studentId: 106820053, courseId: 268986, score: -1, attendance: 0},
+    {studentId: 106820054, courseId: 268986, score: -1, attendance: 0},
+    {studentId: 106820055, courseId: 268986, score: -1, attendance: 0},
+    {studentId: 106820051, courseId: 268987, score: -1, attendance: 0},
+    {studentId: 106820052, courseId: 268987, score: -1, attendance: 0},
+    {studentId: 106820053, courseId: 268987, score: -1, attendance: 0},
+    {studentId: 106820054, courseId: 268987, score: -1, attendance: 0},
+    {studentId: 106820051, courseId: 269469, score: -1, attendance: 0},
+    {studentId: 106820052, courseId: 269469, score: -1, attendance: 0},
+    {studentId: 106820053, courseId: 269469, score: -1, attendance: 0},
+    {studentId: 106820055, courseId: 269469, score: -1, attendance: 0},
+
 ]);
 
 //建立學生課程關聯資料

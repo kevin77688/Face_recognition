@@ -1,5 +1,8 @@
 package org.ntut.faceRecognition.Retrofit;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -59,5 +62,14 @@ public interface IMyService {
             @Part("full_name") RequestBody fullName,
             @Part MultipartBody.Part image
             // @Part("other") RequestBody other
+    );
+
+    @POST("rollCallUpdate")
+    @FormUrlEncoded
+    Observable<String> rollCallUpdate(
+            @Field("class_data") String class_data,
+            @Field("class_name") String class_name,
+            @Field("student_data") String[] student_data,
+            @Field("roll_call_data")  ArrayList<Integer>  roll_call_data
     );
 }

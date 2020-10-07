@@ -11,12 +11,18 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import org.json.JSONObject;
 import org.ntut.faceRecognition.Retrofit.IMyService;
 import org.ntut.faceRecognition.Retrofit.RetrofitClient;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -29,7 +35,7 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
     ArrayList<String> student_fake_name = new ArrayList<String>();
     private IMyService iMyService;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private String className = null;
+    private String className,classDate = null;
     private String[] studentName;
     ArrayList<CheckBox> cb_listb = new ArrayList<CheckBox>();
 
@@ -42,8 +48,10 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
         iMyService = retrofitClient.create(IMyService.class);
 
         Bundle extras = getIntent().getExtras();
-        if (extras != null)
+        if (extras != null){
+            classDate = extras.getString("class_date");
             className = extras.getString("class_name");
+        }
         else
             throw new RuntimeException("Login error ! Cannot find userName");
         findStudent(className);
@@ -192,7 +200,52 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
                 break;
         }
     }
-    public void _return(View v) {
-        TeacherOperationTakePhoto.this.finish();
+    public void _finish(View v) {
+        Integer count=0;
+        for(int i=0;i<cb_listb.size();i++){
+            if(cb_listb.get(i).isChecked()){
+                count+=1;
+            }
+        }
+        if(count==studentName.length){
+            updateRecord();
+            TeacherOperationTakePhoto.this.finish();
+        }else{
+            Toast.makeText(TeacherOperationTakePhoto.this, "還有學生未點到名" , Toast.LENGTH_SHORT).show();
+        }
     }
+    private  void  updateRecord(){
+        ArrayList<Integer> roll = new ArrayList<Integer>();
+        for(int i=0;i<studentName.length;i++){
+            for(int j=i*3;j<i*3+3;j++){
+                if(cb_listb.get(j).isChecked()){
+                    roll.add(j%3);
+                    // 0 準時
+                    // 1 遲到
+                    // 2 缺席
+                }
+            }
+        }
+
+//        Log.e("roll_call", roll_call.get(studentName[0]));
+//        Log.e("roll_call", roll_call.get(studentName[1]));
+        Log.e("roll_call", "roll_call.get(studentName[2])");
+        compositeDisposable.add(iMyService.rollCallUpdate(classDate, className, studentName, roll)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String response) throws Exception {
+//                        GlobalVariable userdata = (GlobalVariable)getApplicationContext();
+//
+//                        JSONObject jsonobj = new JSONObject(response);
+//                        String name = jsonobj.getString("name");
+////                        Log.e("name", name);
+//                        String id = jsonobj.getString("id");
+//                        userdata.setName(name);
+//                        userdata.setId(id);
+                    }
+                }));
+    }
+
 }

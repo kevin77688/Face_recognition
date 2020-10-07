@@ -197,7 +197,36 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
             }
             find();
         });
-        
+
+        app.post('/rollCallUpdate', (request, response, next)=>{
+            var post_data = request.body;
+            var class_data = post_data.class_data;
+            var class_name = post_data.class_name;
+            var student_data = post_data.student_data;
+            var roll_call_data = post_data.roll_call_data;
+
+            console.log(class_data);
+            console.log(class_name);
+            console.log(student_data);
+            console.log(roll_call_data);
+            var db = client.db('nodejsTest');
+            function isRollCallExist(data){
+                var thing = db.collection("rollcall").deleteOne(data);
+                return thing;
+            }
+            async function operation() {
+                for(let i=0;i<student_data.length;i++){
+                    let name = student_data[i].replace("\"","");
+                    name = name.replace("\"","");
+                    let insert_data = {date: class_data, class: class_name, name: name,  status: roll_call_data[i]};
+                    await isRollCallExist({date: class_data, class: class_name, name: name});
+                    db.collection("rollcall").insertOne(insert_data);
+                }
+                response.json("success");
+            }
+            operation();
+        });
+
         app.post('/findUserClass', (request, response, next)=>{
             var post_data = request.body;
             var id =parseInt(post_data.id)  ;

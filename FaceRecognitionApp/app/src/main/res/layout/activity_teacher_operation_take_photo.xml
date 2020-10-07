@@ -6,24 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".TeacherOperationTakePhoto">
 
-    <Button
-        android:id="@+id/return_button"
-        android:layout_width="70dp"
-        android:layout_height="89dp"
-        android:layout_marginTop="636dp"
-        android:background="@drawable/grayreturn_back"
-        android:onClick="_return"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.519"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ImageView
         android:id="@+id/gray_return_button"
         android:layout_width="755dp"
         android:layout_height="940dp"
         android:background="#C4C4C4"
-        android:onClick="_return"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -87,7 +74,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="44dp"
         android:background="@drawable/button_white"
-        android:onClick="_return"
+        android:onClick="_finish"
         android:text="確定"
         android:textColor="#41BCE3"
         app:layout_constraintEnd_toEndOf="parent"

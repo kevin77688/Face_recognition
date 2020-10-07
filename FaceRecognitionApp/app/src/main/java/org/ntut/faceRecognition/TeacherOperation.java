@@ -57,11 +57,13 @@ public class TeacherOperation extends AppCompatActivity {
     public void onclick(View v) {
         Intent intent = new Intent();
         intent.putExtra("class_name", className);
+        intent.putExtra("class_date", classDate);
         switch(v.getId()){
             case R.id.button_take_photo_auto:
                 intent.setClass(this , TeacherOperationTakePhoto.class);
                 break;
             case R.id.button_take_photo:
+                intent.setClass(this , TeacherOperationTakePhoto.class);
                 break;
             case R.id.button_check_absence_record:
 //                intent.setClass(this , teacher_login_new.class);
