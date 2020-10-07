@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button_return"
+        android:id="@+id/button_take_photo"
         android:layout_width="146dp"
         android:layout_height="56dp"
         android:layout_marginTop="24dp"
@@ -38,7 +38,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.476"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_return"></LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/button_take_photo"></LinearLayout>
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -47,7 +47,7 @@
         android:layout_marginTop="84dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_return">
+        app:layout_constraintTop_toBottomOf="@+id/button_take_photo">
 
         <LinearLayout
             android:id="@+id/roll_call_layout"

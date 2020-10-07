@@ -35,7 +35,7 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
     ArrayList<String> student_fake_name = new ArrayList<String>();
     private IMyService iMyService;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private String className,classDate = null;
+    private String className,classDate, take_picture= null;
     private String[] studentName;
     ArrayList<CheckBox> cb_listb = new ArrayList<CheckBox>();
 
@@ -51,9 +51,16 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
         if (extras != null){
             classDate = extras.getString("class_date");
             className = extras.getString("class_name");
+            take_picture = extras.getString("take_picture");
+            Log.e("aaa",take_picture);
         }
         else
             throw new RuntimeException("Login error ! Cannot find userName");
+        if(take_picture.equals("false")){
+            Button bt = (Button)findViewById(R.id.button_take_photo);
+            bt.setVisibility(View.INVISIBLE);
+        }
+
         findStudent(className);
     }
 

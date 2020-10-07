@@ -60,9 +60,11 @@ public class TeacherOperation extends AppCompatActivity {
         intent.putExtra("class_date", classDate);
         switch(v.getId()){
             case R.id.button_take_photo_auto:
+                intent.putExtra("take_picture", "true");
                 intent.setClass(this , TeacherOperationTakePhoto.class);
                 break;
             case R.id.button_take_photo:
+                intent.putExtra("take_picture", "false");
                 intent.setClass(this , TeacherOperationTakePhoto.class);
                 break;
             case R.id.button_check_absence_record:
