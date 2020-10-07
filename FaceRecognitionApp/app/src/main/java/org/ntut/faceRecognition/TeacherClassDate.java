@@ -61,7 +61,10 @@ public class TeacherClassDate extends AppCompatActivity {
     }
     private void goToPage(String button_text) {
         Intent intent = new Intent();
-        intent.putExtra("class_name", className + "\n"+ button_text);
+        Log.e("goToPage", className);
+        intent.putExtra("class_name", className );
+        intent.putExtra("class_date", button_text);
+
         intent.setClass(this , TeacherOperation.class);
         startActivity(intent);
     }

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -27,6 +28,9 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
     ArrayList<String> student_fake_name = new ArrayList<String>();
     private IMyService iMyService;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private String className = null;
+    private String[] studentName;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +39,43 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
 
         Retrofit retrofitClient = RetrofitClient.getInstance();
         iMyService = retrofitClient.create(IMyService.class);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null)
+            className = extras.getString("class_name");
+        else
+            throw new RuntimeException("Login error ! Cannot find userName");
+        findStudent(className);
+    }
+    public void check() {
+    }
+    synchronized private void findStudent(String class_name) {
+        compositeDisposable.add(iMyService.findStudent(class_name)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String response) throws Exception {
+                        JSONObject jsonobj = new JSONObject(response);
+                        String name = jsonobj.getString("name");
+                        Log.e("name", name);
+                        String[] items = name.replaceAll("\\[", "")
+                                         .replaceAll("\\]", "").split(",");
+                        String[] results = new String[items.length];
+                        for (int i = 0; i < items.length; i++)
+                            results[i] = items[i];
+                        Log.e("name", results[0]);
+                        Log.e("name", results[1]);
+
+                        studentName = results;
+                        setButton();
+                    }
+                }));
+    }
+    public void onclick(View v) {
+    }
+    public void setButton() {
+
 
         LinearLayout mainLinerLayout = (LinearLayout) this.findViewById(R.id.roll_call_layout);
         LinearLayout top = new LinearLayout(this);
@@ -72,7 +113,8 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
         show_top_linear.addView(tx2);
         show_top_linear.addView(tx3);
         show_top_linear.addView(tx4);
-        for (int i = 0;i<50;i++){
+        Log.e("ne", studentName[0]);
+        for (int i = 0;i<studentName.length;i++){
             LinearLayout li = new LinearLayout(this);
             li.setOrientation(LinearLayout.HORIZONTAL);
 
@@ -81,7 +123,7 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
             textview.setWidth(330);   //設定寬度
             textview.setHeight(120);
             textview.setGravity(Gravity.CENTER);
-            textview.setText("你好嗎");
+            textview.setText(studentName[i].replace("\"", ""));
 
             Button bt1 = new Button(this);
             bt1.setTextSize(30);
@@ -135,25 +177,6 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
 
             mainLinerLayout.addView(li);
         }
-        findStudent("作業系統");
-    }
-    public void check() {
-    }
-    synchronized private void findStudent(String class_name) {
-        compositeDisposable.add(iMyService.findStudent(class_name)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String response) throws Exception {
-//                        JSONObject jsonobj = new JSONObject(response);
-//                        String name = jsonobj.getString("name");
-////                        Log.e("name", name);
-//                        String id = jsonobj.getString("id");
-                    }
-                }));
-    }
-    public void onclick(View v) {
     }
     public void _return(View v) {
         TeacherOperationTakePhoto.this.finish();

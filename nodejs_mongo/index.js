@@ -163,25 +163,39 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
             var post_data = request.body;
             var class_name = post_data.class_name;
             var db = client.db('nodejsTest');
-            console.log(class_name);
+            console.log("findStudent",class_name);
             var data,student_list;
+            var student = {};
+            student.name = [];
             function findClassNumber(){
                 const  thing = db.collection("course").findOne({ name: class_name });
                 // console.log(thing);
                 return thing;
             }
-            function findStudent(class_code) {
-                var thing = db.collection("studentCourse").find({'courseId': class_code}).toArray();
+            function findStudentCode(class_code) {
+                var thing = db.collection("studentCourse").find({courseId: class_code}).toArray();
+                return thing;
+            }
+            function findStudent(student) {
+                console.log("student99:",student);
+                const  thing = db.collection("user").findOne({ _id: student });
+                console.log("thing:",thing);
+
                 return thing;
             }
             async function find() {
                 data = await findClassNumber();
-                student_list = await findStudent(data._id);
+                student_list = await findStudentCode(data._id);
+                for(let i=0;i<student_list.length;i++){
+                    var data = await findStudent(student_list[i].studentId);
+                    student.name.push(data.name);
+                }
                 console.log("data:",data._id);
                 console.log("student_list:",student_list);
+                console.log("student:",student);
+                response.json(student);
             }
             find();
-            
         });
         
         app.post('/findUserClass', (request, response, next)=>{
