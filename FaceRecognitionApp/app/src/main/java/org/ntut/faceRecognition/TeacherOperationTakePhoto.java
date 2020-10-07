@@ -115,6 +115,7 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
         show_top_linear.addView(tx3);
         show_top_linear.addView(tx4);
         Log.e("ne", studentName[0]);
+
         for (int i = 1;i<=studentName.length;i++){
             LinearLayout li = new LinearLayout(this);
             li.setOrientation(LinearLayout.HORIZONTAL);
