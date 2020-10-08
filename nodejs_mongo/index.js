@@ -265,6 +265,34 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
             });
         });
 
+        app.post('/findStudentClass', (request, response, next)=>{
+            var post_data = request.body;
+            var id =parseInt(post_data.id)  ;
+            var db = client.db('nodejsTest');
+            var userData = {};
+            userData.class = [];
+        
+            var student_calss_code = [];
+            function findClassCode(id){
+                const thing = db.collection("studentCourse").find({studentId: id}).toArray();
+                return thing;
+            }
+            function findClassName(code){
+                const thing = db.collection("course").findOne({_id: code});
+                return thing;
+            }
+            async function operation() {
+                student_class_code = await findClassCode(id);
+                for(let i=0;i<student_class_code.length;i++){
+                    let a = await findClassName(student_class_code[i].courseId)
+                    userData.class.push(a.name);
+                }
+
+                response.json(userData);
+            }
+            operation();
+        });
+
         app.post('/findUserClassDate', (request, response, next)=>{
             var post_data = request.body;
             var class_name =post_data.class_name;

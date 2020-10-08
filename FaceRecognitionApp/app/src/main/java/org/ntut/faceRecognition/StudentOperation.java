@@ -31,7 +31,8 @@ public class StudentOperation extends AppCompatActivity {
                 intent.setClass(this, StudentUpload.class);
                 break;
             case R.id.check_presentation_record_button:
-//                intent.setClass(this , teacher_login_new.class);
+                Log.e("sssss", "check_presentation_record_button");
+                intent.setClass(this , StudentClass.class);
                 break;
             case R.id.return_button:
                 intent.setClass(this , Login.class);

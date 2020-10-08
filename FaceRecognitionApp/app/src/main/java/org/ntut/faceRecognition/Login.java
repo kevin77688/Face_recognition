@@ -182,6 +182,32 @@ public class Login extends AppCompatActivity {
                 }));
     }
 
+    synchronized public void getStudentInformation(Integer id) {
+        compositeDisposable.add(iMyService.findStudentClass(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String response) throws Exception {
+                        GlobalVariable userdata = (GlobalVariable)getApplicationContext();
+                        Log.e("json", response);
+                        JSONObject jsonarr = new JSONObject(response);
+                        String jsonOb = jsonarr.getString("class");
+                        Log.e("getClassInformation", jsonOb);
+                        String[] names = jsonOb.replaceAll("\\[", "")
+                                .replaceAll("\\]", "").split(",");
+                        ArrayList<String> name = new ArrayList<String>();
+                        for(Integer i =0; i<names.length;i++){
+                            name.add(names[i]);
+                            Log.e("getClassInformation", names[i]);
+//                            getClassDate(names[i]);
+                        }
+
+                        userdata.setClassInformation(name);
+                    }
+                }));
+    }
+
     synchronized public void getClassDate(String class_name) {
         Log.e("getClassDate", class_name);
         compositeDisposable.add(iMyService.findClassDate(class_name)
@@ -238,23 +264,26 @@ public class Login extends AppCompatActivity {
                     public void accept(String response) throws Exception {
                         Toast.makeText(Login.this, "" + response, Toast.LENGTH_SHORT).show();
                         Log.e("tag", response);
+                        getClassDate("作業系統");
+                        getClassDate("實務專題(二)");
+                        getClassDate("財務管理");
+                        getClassDate("物件導向程式設計實習");
+                        getClassDate("體育");
+                        getClassDate("設計樣式");
+                        getClassDate("智慧財產權");
+                        getClassDate("人工智慧概論");
+                        getClassDate("雲端應用實務");
+                        getClassDate("職涯進擊講座");
+                        getClassDate("國際觀培養講座");
+                        GlobalVariable userdata = (GlobalVariable)getApplicationContext();
+
                         if("\"Login student\"".equals(response)){
+                            Log.e("同學", userdata.getId());
+                            getStudentInformation(Integer.valueOf(userdata.getId()));
+
                             goToPage(StudentOperation.class);
                         }else if("\"Login teacher\"".equals(response)){
-                            GlobalVariable userdata = (GlobalVariable)getApplicationContext();
                             getClassInformation(Integer.valueOf(userdata.getId()));
-
-                            getClassDate("作業系統");
-                            getClassDate("實務專題(二)");
-                            getClassDate("財務管理");
-                            getClassDate("物件導向程式設計實習");
-                            getClassDate("體育");
-                            getClassDate("設計樣式");
-                            getClassDate("智慧財產權");
-                            getClassDate("人工智慧概論");
-                            getClassDate("雲端應用實務");
-                            getClassDate("職涯進擊講座");
-                            getClassDate("國際觀培養講座");
 //                            Log.e("走囉", String.valueOf(userdata.class_information.size()));
                             goToPage(TeacherClass.class);
                         }

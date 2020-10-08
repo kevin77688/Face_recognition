@@ -56,6 +56,7 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
         }
         else
             throw new RuntimeException("Login error ! Cannot find userName");
+
         if(take_picture.equals("false")){
             Button bt = (Button)findViewById(R.id.button_take_photo);
             bt.setVisibility(View.INVISIBLE);

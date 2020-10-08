@@ -56,6 +56,12 @@ public interface IMyService {
             @Field("id") Integer id
     );
 
+    @POST("findStudentClass")
+    @FormUrlEncoded
+    Observable<String> findStudentClass(
+            @Field("id") Integer id
+    );
+
     @POST("findUserClassDate")
     @FormUrlEncoded
     Observable<String> findClassDate(
