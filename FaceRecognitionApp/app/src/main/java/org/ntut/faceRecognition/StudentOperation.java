@@ -32,7 +32,7 @@ public class StudentOperation extends AppCompatActivity {
                 break;
             case R.id.check_presentation_record_button:
                 Log.e("sssss", "check_presentation_record_button");
-                intent.setClass(this , StudentClass.class);
+                intent.setClass(this , StudentCheckRollCall.class);
                 break;
             case R.id.return_button:
                 intent.setClass(this , Login.class);

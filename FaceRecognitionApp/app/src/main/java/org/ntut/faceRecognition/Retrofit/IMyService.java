@@ -62,6 +62,12 @@ public interface IMyService {
             @Field("id") Integer id
     );
 
+    @POST("findRollCall")
+    @FormUrlEncoded
+    Observable<String> findRollCall(
+            @Field("name") String name
+    );
+
     @POST("findUserClassDate")
     @FormUrlEncoded
     Observable<String> findClassDate(

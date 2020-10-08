@@ -293,6 +293,28 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
             operation();
         });
 
+        app.post('/findRollCall', (request, response, next)=>{
+            var post_data = request.body;
+            var name = post_data.name ;
+            var db = client.db('nodejsTest');
+            var userData = {};
+            userData.class = [];
+            userData.date = [];
+            userData.status = [];
+            console.log("good",name);
+            db.collection("rollcall").find({'name': name}).toArray(function(err, result){
+                for(let i=0;i<result.length;i++){
+                    userData.class.push(result[i].class);
+                    userData.date.push(result[i].date);
+                    userData.status.push(result[i].status);
+                }
+                console.log("good",userData);
+
+
+                response.json(userData);
+            });
+        });
+
         app.post('/findUserClassDate', (request, response, next)=>{
             var post_data = request.body;
             var class_name =post_data.class_name;

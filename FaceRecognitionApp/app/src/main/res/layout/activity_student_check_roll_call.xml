@@ -7,7 +7,7 @@
     tools:context=".StudentCheckRollCall">
 
     <ImageView
-        android:id="@+id/gray_return_button2"
+        android:id="@+id/gray_return_button"
         android:layout_width="755dp"
         android:layout_height="940dp"
         android:background="#C4C4C4"
@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
-        android:id="@+id/scrollView2"
+        android:id="@+id/scrollView"
         android:layout_width="385dp"
         android:layout_height="297dp"
         android:layout_marginTop="4dp"
@@ -41,12 +41,12 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2">
+        app:layout_constraintTop_toBottomOf="@+id/textView">
 
     </LinearLayout>
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/button"
         android:layout_width="147dp"
         android:layout_height="58dp"
         android:layout_marginTop="56dp"
@@ -56,10 +56,10 @@
         android:textColor="#41BCE3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
+        app:layout_constraintTop_toBottomOf="@+id/scrollView" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/textView"
         android:layout_width="56dp"
         android:layout_height="88dp"
         android:layout_marginTop="32dp"
