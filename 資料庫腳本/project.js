@@ -177,3 +177,11 @@ db.user.insertMany([
 	{email: "a5", password: "a5", salt: "sha512", name: "鄭大五", _id: 00005, identification: "teacher"},
 
 ]);
+
+db.rollcall.drop();
+
+
+db.rollcall.insertMany([
+	{name: "陳小一", date: "陳小一", class: "陳小一", status: "陳小一"},
+]);
+

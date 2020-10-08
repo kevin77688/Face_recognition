@@ -188,6 +188,35 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
                 }
             });
         }
+        compositeDisposable.add(iMyService.getRollCall(classDate, className)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String response) throws Exception {
+                        JSONObject jsonobj = new JSONObject(response);
+                        String student_name = jsonobj.getString("student_name");
+                        String student_status = jsonobj.getString("student_status");
+                        Log.e("student_name", student_name);
+                        Log.e("student_status", student_status);
+                        String[] name = student_name.replaceAll("\\[", "")
+                                .replaceAll("\\]", "").split(",");
+                        String[] status = student_status.replaceAll("\\[", "")
+                                .replaceAll("\\]", "").split(",");
+                        Log.e("student_name", String.valueOf(name.length));
+                        Log.e("student_status", String.valueOf(status.length));
+                        for(int i=0;i<studentName.length;i++){
+                            for(int j=0;j<name.length;j++){
+                                if(studentName[i].equals(name[j])){
+                                    Integer status_num = Integer.valueOf(status[j].replaceAll("\"", ""));
+                                    cb_listb.get(i*3 + status_num).setChecked(true);
+
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }));
     }
     public void check(Integer i) {
         switch (i%3){
@@ -243,14 +272,6 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String response) throws Exception {
-//                        GlobalVariable userdata = (GlobalVariable)getApplicationContext();
-//
-//                        JSONObject jsonobj = new JSONObject(response);
-//                        String name = jsonobj.getString("name");
-////                        Log.e("name", name);
-//                        String id = jsonobj.getString("id");
-//                        userdata.setName(name);
-//                        userdata.setId(id);
                     }
                 }));
     }

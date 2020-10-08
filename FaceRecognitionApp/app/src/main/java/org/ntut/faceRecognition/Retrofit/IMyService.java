@@ -24,6 +24,13 @@ public interface IMyService {
             @Field("_id") String _id
     );
 
+    @POST("getRollCall")
+    @FormUrlEncoded
+    Observable<String> getRollCall(
+            @Field("class_data") String class_data,
+            @Field("class_name") String class_name
+    );
+
     @POST("login")
     @FormUrlEncoded
     Observable<String> loginUser(
