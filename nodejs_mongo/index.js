@@ -96,7 +96,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
                 'password': plaint_password, //改成不加密
                 'salt': salt,
                 'name': name,
-				'_id': id,
+				'_id': _id,
                 'identification': identification
             };
 
@@ -112,7 +112,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 				db.collection('user')
 					.insertOne(insertJson, function(error, res){
 						userResponse.username = name;
-						userResponse.userId = id;
+						userResponse.userId = _id;
 						userResponse.description = "Register success";
 						userResponse.status = 202;
 						console.log('Registration success');

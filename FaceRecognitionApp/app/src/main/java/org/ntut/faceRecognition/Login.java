@@ -33,18 +33,12 @@ import retrofit2.Retrofit;
 
 public class Login extends AppCompatActivity {
 
-    public static String user_email;
     private IMyService iMyService;
     private TextView txt_create_account;
     private MaterialEditText edt_login_email, edt_login_password;
     private Button btn_login;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-
-    @Override
-    protected void onStop() {
-        compositeDisposable.clear();
-        super.onStop();
-    }
+    private String username, userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +90,6 @@ public class Login extends AppCompatActivity {
                                 MaterialEditText edt_register_name = register_layout.findViewById(R.id.edt_name);
                                 MaterialEditText edt_register_password = register_layout.findViewById(R.id.edt_password);
                                 MaterialEditText edt_register_id = register_layout.findViewById(R.id.edt_id);
-                                String edt_register_identification;
 
                                 if (TextUtils.isEmpty(edt_register_email.getText().toString())) {
                                     Toast.makeText(Login.this, "Email cannot be null or empty", Toast.LENGTH_SHORT).show();
@@ -117,17 +110,11 @@ public class Login extends AppCompatActivity {
                                     Toast.makeText(Login.this, "ID cannot be null or empty", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
-                                edt_register_identification = edt_register_name.getText().toString();
-                                if("a".equals(edt_register_identification.substring(0, 1)))
-                                    edt_register_identification = "teacher";
-                                else
-                                    edt_register_identification = "student";
 
                                 registerUser(
                                         edt_register_email.getText().toString(),
                                         edt_register_name.getText().toString(),
                                         edt_register_password.getText().toString(),
-                                        edt_register_identification,
                                         edt_register_id.getText().toString()
                                 );
                             }
@@ -137,108 +124,22 @@ public class Login extends AppCompatActivity {
 
     }
 
-    synchronized private void findUser(String email) {
-        compositeDisposable.add(iMyService.findName(email)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String response) throws Exception {
-                        GlobalVariable userdata = (GlobalVariable)getApplicationContext();
-
-                        JSONObject jsonobj = new JSONObject(response);
-                        String name = jsonobj.getString("name");
-//                        Log.e("name", name);
-                        String id = jsonobj.getString("id");
-                        userdata.setName(name);
-                        userdata.setId(id);
+    synchronized private void registerUser(String email, String name, String password, String _id) {
+    compositeDisposable.add(iMyService.registerUser(email, name, password, _id)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Consumer<String>() {
+                @Override
+                public void accept(String response) throws Exception {
+                    JsonParser jsonParser = new JsonParser(response);
+                    showToast(jsonParser.getDescription());
+                    switch(jsonParser.getStatus()){
+                        case 202:
+                        case 401:
+                            break;
                     }
-                }));
-    }
-
-    synchronized public void getClassInformation(String id) {
-        compositeDisposable.add(iMyService.findClass(id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String response) throws Exception {
-                        GlobalVariable userdata = (GlobalVariable)getApplicationContext();
-                        Log.e("json", response);
-                        JSONObject jsonarr = new JSONObject(response);
-                        String jsonOb = jsonarr.getString("class");
-
-                        String[] names = jsonOb.replaceAll("\\[", "")
-                                        .replaceAll("\\]", "").split(",");
-                        ArrayList<String> name = new ArrayList<String>();
-                        for(Integer i =0; i<names.length;i++){
-                            name.add(names[i]);
-                            Log.e("getClassInformation", names[i]);
-//                            getClassDate(names[i]);
-                        }
-
-                        userdata.setClassInformation(name);
-                    }
-                }));
-    }
-
-    synchronized public void getStudentInformation(String id) {
-        compositeDisposable.add(iMyService.findStudentClass(id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String response) throws Exception {
-                        GlobalVariable userdata = (GlobalVariable)getApplicationContext();
-                        Log.e("json", response);
-                        JSONObject jsonarr = new JSONObject(response);
-                        String jsonOb = jsonarr.getString("class");
-                        Log.e("getClassInformation", jsonOb);
-                        String[] names = jsonOb.replaceAll("\\[", "")
-                                .replaceAll("\\]", "").split(",");
-                        ArrayList<String> name = new ArrayList<String>();
-                        for(Integer i =0; i<names.length;i++){
-                            name.add(names[i]);
-                            Log.e("getClassInformation", names[i]);
-//                            getClassDate(names[i]);
-                        }
-
-                        userdata.setClassInformation(name);
-                    }
-                }));
-    }
-
-    synchronized public void getClassDate(String class_name) {
-        Log.e("getClassDate", class_name);
-        compositeDisposable.add(iMyService.findClassDate(class_name)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String response) throws Exception {
-                        JSONObject jsonarr = new JSONObject(response);
-                        String jsonOb = jsonarr.getString("date");
-                        String[] names = jsonOb.replaceAll("\\[", "")
-                                .replaceAll("\\]", "").split(",");
-                        Log.e("names", names[1]);
-                        GlobalVariable userdata = (GlobalVariable)getApplicationContext();
-                        userdata.setClassDate(jsonarr.getString("name"), names);
-                    }
-}));
-    }
-
-    private void registerUser(String email, String name, String password, String identification, String _id) {
-        compositeDisposable.add(iMyService.registerUser(email, name, password, identification, _id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String response) throws Exception {
-                        Toast.makeText(Login.this, "" + response, Toast.LENGTH_SHORT).show();
-                    }
-                }));
-        goToPage(StudentOperation.class);
-    }
+                }}));
+}
 
     synchronized private void loginUser(String email, String password) {
         if (TextUtils.isEmpty(email)) {
@@ -250,52 +151,153 @@ public class Login extends AppCompatActivity {
             Toast.makeText(this, "Password cannot be null or empty", Toast.LENGTH_SHORT).show();
             return;
         }
-        //交使用者資料儲存成全域變數
-        GlobalVariable userdata = (GlobalVariable)getApplicationContext();
-        userdata.setEmail(email);
-        userdata.setPassword(password);
-        findUser(email);
 
         compositeDisposable.add(iMyService.loginUser(email, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String response) throws Exception {
-                        Toast.makeText(Login.this, "" + response, Toast.LENGTH_SHORT).show();
-                        Log.e("tag", response);
-                        getClassDate("作業系統");
-                        getClassDate("實務專題(二)");
-                        getClassDate("財務管理");
-                        getClassDate("物件導向程式設計實習");
-                        getClassDate("體育");
-                        getClassDate("設計樣式");
-                        getClassDate("智慧財產權");
-                        getClassDate("人工智慧概論");
-                        getClassDate("雲端應用實務");
-                        getClassDate("職涯進擊講座");
-                        getClassDate("國際觀培養講座");
-                        GlobalVariable userdata = (GlobalVariable)getApplicationContext();
+                               @Override
+                               public void accept(String response) throws Exception {
+                                   JsonParser jsonParser = new JsonParser(response);
+                                   userId = jsonParser.getId();
+                                   username = jsonParser.getName();
+                                   showToast(jsonParser.getDescription());
+                                   switch (jsonParser.getStatus()){
+                                       case 200:
+                                           goToPage(StudentOperation.class);
+                                           break;
+                                       case 201:
+                                           goToPage(TeacherOperation.class);
+                                           break;
+                                       case 400:
+                                       case 402:
+                                           break;
+                                   }
+//                        getClassDate("作業系統");
+//                        getClassDate("實務專題(二)");
+//                        getClassDate("財務管理");
+//                        getClassDate("物件導向程式設計實習");
+//                        getClassDate("體育");
+//                        getClassDate("設計樣式");
+//                        getClassDate("智慧財產權");
+//                        getClassDate("人工智慧概論");
+//                        getClassDate("雲端應用實務");
+//                        getClassDate("職涯進擊講座");
+//                        getClassDate("國際觀培養講座");
 
-                        if("\"Login student\"".equals(response)){
-                            Log.e("同學", userdata.getId());
-                            getStudentInformation(userdata.getId());
+//                        if("\"Login student\"".equals(response)){
+//                            Log.e("同學", userdata.getId());
+//                            getStudentInformation(Integer.valueOf(userdata.getId()));
+//
+//                            goToPage(StudentOperation.class);
+//                        }else if("\"Login teacher\"".equals(response)){
+//                            getClassInformation(Integer.valueOf(userdata.getId()));
+////                            Log.e("走囉", String.valueOf(userdata.class_information.size()));
+//                            goToPage(TeacherClass.class);
+//                        }
 
-                            goToPage(StudentOperation.class);
-                        }else if("\"Login teacher\"".equals(response)){
-                            getClassInformation(userdata.getId());
-//                            Log.e("走囉", String.valueOf(userdata.class_information.size()));
-                            goToPage(TeacherClass.class);
-                        }
-
-                    }
-                }));
+                               }}
+                ));
     }
+
+
+
     private void goToPage(Class page) {
-        GlobalVariable userdata = (GlobalVariable)getApplicationContext();
-        Log.e("走囉", String.valueOf(userdata.class_information.size()));
         Intent intent = new Intent();
         intent.setClass(this , page);
+        intent.putExtra("username", username);
+        intent.putExtra("userId", userId);
         startActivity(intent);
     }
+
+    private void showToast(String message){
+        Toast.makeText(Login.this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    //    synchronized private void findUser(String email) {
+//        compositeDisposable.add(iMyService.findName(email)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Consumer<String>() {
+//                    @Override
+//                    public void accept(String response) throws Exception {
+//                        JSONObject jsonobj = new JSONObject(response);
+//                        String name = jsonobj.getString("name");
+//                        String id = jsonobj.getString("id");
+//                        userdata.setName(name);
+//                        userdata.setId(id);
+//                    }
+//                }));
+//    }
+
+//    synchronized public void getClassInformation(Integer id) {
+//        compositeDisposable.add(iMyService.findClass(id)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Consumer<String>() {
+//                    @Override
+//                    public void accept(String response) throws Exception {
+//                        GlobalVariable userdata = (GlobalVariable)getApplicationContext();
+//                        Log.e("json", response);
+//                        JSONObject jsonarr = new JSONObject(response);
+//                        String jsonOb = jsonarr.getString("class");
+//
+//                        String[] names = jsonOb.replaceAll("\\[", "")
+//                                        .replaceAll("\\]", "").split(",");
+//                        ArrayList<String> name = new ArrayList<String>();
+//                        for(Integer i =0; i<names.length;i++){
+//                            name.add(names[i]);
+//                            Log.e("getClassInformation", names[i]);
+////                            getClassDate(names[i]);
+//                        }
+//
+//                        userdata.setClassInformation(name);
+//                    }
+//                }));
+//    }
+//
+//    synchronized public void getClassDate(String class_name) {
+//        Log.e("getClassDate", class_name);
+//        compositeDisposable.add(iMyService.findClassDate(class_name)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Consumer<String>() {
+//                    @Override
+//                    public void accept(String response) throws Exception {
+//                        JSONObject jsonarr = new JSONObject(response);
+//                        String jsonOb = jsonarr.getString("date");
+//                        String[] names = jsonOb.replaceAll("\\[", "")
+//                                .replaceAll("\\]", "").split(",");
+//                        Log.e("names", names[1]);
+//                        GlobalVariable userdata = (GlobalVariable)getApplicationContext();
+//                        userdata.setClassDate(jsonarr.getString("name"), names);
+//                    }}));
+//    }
+//
+//    synchronized public void getStudentInformation(Integer id) {
+//        compositeDisposable.add(iMyService.findStudentClass(id)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Consumer<String>() {
+//                    @Override
+//                    public void accept(String response) throws Exception {
+//                        GlobalVariable userdata = (GlobalVariable)getApplicationContext();
+//                        Log.e("json", response);
+//                        JSONObject jsonarr = new JSONObject(response);
+//                        String jsonOb = jsonarr.getString("class");
+//                        Log.e("getClassInformation", jsonOb);
+//                        String[] names = jsonOb.replaceAll("\\[", "")
+//                                .replaceAll("\\]", "").split(",");
+//                        ArrayList<String> name = new ArrayList<String>();
+//                        for(Integer i =0; i<names.length;i++){
+//                            name.add(names[i]);
+//                            Log.e("getClassInformation", names[i]);
+////                            getClassDate(names[i]);
+//                        }
+//
+//                        userdata.setClassInformation(name);
+//                    }
+//                }));
+//    }
+
 }
