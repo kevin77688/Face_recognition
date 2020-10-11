@@ -156,7 +156,7 @@ public class Login extends AppCompatActivity {
                 }));
     }
 
-    synchronized public void getClassInformation(Integer id) {
+    synchronized public void getClassInformation(String id) {
         compositeDisposable.add(iMyService.findClass(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -182,7 +182,7 @@ public class Login extends AppCompatActivity {
                 }));
     }
 
-    synchronized public void getStudentInformation(Integer id) {
+    synchronized public void getStudentInformation(String id) {
         compositeDisposable.add(iMyService.findStudentClass(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -279,11 +279,11 @@ public class Login extends AppCompatActivity {
 
                         if("\"Login student\"".equals(response)){
                             Log.e("同學", userdata.getId());
-                            getStudentInformation(Integer.valueOf(userdata.getId()));
+                            getStudentInformation(userdata.getId());
 
                             goToPage(StudentOperation.class);
                         }else if("\"Login teacher\"".equals(response)){
-                            getClassInformation(Integer.valueOf(userdata.getId()));
+                            getClassInformation(userdata.getId());
 //                            Log.e("走囉", String.valueOf(userdata.class_information.size()));
                             goToPage(TeacherClass.class);
                         }

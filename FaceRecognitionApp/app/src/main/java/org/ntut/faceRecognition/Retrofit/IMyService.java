@@ -53,13 +53,13 @@ public interface IMyService {
     @POST("findUserClass")
     @FormUrlEncoded
     Observable<String> findClass(
-            @Field("id") Integer id
+            @Field("id") String id
     );
 
     @POST("findStudentClass")
     @FormUrlEncoded
     Observable<String> findStudentClass(
-            @Field("id") Integer id
+            @Field("id") String id
     );
 
     @POST("findRollCall")
