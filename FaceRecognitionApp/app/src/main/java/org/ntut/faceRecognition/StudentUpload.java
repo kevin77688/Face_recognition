@@ -92,7 +92,6 @@ public class StudentUpload extends AppCompatActivity {
     }
 
     private void openCamera(){
-        Log.i("TAG", "faildddd: ");
         Intent intent = new Intent();
         intent.setClass(this, CameraCapture.class);
         startActivity(intent);

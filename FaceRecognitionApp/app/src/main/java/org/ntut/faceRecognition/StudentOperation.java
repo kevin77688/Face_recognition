@@ -9,35 +9,36 @@ import android.view.View;
 import android.widget.TextView;
 
 public class StudentOperation extends AppCompatActivity {
-    private String email;
+
+    private String _username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_operation);
-        GlobalVariable userdata = (GlobalVariable) getApplicationContext();
+
+        // Get Extra
+        _username = getIntent().getStringExtra("username");
+
         TextView upview_text = (TextView) findViewById(R.id.upview_text);
-        email = userdata.getEmail();
-        upview_text.setText("\n歡迎" + userdata.getName() + "學生");
+        upview_text.setText("\n歡迎" + _username + "學生");
     }
     public void onclick(View v) {
         Intent intent = new Intent();
         switch(v.getId()){
             case R.id.dcchect_photo_button:
-                intent.setClass(this , Login.class);
+                // TODO show student picture view
                 break;
             case R.id.upload_button:
-                Log.e("sssss", "快跳轉");
                 intent.setClass(this, StudentUpload.class);
                 break;
             case R.id.check_presentation_record_button:
-                Log.e("sssss", "check_presentation_record_button");
                 intent.setClass(this , StudentCheckRollCall.class);
                 break;
             case R.id.return_button:
-                intent.setClass(this , Login.class);
-                break;
+                finish();
         }
+        intent.putExtra("username", _username);
         startActivity(intent);
     }
 
