@@ -66,9 +66,11 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 	// 200 student login
     // 201 teacher login
     // 202 register success
+	// 203 Get roll call success
     // 400 login password error
     // 401 register email exist
 	// 402 login email not exist
+	// 403 Get roll call failed
     if (err)
         console.log('Unable to connect to MongoDB', err);
     else{
@@ -178,22 +180,6 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			var user = db.collection('user').findOne({'email': email})
 			return user;
 		}
-
-        app.post('/findUserName', (request, response, next)=>{
-            var post_data = request.body;
-            var email = post_data.email;
-            var db = client.db('nodejsTest');
-            console.log(post_data.email);
-            db.collection('user')
-                            .findOne({'email': email}, function(err, user){
-                                console.log("findUserName：",user.name);
-                                var userData = {
-                                    'name': user.name,
-                                    'id': user._id
-                                };
-                                response.json(userData);
-                            })
-        });
 
         app.post('/findStudent', (request, response, next)=>{
             var post_data = request.body;
@@ -329,27 +315,35 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
             operation();
         });
 
-        app.post('/findRollCall', (request, response, next)=>{
+        app.post('/findRollCall', async(request, response, next)=>{
+			var userResponse = {};
             var post_data = request.body;
-            var name = post_data.name ;
-            var db = client.db('nodejsTest');
-            var userData = {};
-            userData.class = [];
-            userData.date = [];
-            userData.status = [];
-            console.log("good",name);
-            db.collection("rollcall").find({'name': name}).toArray(function(err, result){
-                for(let i=0;i<result.length;i++){
-                    userData.class.push(result[i].class);
-                    userData.date.push(result[i].date);
-                    userData.status.push(result[i].status);
+            var _id = post_data._id ;
+            var rollCalls = findRollCallFromId(_id);
+			if (!rollCalls){
+				userResponse.description = "Get roll call failed";
+				userResponse.status = 403;
+			}
+			else {
+				userResponse.description = "Get roll call success"
+				userResponse.status = 203;
+				userResponse.classes = {};
+				for(let i = 0; i < rollcalls.length; i++){
+					var classes;
+					classes.class = result[i].class;
+                    classes.date = result[i].date;
+					classes.attendence = result[i].status;
                 }
-                console.log("good",userData);
-
-
-                response.json(userData);
+			}
+            response.json(userResponse);
             });
         });
+		
+		function findRollCallFromId(id){
+			var db = client.db('nodejsTest');
+			rollcalls = db.collection('rollcall').find({'_id': id}).toArray();
+			return rollCalls;
+		}
 
         app.post('/findUserClassDate', (request, response, next)=>{
             var post_data = request.body;

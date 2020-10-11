@@ -20,6 +20,7 @@ import retrofit2.Retrofit;
 
 public class TeacherOperation extends AppCompatActivity {
     String className, classDate = null;
+    private String _username;
     private IMyService iMyService;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -37,8 +38,9 @@ public class TeacherOperation extends AppCompatActivity {
         Retrofit retrofitClient = RetrofitClient.getInstance();
         iMyService = retrofitClient.create(IMyService.class);
 
-        GlobalVariable userdata = (GlobalVariable)getApplicationContext();
+//        GlobalVariable userdata = (GlobalVariable)getApplicationContext();
 
+        _username = getIntent().getStringExtra("username");
         Bundle extras = getIntent().getExtras();
         if (extras != null){
             className = extras.getString("class_name");
@@ -48,7 +50,7 @@ public class TeacherOperation extends AppCompatActivity {
             throw new RuntimeException("Login error ! Cannot find userName");
 
         TextView textView_show_teacher_name = (TextView)findViewById(R.id.textView_show_teacher_name);
-        textView_show_teacher_name.setText("\n" + className + "\n" + classDate + "課程");
+        textView_show_teacher_name.setText("\n" + _username + "\n" + className + "課程");
 
         LinearLayout mainLinerLayout = (LinearLayout) this.findViewById(R.id.layout_teacher_class);
 
