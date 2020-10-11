@@ -146,11 +146,89 @@ public class Login extends AppCompatActivity {
                             default:
                                 showToast("Cannot connect to server !");
                         }
-                        compositeDisposable.dispose();
                     }
                 }));
     }
 
+    @Override
+    public void onBackPressed() {
+        // your code.
+        // Init Services
+        Retrofit retrofitClient = RetrofitClient.getInstance();
+        iMyService = retrofitClient.create(IMyService.class);
+
+        // Init view
+        edt_login_email = findViewById(R.id.edt_email);
+        edt_login_password = findViewById(R.id.edt_password);
+
+        btn_login = findViewById(R.id.btn_login);
+        btn_login.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                loginUser(edt_login_email.getText().toString(), edt_login_password.getText().toString());
+            }
+        });
+
+        txt_create_account = findViewById(R.id.txt_create_account);
+        txt_create_account.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final View register_layout = LayoutInflater.from(Login.this)
+                        .inflate(R.layout.register_layout, null);
+
+                new MaterialStyledDialog.Builder(Login.this)
+                        .setTitle("REGISTRATION")
+                        .setDescription("Please fill all fields")
+                        .setCustomView(register_layout)
+                        .setNegativeText("CANCEL")
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setPositiveText("REGISTER")
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                final boolean[] count = {false};
+                                MaterialEditText edt_register_name = register_layout.findViewById(R.id.edt_name);
+                                MaterialEditText edt_register_password = register_layout.findViewById(R.id.edt_password);
+                                MaterialEditText edt_register_email = register_layout.findViewById(R.id.edt_email);
+                                MaterialEditText edt_register_id = register_layout.findViewById(R.id.edt_id);
+
+                                if (TextUtils.isEmpty(edt_register_email.getText().toString())) {
+                                    showToast("Email cannot be null or empty");
+                                    return;
+                                }
+
+                                if (TextUtils.isEmpty(edt_register_name.getText().toString())) {
+                                    showToast("Name cannot be null or empty");
+                                    return;
+                                }
+
+                                if (TextUtils.isEmpty(edt_register_password.getText().toString())) {
+                                    showToast("Password cannot be null or empty");
+                                    return;
+                                }
+
+                                if (TextUtils.isEmpty(edt_register_id.getText().toString())) {
+                                    showToast("ID cannot be null or empty");
+                                    return;
+                                }
+                                registerUser(
+                                        edt_register_name.getText().toString(),
+                                        edt_register_password.getText().toString(),
+                                        edt_register_email.getText().toString(),
+                                        edt_register_id.getText().toString()
+                                );
+                            }
+                        }).show();
+            }
+        });
+    }
     private void loginUser(String email, String password) {
         if (TextUtils.isEmpty(email)) {
             showToast("Email cannot be null or empty");
@@ -184,7 +262,6 @@ public class Login extends AppCompatActivity {
                                 break;
                         }
                         showToast(jsonObject.getString("description"));
-                        compositeDisposable.dispose();
                     }
                 }));
     }

@@ -43,9 +43,9 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
     if (err)
         console.log('Unable to connect to MongoDB', err);
     else{
-        var userResponse = {};
         // Register
         app.post('/register', (request, response, next)=>{
+			var userResponse = {};
             var post_data = request.body;
             var username = post_data.username;
             var password = post_data.password;
@@ -85,37 +85,56 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
         });
 
         // Login
-        app.post('/login', (request, response, next)=>{
+        app.post('/login', async(request, response, next)=>{
+			userResponse = {};
             var post_data = request.body;
             var email = post_data.email;
             var password = post_data.password;
-            var db = client.db('nodejsTest');
-
-            db.collection('user')
-                .find({'email': email}).count(function(err, number){
-                    if (number == 0){
-                        userResponse.description = 'Email not exists';
-                        userResponse.status = "401";
-                        console.log('Email not exists');
-                    }else{
-                        db.collection('user').findOne({'email': email}, function(err, user){
-                            if (password != user.password){
-                                userResponse.description = 'Login error !';
-                                userResponse.status = "402";
-                            }
-                            else{
-                                userResponse.description = 'Login success';
-                                if (user.identification == "student")
-                                    userResponse.status = "201";
-                                else if (user.identification == "teacher")
-                                    userResponse.status = "202";
-                                userResponse.username = user.username;
-                                userResponse.identification = user.identification;
-                                console.log("username : " + user.username + " login");
-                            }})
-                    }
-                    response.json(userResponse);
-        })});
+            var number = await findUserExistenceFromEmail(email);
+			if (number == 0){
+				userResponse.description = 'Email not exists';
+				userResponse.status = "401";
+				console.log('Email not exists');
+			}else{
+				var user = await findUserDataFromEmail(email);
+				if (user){
+					if (password != user.password){
+						console.log("1");
+						userResponse.description = 'Login error !';
+						userResponse.status = "402";
+					}
+					else{
+						console.log("2");
+						userResponse.description = 'Login success';
+						if (user.identification == "student")
+							userResponse.status = "201";
+						else if (user.identification == "teacher")
+							userResponse.status = "202";
+						userResponse.username = user.name;
+						userResponse.identification = user.identification;
+						console.log("username : " + user.name + " login");
+					}
+				}
+				else {
+					console.log("user not found!");
+				}
+			}
+			console.log(userResponse);
+			response.json(userResponse);
+		});
+		
+		function findUserExistenceFromEmail(email){
+			var db = client.db('nodejsTest');
+            var number = db.collection('user').find({'email': email}).count();
+			return number;
+		}
+		
+		function findUserDataFromEmail(email){
+			var db = client.db('nodejsTest');
+			var userResponse = {};
+			var user = db.collection('user').findOne({'email': email})
+			return user;
+		}
 
         app.post('/findUserClass', (request, response, next)=>{
             // var post_data = request.body;
