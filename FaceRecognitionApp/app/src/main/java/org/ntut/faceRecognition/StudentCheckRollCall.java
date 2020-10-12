@@ -40,14 +40,13 @@ public class StudentCheckRollCall extends AppCompatActivity {
     }
 
     synchronized private void findRollCall(String userId) {
-        compositeDisposable.add(iMyService.studentFindRollCall(userId)
+        compositeDisposable.add(iMyService.studentCheckAttendance(userId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String response) throws Exception {
 
-                        // TODO classes need to construct as jsonObject
                         JSONObject jsonObject = new JSONObject(response);
                         int status = Integer.parseInt(jsonObject.getString("status"));
 
