@@ -73,8 +73,8 @@ public class TeacherClass extends AppCompatActivity {
                                     ArrayList<String> dates = new ArrayList<>();
                                     Iterator<String> date = jsonObject.getJSONObject("dates").keys();
                                     while (date.hasNext())
-                                        dates.add((String) jsonObject.get(date.next()));
-                                    courseButtonPage.putExtra("dates", dates);
+                                        dates.add((String) jsonObject.getJSONObject("dates").get(date.next()));
+                                    courseButtonPage.putExtra("courseDate", dates);
                                     gotoPage(courseName, courseId);
                                 }
                             }));

@@ -250,7 +250,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			var date = post_data.date;
 			var course_id = post_data.courseId;
             var isRecorded = await CheckCourseDateRecorded(course_id, date);
-			var userResponse.rollCalls = {};
+			userResponse.rollCalls = {};
 			if (!isRecorded){
 				var studentList = await FindStudentListUsingDateAndCourseId(course_id);
 				for (let i = 0; i < studentList.length; i++){

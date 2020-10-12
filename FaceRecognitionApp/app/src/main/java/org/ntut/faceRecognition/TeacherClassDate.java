@@ -16,6 +16,7 @@ public class TeacherClassDate extends AppCompatActivity {
 
     private String courseName, courseId;
     private ArrayList<String> courseDates;
+    private Intent dateIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,19 +41,24 @@ public class TeacherClassDate extends AppCompatActivity {
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent();
+                    dateIntent = new Intent();
                     Button button = (Button) v;
-                    intent.putExtra("courseName", courseName);
-                    intent.putExtra("courseId", courseId);
-                    intent.putExtra("courseDate", date);
+                    dateIntent.putExtra("courseName", courseName);
+                    dateIntent.putExtra("courseId", courseId);
+                    dateIntent.putExtra("courseDate", date);
+                    gotoPage();
                 }
             });
             mainLinerLayout.addView(btn);
         }
     }
 
-    public  void  _return(View v){
+    public void _return(View v) {
         TeacherClassDate.this.finish();
     }
 
+    public void gotoPage() {
+        dateIntent.setClass(this, TeacherOperation.class);
+        startActivity(dateIntent);
+    }
 }
