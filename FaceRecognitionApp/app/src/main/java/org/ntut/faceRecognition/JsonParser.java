@@ -1,8 +1,9 @@
 package org.ntut.faceRecognition;
 
-import com.google.gson.JsonObject;
-
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class JsonParser {
 
@@ -10,8 +11,8 @@ public class JsonParser {
     private int _status;
     private String _description, _username, _userId;
 
-    public JsonParser(String response){
-        try{
+    public JsonParser(String response) {
+        try {
             _jsonObject = new JSONObject(response);
             _status = Integer.parseInt(_jsonObject.getString("status"));
             _description = _jsonObject.getString("description");
@@ -31,11 +32,26 @@ public class JsonParser {
         return _description;
     }
 
-    public String getName(){
+    public String getName() {
         return _username;
     }
 
-    public String getId(){
+    public String getId() {
         return _userId;
+    }
+
+    public HashMap<String, String> getCourses() {
+        HashMap courses = new HashMap();
+        try {
+            JSONObject jsonCourses = _jsonObject.getJSONObject("courses");
+            Iterator<String> coursesId = jsonCourses.keys();
+            while (coursesId.hasNext()) {
+                String courseId = coursesId.next();
+                courses.put(courseId, jsonCourses.get(courseId));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return courses;
     }
 }

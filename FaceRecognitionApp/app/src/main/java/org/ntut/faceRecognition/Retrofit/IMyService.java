@@ -1,7 +1,6 @@
 package org.ntut.faceRecognition.Retrofit;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
@@ -14,6 +13,8 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 
 public interface IMyService {
+
+    // 註冊
     @POST("register")
     @FormUrlEncoded
     Observable<String> registerUser(
@@ -23,13 +24,7 @@ public interface IMyService {
             @Field("_id") String _id
     );
 
-    @POST("getRollCall")
-    @FormUrlEncoded
-    Observable<String> getRollCall(
-            @Field("class_data") String class_data,
-            @Field("class_name") String class_name
-    );
-
+    // 登入
     @POST("login")
     @FormUrlEncoded
     Observable<String> loginUser(
@@ -37,22 +32,41 @@ public interface IMyService {
             @Field("password") String password
     );
 
+    // 學生查詢出缺席
+    @POST("studentFindRollCall")
+    @FormUrlEncoded
+    Observable<String> studentFindRollCall(
+            @Field("userId") String id
+    );
+
+    // 教授點課程時回傳日期
+    @POST("teacherFindCourseDate")
+    @FormUrlEncoded
+    Observable<String> findCourseDate(
+            @Field("courseId") String courseId
+    );
+
+    // 教授點擊課程時間回傳點名單
+    @POST("teacherGetCourseStudentList")
+    @FormUrlEncoded
+    Observable<String> getRollCall(
+            @Field("courseId") String courseId,
+            @Field("courseDate") String date
+    );
+
+//    @POST("getRollCall")
+//    @FormUrlEncoded
+//    Observable<String> getRollCall(
+//            @Field("class_data") String class_data,
+//            @Field("class_name") String class_name
+//    );
+
+
+    // TODO class name must use id  !!!!
     @POST("findStudent")
     @FormUrlEncoded
     Observable<String> findStudent(
             @Field("class_name") String class_name
-    );
-
-    @POST("findUserName")
-    @FormUrlEncoded
-    Observable<String> findName(
-            @Field("email") String email
-    );
-
-    @POST("findUserClass")
-    @FormUrlEncoded
-    Observable<String> findClass(
-            @Field("id") String id
     );
 
     @POST("findStudentClass")
@@ -61,17 +75,6 @@ public interface IMyService {
             @Field("id") String id
     );
 
-    @POST("findRollCall")
-    @FormUrlEncoded
-    Observable<String> findRollCall(
-            @Field("_id") String _id
-    );
-
-    @POST("findUserClassDate")
-    @FormUrlEncoded
-    Observable<String> findClassDate(
-            @Field("class_name") String class_name
-    );
 
     @Multipart
     @POST("studentUpload")

@@ -168,8 +168,8 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 							userResponse.status = 201;
 							userResponse.courses = {};
 							var courses = await findCoursesFromTeacherId(user._id);
-							for (var course in courses){
-								userResponse.courses[course._id] = course.name;
+							for (var i = 0; i < courses.length; i++){
+								userResponse.courses[courses[i]._id] = courses[i].name;
 							}
 						}
 						userResponse.username = user.name;
@@ -343,8 +343,8 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 				userResponse.description = "Get roll call success"
 				userResponse.status = 203;
 				userResponse.courses = [];
-				for(let rollCall in rollCalls){
-					userResponse.courses.push({'courseName': rollCall.course_name, 'date': rollCall.date, 'attendance': rollCall.attendance});
+				for(var i = 0; i < rollcalls.length; i++){
+					userResponse.courses.push({'name': rollCalls[i].course_name, 'date': rollCall[i].date, 'attendance': rollCall[i].attendance});
 				}
 			}
             response.json(userResponse);
@@ -360,15 +360,16 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			var userResponse = {};
             var post_data = request.body;
             var course_id = post_data.courseId;
-            var db = client.db('nodejsTest');
-            console.log("findUserClassDate：",course_id);
-            var courseDates = await findCourseDatesFromCourseId();
+            console.log("Teacher find course date：",course_id);
+            var courseDates = await findCourseDatesFromCourseId(course_id);
             userResponse.status = "203";
 			userResponse.description = "Find data success";
-			userResponse.dates = [];
-			for (let courseDate in courseDates){
-				userResponse.dates.push(courseDate.date);
+			userResponse.dates = {};
+			console.log(courseDates);
+			for (var i = 0; i < courseDates.length; i++){
+				userResponse.dates[i] = courseDates[i].date;
 			}
+			console.log(userResponse);
 			response.json(userResponse);
         });
 		
