@@ -46,12 +46,11 @@ public class TeacherOperation extends AppCompatActivity {
                 intent.putExtra("courseDate", courseDate);
                 switch (v.getId()) {
                     case R.id.button_take_photo_auto:
-                        intent.putExtra("take_picture", "true");
-                        intent.setClass(TeacherOperation.this, TeacherOperationTakePhoto.class);
+                        // TODO switch to take picture check attendance
                         break;
                     case R.id.button_take_photo:
                         intent.putExtra("take_picture", "false");
-                        intent.setClass(TeacherOperation.this, TeacherOperationTakePhoto.class);
+                        intent.setClass(TeacherOperation.this, TeacherOperationManualCheckAttendance.class);
                         break;
                     case R.id.button_check_absence_record:
                         break;
@@ -64,4 +63,6 @@ public class TeacherOperation extends AppCompatActivity {
     public void _return(View v) {
         TeacherOperation.this.finish();
     }
+
+
 }

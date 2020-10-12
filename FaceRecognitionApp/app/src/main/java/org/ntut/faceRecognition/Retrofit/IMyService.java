@@ -33,10 +33,10 @@ public interface IMyService {
     );
 
     // 學生查詢出缺席
-    @POST("studentFindRollCall")
+    @POST("studentCheckAttendance")
     @FormUrlEncoded
-    Observable<String> studentFindRollCall(
-            @Field("userId") String id
+    Observable<String> studentCheckAttendance(
+            @Field("userId") String studentId
     );
 
     // 教授點課程時回傳日期
@@ -47,11 +47,11 @@ public interface IMyService {
     );
 
     // 教授點擊課程時間回傳點名單
-    @POST("teacherGetCourseStudentList")
+    @POST("teacherGetCourseAttendance")
     @FormUrlEncoded
-    Observable<String> getRollCall(
+    Observable<String> teacherGetCourseAttendance(
             @Field("courseId") String courseId,
-            @Field("courseDate") String date
+            @Field("courseDate") String courseDate
     );
 
 //    @POST("getRollCall")
@@ -63,10 +63,11 @@ public interface IMyService {
 
 
     // TODO class name must use id  !!!!
-    @POST("findStudent")
+    @POST("teacherGetCourseAttendance")
     @FormUrlEncoded
     Observable<String> findStudent(
-            @Field("class_name") String class_name
+            @Field("courseId") String courseId,
+            @Field("date") String courseDate
     );
 
     @POST("findStudentClass")

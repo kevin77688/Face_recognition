@@ -1,8 +1,5 @@
 package org.ntut.faceRecognition;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -13,16 +10,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.json.JSONObject;
 import org.ntut.faceRecognition.Retrofit.IMyService;
 import org.ntut.faceRecognition.Retrofit.RetrofitClient;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -66,27 +60,27 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
     }
 
     synchronized private void findStudent(String class_name) {
-        compositeDisposable.add(iMyService.findStudent(class_name)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String response) throws Exception {
-                        JSONObject jsonobj = new JSONObject(response);
-                        String name = jsonobj.getString("name");
-                        Log.e("name", name);
-                        String[] items = name.replaceAll("\\[", "")
-                                         .replaceAll("\\]", "").split(",");
-                        String[] results = new String[items.length];
-                        for (int i = 0; i < items.length; i++)
-                            results[i] = items[i];
-                        Log.e("name", results[0]);
-                        Log.e("name", results[1]);
-
-                        studentName = results;
-                        setButton();
-                    }
-                }));
+//        compositeDisposable.add(iMyService.findStudent(class_name)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Consumer<String>() {
+//                    @Override
+//                    public void accept(String response) throws Exception {
+//                        JSONObject jsonobj = new JSONObject(response);
+//                        String name = jsonobj.getString("name");
+//                        Log.e("name", name);
+//                        String[] items = name.replaceAll("\\[", "")
+//                                         .replaceAll("\\]", "").split(",");
+//                        String[] results = new String[items.length];
+//                        for (int i = 0; i < items.length; i++)
+//                            results[i] = items[i];
+//                        Log.e("name", results[0]);
+//                        Log.e("name", results[1]);
+//
+//                        studentName = results;
+//                        setButton();
+//                    }
+//                }));
     }
     public void setButton() {
 
@@ -189,7 +183,7 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
                 }
             });
         }
-        compositeDisposable.add(iMyService.getRollCall(classDate, className)
+        compositeDisposable.add(iMyService.teacherGetCourseAttendance(classDate, className)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
