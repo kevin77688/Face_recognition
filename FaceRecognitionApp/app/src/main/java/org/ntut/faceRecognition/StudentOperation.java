@@ -1,16 +1,16 @@
 package org.ntut.faceRecognition;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class StudentOperation extends AppCompatActivity {
 
     private String _username;
+    private String _userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,8 +19,9 @@ public class StudentOperation extends AppCompatActivity {
 
         // Get Extra
         _username = getIntent().getStringExtra("username");
+        _userId = getIntent().getStringExtra("userId");
 
-        TextView upview_text = (TextView) findViewById(R.id.upview_text);
+        TextView upview_text = findViewById(R.id.upview_text);
         upview_text.setText("\n歡迎" + _username + "學生");
     }
     public void onclick(View v) {
@@ -39,6 +40,7 @@ public class StudentOperation extends AppCompatActivity {
                 finish();
         }
         intent.putExtra("username", _username);
+        intent.putExtra("userId", _userId);
         startActivity(intent);
     }
 

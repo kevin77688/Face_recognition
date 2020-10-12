@@ -3,27 +3,22 @@ package org.ntut.faceRecognition;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.ntut.faceRecognition.Retrofit.IMyService;
 import org.ntut.faceRecognition.Retrofit.RetrofitClient;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import java.util.ArrayList;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -38,7 +33,7 @@ public class Login extends AppCompatActivity {
     private MaterialEditText edt_login_email, edt_login_password;
     private Button btn_login;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private String username, userId;
+    private Intent nextPage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,10 +128,13 @@ public class Login extends AppCompatActivity {
                 public void accept(String response) throws Exception {
                     JsonParser jsonParser = new JsonParser(response);
                     showToast(jsonParser.getDescription());
-                    switch(jsonParser.getStatus()){
+                    switch(jsonParser.getStatus()) {
                         case 202:
                         case 401:
+                        case 405:
                             break;
+                        default:
+                            throw new RuntimeException("Status code: " + jsonParser.getStatus() + " error !");
                     }
                 }}));
 }
@@ -159,15 +157,17 @@ public class Login extends AppCompatActivity {
                                @Override
                                public void accept(String response) throws Exception {
                                    JsonParser jsonParser = new JsonParser(response);
-                                   userId = jsonParser.getId();
-                                   username = jsonParser.getName();
+                                   nextPage = new Intent();
+                                   nextPage.putExtra("username", jsonParser.getName());
+                                   nextPage.putExtra("userId", jsonParser.getId());
                                    showToast(jsonParser.getDescription());
-                                   switch (jsonParser.getStatus()){
+                                   switch (jsonParser.getStatus()) {
                                        case 200:
                                            goToPage(StudentOperation.class);
                                            break;
                                        case 201:
-                                           goToPage(TeacherOperation.class);
+                                           nextPage.putExtra("courses", jsonParser.getCourses());
+                                           goToPage(TeacherClass.class);
                                            break;
                                        case 400:
                                        case 402:
@@ -203,11 +203,8 @@ public class Login extends AppCompatActivity {
 
 
     private void goToPage(Class page) {
-        Intent intent = new Intent();
-        intent.setClass(this , page);
-        intent.putExtra("username", username);
-        intent.putExtra("userId", userId);
-        startActivity(intent);
+        nextPage.setClass(this, page);
+        startActivity(nextPage);
     }
 
     private void showToast(String message){
