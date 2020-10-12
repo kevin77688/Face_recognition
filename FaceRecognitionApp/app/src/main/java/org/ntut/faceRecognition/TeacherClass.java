@@ -16,6 +16,7 @@ import org.ntut.faceRecognition.Retrofit.RetrofitClient;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -70,10 +71,13 @@ public class TeacherClass extends AppCompatActivity {
                                 public void accept(String response) throws Exception {
                                     JSONObject jsonObject = new JSONObject(response);
                                     ArrayList<String> dates = new ArrayList<>();
-//                                    Iterator<String> date = jsonObject.getJSONArray("dates")
+                                    Iterator<String> date = jsonObject.getJSONObject("dates").keys();
+                                    while (date.hasNext())
+                                        dates.add((String) jsonObject.get(date.next()));
+                                    courseButtonPage.putExtra("dates", dates);
+                                    gotoPage(courseName, courseId);
                                 }
                             }));
-                    gotoPage(courseName, courseId);
                 }
             });
             mainLinerLayout.addView(btn);
