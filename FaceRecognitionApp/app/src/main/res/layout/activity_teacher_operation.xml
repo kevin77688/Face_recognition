@@ -6,20 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".TeacherOperation">
 
-    <Button
-        android:id="@+id/button_take_photo_auto"
-        android:layout_width="249dp"
-        android:layout_height="44dp"
-        android:layout_marginTop="180dp"
-        android:background="@drawable/button_white"
-        android:onClick="onclick"
-        android:text="拍照點名"
-        android:textColor="#4196E3"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
         android:id="@+id/background_all"
         android:layout_width="417dp"
@@ -33,18 +19,28 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <Button
+        android:id="@+id/button_take_photo_auto"
+        android:layout_width="249dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="180dp"
+        android:background="@drawable/button_white"
+        android:text="拍照點名"
+        android:textColor="#4196E3"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
         android:id="@+id/button_check_absence_record"
         android:layout_width="249dp"
         android:layout_height="44dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/button_white"
-        android:onClick="onclick"
         android:text="查看出缺席紀錄"
         android:textColor="#4196E3"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/button_take_photo"
         app:layout_constraintTop_toBottomOf="@+id/button_take_photo" />
 
     <Button
@@ -53,17 +49,14 @@
         android:layout_height="44dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/button_white"
-        android:onClick="onclick"
         android:text="手動點名"
         android:textColor="#4196E3"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/button_take_photo_auto"
         app:layout_constraintTop_toBottomOf="@+id/button_take_photo_auto" />
 
     <Button
-        android:id="@+id/button_take_photo"
+        android:id="@+id/goBack"
         android:layout_width="90dp"
         android:layout_height="114dp"
         android:background="@drawable/home_gray"
