@@ -244,7 +244,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
             operation();
         });
 
-        app.post('/teacherGetCourseStudentList', async(request, response, next)=>{
+        app.post('/teacherGetCourseAttendance', async(request, response, next)=>{
 			var userResponse = {};
             var post_data = request.body;
 			var date = post_data.date;
@@ -254,7 +254,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			if (!isRecorded){
 				var studentList = await FindStudentListUsingDateAndCourseId(course_id);
 				for (let i = 0; i < studentList.length; i++){
-					userResponse.rollCalls[studentList[i].studentId] = -1;
+					userResponse.rollCalls[studentList[i].studentDetails[0].name] = '-1';
 				}
 			}
 			else {
@@ -275,13 +275,47 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 		
 		function FindStudentListUsingDateAndCourseId(course_id){
 			var db = client.db('nodejsTest');
-			var studentList = db.collection('studentCourse').find({courseId: course_id}).toArray();
+			const pipeline = [
+				{
+					'$lookup':
+					{
+						from: 'user',
+						localField: 'studentId',
+						foreignField: '_id',
+						as: 'studentDetails'
+					}
+				},
+				{
+					'$match':
+					{
+						courseId: course_id
+					}
+				}
+			]
+			var studentList = db.collection('studentCourse').aggregate(pipeline).toArray();
 			return studentList;
 		}
 		
 		function FindRollCallsUsingDateAndCourseId(course_id, date){
 			var db = client.db('nodejsTest');
-			var rollCalls = db.collection('rollCall').find({courseId: course_id, date: date}).toArray();
+			const pipeline = [
+				{
+					'$lookup':
+					{
+						from: 'user',
+						localField: 'studentId',
+						foreignField: '_id',
+						as: 'studentDetails'
+					}
+				},
+				{
+					'$match':
+					{
+						courseId: course_id
+					}
+				}
+			]
+			var rollCalls = db.collection('rollCall').aggregate(pipeline).toArray();
 			return rollCalls;
 		}
 
@@ -313,7 +347,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
             operation();
         });
 
-        app.post('/studentFindRollCall', async(request, response, next)=>{
+        app.post('/studentCheckAttendance', async(request, response, next)=>{
 			var userResponse = {};
             var post_data = request.body;
             var _id = post_data._id ;

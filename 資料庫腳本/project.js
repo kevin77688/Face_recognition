@@ -1,43 +1,5 @@
 use nodejsTest
 
-//建立學生資料
-
-db.student.drop();
-
-db.student.insertMany([ 
-
-    //不能取class所以班級一樣先叫faculty
-
-    {_id: 106820051, name: "陳小一", faculty: "電資三", birthday: "1999/09/01", sex: "male", salt: "123456"},
-
-    {_id: 106820052, name: "王小二", faculty: "電資三", birthday: "1999/09/02", sex: "female", salt: "123456"},
-
-    {_id: 106820053, name: "李小三", faculty: "電資三", birthday: "1999/09/03", sex: "male", salt: "123456"},
-
-    {_id: 106820054, name: "許小四", faculty: "電資三", birthday: "1999/09/04", sex: "female", salt: "123456"},
-
-    {_id: 106820055, name: "鄭小五", faculty: "電資三", birthday: "1999/09/05", sex: "male",  salt: "123456"}
-
-]); 
-
-//建立教授資料
-
-db.professor.drop();
-
-db.professor.insertMany([ 
-
-    {_id: 00001, name: "陳大一", faculty: "資工系", birthday: "1979/09/01", sex: "male", salt: "123456"},
-
-    {_id: 00002, name: "王大二", faculty: "資工系", birthday: "1979/09/02", sex: "female", salt: "123456"},
-
-    {_id: 00003, name: "李大三", faculty: "資工系", birthday: "1979/09/03", sex: "male", salt: "123456"},
-
-    {_id: 00004, name: "許大四", faculty: "資工系", birthday: "1979/09/04", sex: "female", salt: "123456"},
-
-    {_id: 00005, name: "鄭大五", faculty: "資工系", birthday: "1979/09/05", sex: "male", salt: "123456"}
-
-]);
-
 //建立課程資料
 
 db.course.drop();
@@ -120,15 +82,15 @@ db.courseDate.insertMany([
 	{recordId:35, courseId: "274202", date: "2020-10-15",isRecord: false},
 	{recordId:36, courseId: "274202", date: "2020-10-22",isRecord: false},
 
-　　{recordId:37, courseId: "職涯進擊講座", date: "2020-10-02",isRecord: false},
-	{recordId:38, courseId: "職涯進擊講座", date: "2020-10-09",isRecord: false},
-	{recordId:39, courseId: "職涯進擊講座", date: "2020-10-16",isRecord: false},
-	{recordId:40, courseId: "職涯進擊講座", date: "2020-10-23",isRecord: false},
+　　{recordId:37, courseId: "274250", date: "2020-10-02",isRecord: false},
+	{recordId:38, courseId: "274250", date: "2020-10-09",isRecord: false},
+	{recordId:39, courseId: "274250", date: "2020-10-16",isRecord: false},
+	{recordId:40, courseId: "274250", date: "2020-10-23",isRecord: false},
 
-　　{recordId:41, courseId: "國際觀培養講座", date: "2020-11-02",isRecord: false},
-	{recordId:42, courseId: "國際觀培養講座", date: "2020-11-09",isRecord: false},
-	{recordId:43, courseId: "國際觀培養講座", date: "2020-11-16",isRecord: false},
-	{recordId:44, courseId: "國際觀培養講座", date: "2020-11-23",isRecord: false}
+　　{recordId:41, courseId: "274340", date: "2020-11-02",isRecord: false},
+	{recordId:42, courseId: "274340", date: "2020-11-09",isRecord: false},
+	{recordId:43, courseId: "274340", date: "2020-11-16",isRecord: false},
+	{recordId:44, courseId: "274340", date: "2020-11-23",isRecord: false}
 ]);
 
 //建立學生課程關聯資料
@@ -137,17 +99,17 @@ db.studentCourse.drop();
 db.studentCourse.createIndex({studentId: 1, courseId: 1}, {unique: true});
 
 db.studentCourse.insertMany([
-    {studentId: 106820053, courseId: 268986, score: -1, attendance: 0},
-    {studentId: 106820054, courseId: 268986, score: -1, attendance: 0},
-    {studentId: 106820055, courseId: 268986, score: -1, attendance: 0},
-    {studentId: 106820051, courseId: 268987, score: -1, attendance: 0},
-    {studentId: 106820052, courseId: 268987, score: -1, attendance: 0},
-    {studentId: 106820053, courseId: 268987, score: -1, attendance: 0},
-    {studentId: 106820054, courseId: 268987, score: -1, attendance: 0},
-    {studentId: 106820051, courseId: 269469, score: -1, attendance: 0},
-    {studentId: 106820052, courseId: 269469, score: -1, attendance: 0},
-    {studentId: 106820053, courseId: 269469, score: -1, attendance: 0},
-    {studentId: 106820055, courseId: 269469, score: -1, attendance: 0}
+    {studentId: '106820053', courseId: '268986', score: -1, attendance: 0},
+    {studentId: '106820054', courseId: '268986', score: -1, attendance: 0},
+    {studentId: '106820055', courseId: '268986', score: -1, attendance: 0},
+    {studentId: '106820051', courseId: '268987', score: -1, attendance: 0},
+    {studentId: '106820052', courseId: '268987', score: -1, attendance: 0},
+    {studentId: '106820053', courseId: '268987', score: -1, attendance: 0},
+    {studentId: '106820054', courseId: '268987', score: -1, attendance: 0},
+    {studentId: '106820051', courseId: '269469', score: -1, attendance: 0},
+    {studentId: '106820052', courseId: '269469', score: -1, attendance: 0},
+    {studentId: '106820053', courseId: '269469', score: -1, attendance: 0},
+    {studentId: '106820055', courseId: '269469', score: -1, attendance: 0}
 ]);
 
 //建立學生課程關聯資料
@@ -156,32 +118,32 @@ db.user.drop();
 
 db.user.insertMany([
 
-	{email: "b", password: "b", salt: "sha512", name: "陳小一", _id: 106820051, identification: "student"},
+	{email: "b", password: "b", salt: "sha512", name: "陳小一", _id: '106820051', identification: "student"},
 	
-	{email: "c", password: "c", salt: "sha512", name: "王小二", _id: 106820052, identification: "student"},
+	{email: "c", password: "c", salt: "sha512", name: "王小二", _id: '106820052', identification: "student"},
 	
-	{email: "d", password: "d", salt: "sha512", name: "李小三", _id: 106820053, identification: "student"},
+	{email: "d", password: "d", salt: "sha512", name: "李小三", _id: '106820053', identification: "student"},
 	
-	{email: "e", password: "e", salt: "sha512", name: "許小四", _id: 106820054, identification: "student"},
+	{email: "e", password: "e", salt: "sha512", name: "許小四", _id: '106820054', identification: "student"},
 	
-	{email: "f", password: "f", salt: "sha512", name: "鄭小五", _id: 106820055, identification: "student"},
+	{email: "f", password: "f", salt: "sha512", name: "鄭小五", _id: '106820055', identification: "student"},
 	
-	{email: "a1", password: "a1", salt: "sha512", name: "陳大一", _id: 00001, identification: "teacher"},
+	{email: "a1", password: "a1", salt: "sha512", name: "陳大一", _id: '00001', identification: "teacher"},
 	
-	{email: "a2", password: "a2", salt: "sha512", name: "王大二", _id: 00002, identification: "teacher"},
+	{email: "a2", password: "a2", salt: "sha512", name: "王大二", _id: '00002', identification: "teacher"},
 	
-	{email: "a3", password: "a3", salt: "sha512", name: "李大三", _id: 00003, identification: "teacher"},
+	{email: "a3", password: "a3", salt: "sha512", name: "李大三", _id: '00003', identification: "teacher"},
 	
-	{email: "a4", password: "a4", salt: "sha512", name: "許大四", _id: 00004, identification: "teacher"},
+	{email: "a4", password: "a4", salt: "sha512", name: "許大四", _id: '00004', identification: "teacher"},
 	
-	{email: "a5", password: "a5", salt: "sha512", name: "鄭大五", _id: 00005, identification: "teacher"},
+	{email: "a5", password: "a5", salt: "sha512", name: "鄭大五", _id: '00005', identification: "teacher"},
 
 ]);
 
-db.rollcall.drop();
+db.attendance.drop();
 
 
-db.rollcall.insertMany([
-	{name: "陳小一", date: "陳小一", class: "陳小一", status: "陳小一"},
+db.attendance.insertMany([
+	{studentId: "陳小一", date: "陳小一", courseId: "陳小一", attendance: "陳小一"},
 ]);
 
