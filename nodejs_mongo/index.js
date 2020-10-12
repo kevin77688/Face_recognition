@@ -62,15 +62,16 @@ var url = 'mongodb://localhost:27017'
 MongoClient.connect(url, {useNewParser: true}, function(err, client){
 	
 	// Response code : 
-    // Login password wrong:402
+	// 100 Database insertion error
 	// 200 student login
     // 201 teacher login
     // 202 register success
-	// 203 Get roll call success
+	// 203 Get data success
     // 400 login password error
     // 401 register email exist
 	// 402 login email not exist
-	// 403 Get roll call failed
+	// 403 Get data failed
+	// 405 register id exist
     if (err)
         console.log('Unable to connect to MongoDB', err);
     else{
@@ -103,22 +104,33 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
             };
 
             var db = client.db('nodejsTest');
-			var numberOfExistence = await findUserExistenceFromEmail();
-			if (numberOfExistence != 0){
-				userResponse.description = "Register email exist"
+			var numberOfSameEmail = await findUserExistenceFromEmail();
+			if (numberOfSameEmail != 0){
+				userResponse.description = "Register email exist";
 				userResponse.status = 401;
 				console.log('Email already exists');
 			}
-			else{
+			var numberOfSameId = await findUserExistFromId();
+			if (numberOfSameId != 0){
+				userResponse.description = "Register id exist";
+				userResponse.status = 405;
+				console.log('Id already exists');
+			}
+			if (numberOfSameEmail == 0 && numberOfSameId == 0){
 				// Insert Data
-				db.collection('user')
-					.insertOne(insertJson, function(error, res){
+				db.collection('user').insertOne(insertJson, function(error, res){
+					if (!error){
 						userResponse.username = name;
 						userResponse.userId = _id;
 						userResponse.description = "Register success";
 						userResponse.status = 202;
 						console.log('Registration success');
-					})
+					}
+					else {
+						userResponse.description = "Database insertion error";
+						userResponse.status = 100;
+					}
+				})
 			}
 			response.json(userResponse);
         });
@@ -154,6 +166,11 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 						else if (user.identification == "teacher"){
 							userResponse.description = "Teacher login";
 							userResponse.status = 201;
+							userResponse.courses = {};
+							var courses = await findCoursesFromTeacherId(user._id);
+							for (var course in courses){
+								userResponse.courses[course._id] = course.name;
+							}
 						}
 						userResponse.username = user.name;
 						userResponse.userId = user._id;
@@ -176,42 +193,41 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 		
 		function findUserDataFromEmail(email){
 			var db = client.db('nodejsTest');
-			var userResponse = {};
-			var user = db.collection('user').findOne({'email': email})
+			var user = db.collection('user').findOne({'email': email});
 			return user;
 		}
+		
+		function findUserExistenceFromId(id){
+			var db = client.db('nodejsTest');
+			var user = db.collection('user').findone({'_id': id});
+			return user;
+		}
+		
+		function findStudentsFromCourseId(course_id) {
+			var db = client.db('nodejsTest');
+			var students = db.collection("studentCourse").find({_id: course_id}).toArray();
+			return students;
+		}
+		
+		function findCoursesFromTeacherId(teacher_id){
+			var db = client.db('nodejsTest');
+			var courses = db.collection('course').find({teacherId: teacher_id}).toArray();
+			return courses;
+		}
 
+		//用課程id尋找學生名單
         app.post('/findStudent', (request, response, next)=>{
             var post_data = request.body;
-            var class_name = post_data.class_name;
-            var db = client.db('nodejsTest');
-            console.log("findStudent",class_name);
-            var data,student_list;
-            var student = {};
-            student.name = [];
-            function findClassNumber(){
-                const  thing = db.collection("course").findOne({ name: class_name });
-                // console.log(thing);
-                return thing;
-            }
-            function findStudentCode(class_code) {
-                var thing = db.collection("studentCourse").find({courseId: class_code}).toArray();
-                return thing;
-            }
-            function findStudent(student) {
-                console.log("student99:",student);
-                const  thing = db.collection("user").findOne({ _id: student });
-                console.log("thing:",thing);
-
-                return thing;
-            }
+            var course_id = post_data.course_id;
+            console.log("find students of course: ",course_id);
+            var userResponse = {};
             async function find() {
-                data = await findClassNumber();
-                student_list = await findStudentCode(data._id);
+                student_list = await findStudentsFromCourseId(course._id);
                 for(let i=0;i<student_list.length;i++){
                     var data = await findStudent(student_list[i].studentId);
                     student.name.push(data.name);
                 }
+				userResponse
                 console.log("data:",data._id);
                 console.log("student_list:",student_list);
                 console.log("student:",student);
@@ -249,18 +265,11 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
             operation();
         });
 
-        app.post('/getRollCall', (request, response, next)=>{
+        app.post('/teacherGetCourseStudentList', (request, response, next)=>{
             var post_data = request.body;
-            var class_data = post_data.class_data;
-            var class_name = post_data.class_name;
-
-            console.log(class_data);
-            console.log(class_name);
-            var userData = {};
-            userData.student_name = [];
-            userData.student_status = [];
-            var db = client.db('nodejsTest');
-            db.collection("rollcall").find({date: class_data, class: class_name}).toArray(function(err, result){
+			var date = post_data.date;
+			var course_id = post_data.courseId;
+            db.collection("studentCourse").find({date: class_data, class: class_name}).toArray(function(err, result){
                 if (err) throw err;
                 for(let i=0;i<result.length;i++){
                     userData.student_name.push(result[i].name)
@@ -270,22 +279,28 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
                 response.json(userData);
             });
         });
+		
+		function FindStudentListFromDateAndCourseId(){
+			var db = client.db('nodejsTest');
+			var studentList = db.collection('studentCourse').find({date: date, courseId: course_id}).toArray();
+			return studentList;
+		}
 
-        app.post('/findUserClass', (request, response, next)=>{
-            var post_data = request.body;
-            var id =parseInt(post_data.id)  ;
-            var db = client.db('nodejsTest');
-            console.log("post findUserClass: 888888");
-            console.log(post_data);
-            var userData = {};
-            userData.class = [];
-            db.collection("course").find({'teacherId': id}).toArray(function(err, result){
-                if (err) throw err;
-                for(let i=0;i<result.length;i++)
-                    userData.class.push(result[i].name)
-                response.json(userData);
-            });
-        });
+        // app.post('/findUserClass', (request, response, next)=>{
+            // var post_data = request.body;
+            // var id =parseInt(post_data.id)  ;
+            // var db = client.db('nodejsTest');
+            // console.log("post findUserClass: 888888");
+            // console.log(post_data);
+            // var userData = {};
+            // userData.class = [];
+            // db.collection("course").find({'teacherId': id}).toArray(function(err, result){
+                // if (err) throw err;
+                // for(let i=0;i<result.length;i++)
+                    // userData.class.push(result[i].name)
+                // response.json(userData);
+            // });
+        // });
 
         app.post('/findStudentClass', (request, response, next)=>{
             var post_data = request.body;
@@ -315,7 +330,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
             operation();
         });
 
-        app.post('/findRollCall', async(request, response, next)=>{
+        app.post('/studentFindRollCall', async(request, response, next)=>{
 			var userResponse = {};
             var post_data = request.body;
             var _id = post_data._id ;
@@ -327,16 +342,12 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			else {
 				userResponse.description = "Get roll call success"
 				userResponse.status = 203;
-				userResponse.classes = {};
-				for(let i = 0; i < rollcalls.length; i++){
-					var classes;
-					classes.class = result[i].class;
-                    classes.date = result[i].date;
-					classes.attendence = result[i].status;
-                }
+				userResponse.courses = [];
+				for(let rollCall in rollCalls){
+					userResponse.courses.push({'courseName': rollCall.course_name, 'date': rollCall.date, 'attendance': rollCall.attendance});
+				}
 			}
             response.json(userResponse);
-            });
         });
 		
 		function findRollCallFromId(id){
@@ -345,22 +356,27 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			return rollCalls;
 		}
 
-        app.post('/findUserClassDate', (request, response, next)=>{
+        app.post('/teacherFindCourseDate', async(request, response, next)=>{
+			var userResponse = {};
             var post_data = request.body;
-            var class_name =post_data.class_name;
+            var course_id = post_data.courseId;
             var db = client.db('nodejsTest');
-            console.log("post findUserClass: 99999");
-            console.log("findUserClassDate：",class_name);
-            var classData = {};
-            classData.date = [];
-            classData.name = class_name;
-            db.collection("courseDate").find({'classId': class_name}).toArray(function(err, result){
-                for(let j=0;j<result.length;j++)
-                    classData.date.push(result[j].date);
-                console.log("4",classData);
-                response.json(classData);
-            });
+            console.log("findUserClassDate：",course_id);
+            var courseDates = await findCourseDatesFromCourseId();
+            userResponse.status = "203";
+			userResponse.description = "Find data success";
+			userResponse.dates = [];
+			for (let courseDate in courseDates){
+				userResponse.dates.push(courseDate.date);
+			}
+			response.json(userResponse);
         });
+		
+		function findCourseDatesFromCourseId(course_id){
+			var db = client.db('nodejsTest');
+			var courseDates = db.collection("courseDate").find({'courseId': course_id}).toArray();
+			return courseDates;
+		}
 		
 		// student upload images
 		app.post('/studentUpload', upload.single('image'), async(request, response, next)=>{
