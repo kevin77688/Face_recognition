@@ -42,9 +42,15 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_operation_manual_check_attendance);
 
-        Retrofit retrofitClient = RetrofitClient.getInstance();
-        iMyService = retrofitClient.create(IMyService.class);
+        getExtras();
+        setupConnection();
 
+        students = new ArrayList<>();
+        getStudentList();
+        setConfirmButton();
+    }
+
+    private void getExtras() {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             courseName = extras.getString("courseName");
@@ -52,9 +58,11 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
             courseId = extras.getString("courseId");
         } else
             throw new RuntimeException("Transfer extra between activity failed");
-        students = new ArrayList<>();
-        getStudentList();
-        setConfirmButton();
+    }
+
+    private void setupConnection() {
+        Retrofit retrofitClient = RetrofitClient.getInstance();
+        iMyService = retrofitClient.create(IMyService.class);
     }
 
     synchronized private void getStudentList() {

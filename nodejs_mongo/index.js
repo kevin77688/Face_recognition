@@ -59,6 +59,8 @@ var MongoClient = mongodb.MongoClient;
 //Connection URL
 var url = 'mongodb://localhost:27017'
 
+var dbName = 'nodejsTest'
+
 MongoClient.connect(url, {useNewParser: true}, function(err, client){
 	
 	// Response code : 
@@ -67,6 +69,8 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
     // 201 teacher login
     // 202 register success
 	// 203 Get data success
+	// 204 insert data success
+	// 205 update date success
     // 400 login password error
     // 401 register email exist
 	// 402 login email not exist
@@ -103,7 +107,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
                 'identification': identification
             };
 
-            var db = client.db('nodejsTest');
+            var db = client.db(dbName);
 			var numberOfSameEmail = await findUserExistenceUsingEmail();
 			if (numberOfSameEmail != 0){
 				userResponse.description = "Register email exist";
@@ -186,31 +190,31 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 		});
 		
 		function findUserExistenceUsingEmail(email){
-			var db = client.db('nodejsTest');
+			var db = client.db(dbName);
             var number = db.collection('user').find({'email': email}).count();
 			return number;
 		}
 		
 		function findUserDataUsingEmail(email){
-			var db = client.db('nodejsTest');
+			var db = client.db(dbName);
 			var user = db.collection('user').findOne({'email': email});
 			return user;
 		}
 		
 		function findUserExistenceUsingId(id){
-			var db = client.db('nodejsTest');
+			var db = client.db(dbName);
 			var user = db.collection('user').findone({'_id': id});
 			return user;
 		}
 		
 		function findStudentsUsingCourseId(course_id) {
-			var db = client.db('nodejsTest');
+			var db = client.db(dbName);
 			var students = db.collection("studentCourse").find({_id: course_id}).toArray();
 			return students;
 		}
 		
 		function findCoursesUsingTeacherId(teacher_id){
-			var db = client.db('nodejsTest');
+			var db = client.db(dbName);
 			var courses = db.collection('course').find({teacherId: teacher_id}).toArray();
 			return courses;
 		}
@@ -219,42 +223,53 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			var userResponse = {};
             var post_data = request.body;
 			var jsonData = JSON.parse(post_data.studentAttendantList);
+			console.log(jsonData);
 			var course_id = jsonData.courseId;
-			var date = jsonData.date;
+			var date = jsonData.courseDate;
 			var studentList = jsonData.students;
-			console.log(studentList[0].userId);
-			console.log(studentList[1]);
-			var isRecorded = await CheckCourseDateRecorded(course_id, date);
-			console.log(course_id);
-			if (isRecorded){
-				userResponse.status = 300;
+			var courseDate = await GetCourseDateByIdAndDate(course_id, date);
+			var isRecorded = courseDate.isRecord;
+			var db = client.db(dbName);
+			if (!isRecorded){
+				userResponse.status = 204;
+				var insertDocs = [];
+				for (const [key, value] of Object.entries(studentList)) {
+					insertDocs.push({studentId: key, date: date, courseId: course_id, attendance: value.toString()});
+				}
+				userResponse.result = await db.collection('attendance').insertMany(insertDocs);
+				var filter = {courseId: course_id, date: date};
+				var updateValue = { $set: { isRecord: true } };
+				await db.collection('courseDate').updateOne(filter, updateValue);
 			}
 			else{
-				userResponse.status = 301;
+				userResponse.status = 205;
+				ops = [];
+				for (const [key, value] of Object.entries(studentList)) {
+					ops.push(
+						{
+							updateOne: {
+								filter: {studentId: key, date: date, courseId: course_id},
+								update: {
+									$set: {attendance: value.toString()}
+								},
+								upsert: true
+							}
+						}
+					)
+				}
+				userResponse.result = await db.collection('attendance').bulkWrite(ops, { ordered: false });				
 			}
+			console.log(userResponse);
 			response.json(userResponse);
-        });
-		
-		app.post('/rollCallUpdate', async(request, response, next)=>{
-            var post_data = request.body;
-			var course_id = post_data.courseId;
-			var date = post_data.date;
-			var isRecorded = await CheckCourseDateRecorded(course_id, date);
-			console.log("called!");
-			if (isRecorded){
-				
-			}
-			else{
-				
-			}
         });
 
         app.post('/teacherGetCourseAttendance', async(request, response, next)=>{
 			var userResponse = {};
             var post_data = request.body;
-			var date = post_data.date;
+			var date = post_data.courseDate;
 			var course_id = post_data.courseId;
-            var isRecorded = await CheckCourseDateRecorded(course_id, date);
+            var courseDate = await GetCourseDateByIdAndDate(course_id, date);
+			var isRecorded = courseDate.isRecord;
 			userResponse.attendance = {}
 			if (!isRecorded){
 				var studentList = await FindStudentListUsingCourseId(course_id);
@@ -274,14 +289,14 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			response.json(userResponse);
         });
 		
-		function CheckCourseDateRecorded(course_id, date){
-			var db = client.db('nodejsTest');
+		function GetCourseDateByIdAndDate(course_id, date){
+			var db = client.db(dbName);
 			var courseDate = db.collection('courseDate').findOne({date: date, courseId: course_id});
-			return courseDate.isRecord;
+			return courseDate;
 		}
 		
 		function FindStudentListUsingCourseId(course_id){
-			var db = client.db('nodejsTest');
+			var db = client.db(dbName);
 			const pipeline = [
 				{
 					'$lookup':
@@ -304,7 +319,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 		}
 		
 		function FindAttendanceUsingDateAndCourseId(course_id, date){
-			var db = client.db('nodejsTest');
+			var db = client.db(dbName);
 			const pipeline = [
 				{
 					'$lookup':
@@ -329,7 +344,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
         app.post('/findStudentClass', (request, response, next)=>{
             var post_data = request.body;
             var id =parseInt(post_data.id)  ;
-            var db = client.db('nodejsTest');
+            var db = client.db(dbName);
             var userData = {};
             userData.class = [];
         
@@ -378,7 +393,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
         });
 		
 		function findAttendanceUsingStudentId(id){
-			var db = client.db('nodejsTest');
+			var db = client.db(dbName);
 			const pipeline = [
 				{
 					'$lookup':
@@ -418,7 +433,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
         });
 		
 		function findCourseDatesUsingCourseId(course_id){
-			var db = client.db('nodejsTest');
+			var db = client.db(dbName);
 			var courseDates = db.collection("courseDate").find({'courseId': course_id}).toArray();
 			return courseDates;
 		}
@@ -428,7 +443,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			console.log(request.body);
 			console.log(request.file);
 			console.log(request.file.originalname);
-			var db = client.db('nodejsTest');
+			var db = client.db(dbName);
 			db.collection('avatar').insertOne({'userId': request.body._id, 'imageName': imageName}, function(error, res){
                                 response.json('Upload success');
                                 console.log('Upload success');

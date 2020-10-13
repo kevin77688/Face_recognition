@@ -32,9 +32,13 @@ public class TeacherClassDate extends AppCompatActivity {
     }
 
     private void getExtras() {
-        courseName = getIntent().getStringExtra("courseName");
-        courseId = getIntent().getStringExtra("courseId");
-        courseDates = getIntent().getStringArrayListExtra("courseDate");
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            courseName = getIntent().getStringExtra("courseName");
+            courseId = getIntent().getStringExtra("courseId");
+            courseDates = getIntent().getStringArrayListExtra("courseDate");
+        } else
+            throw new RuntimeException("pass data between activity error");
     }
 
     private void setCourseButton() {
