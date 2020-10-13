@@ -1,6 +1,7 @@
 package org.ntut.faceRecognition;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.CheckBox;
@@ -9,8 +10,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.gson.JsonObject;
 
 import org.json.JSONObject;
 import org.ntut.faceRecognition.Retrofit.IMyService;
@@ -24,6 +23,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
@@ -144,6 +146,21 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
 
     private void updateRecord() {
         // TODO update record need to reformat
+        ArrayList<String> names = new ArrayList<>();
+        for (Student student : students)
+            names.add(student.getName());
+        Call call = iMyService.uploadAttendanceList(names);
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                Log.i("Response", "success");
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                Log.i("Response", "failure");
+            }
+        });
 //        for (ArrayList<CheckBox> checkBoxArrayList : checkBoxesRow){
 //
 //        }
