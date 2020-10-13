@@ -41,24 +41,34 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Init Services
-        Retrofit retrofitClient = RetrofitClient.getInstance();
-        iMyService = retrofitClient.create(IMyService.class);
+        setupConnection();
+        findView();
+        setLoginButton();
+        setRegisterButton();
+    }
 
-        // Init view
+    private void findView() {
         edt_login_email = findViewById(R.id.email_field);
         edt_login_password = findViewById(R.id.password_field);
-
+        txt_create_account = findViewById(R.id.create_account_text);
         btn_login = findViewById(R.id.login_button);
-        btn_login.setOnClickListener(new View.OnClickListener() {
+    }
 
+    private void setupConnection() {
+        Retrofit retrofitClient = RetrofitClient.getInstance();
+        iMyService = retrofitClient.create(IMyService.class);
+    }
+
+    private void setLoginButton() {
+        btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loginUser(edt_login_email.getText().toString(), edt_login_password.getText().toString());
             }
         });
+    }
 
-        txt_create_account = findViewById(R.id.create_account_text);
+    private void setRegisterButton() {
         txt_create_account.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,18 +127,17 @@ public class Login extends AppCompatActivity {
                         }).show();
             }
         });
-
     }
 
     synchronized private void registerUser(String email, String name, String password, String _id) {
-    compositeDisposable.add(iMyService.registerUser(email, name, password, _id)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Consumer<String>() {
-                @Override
-                public void accept(String response) throws Exception {
-                    JsonParser jsonParser = new JsonParser(response);
-                    Utils.showToast(jsonParser.getDescription(), Login.this);
+        compositeDisposable.add(iMyService.registerUser(email, name, password, _id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String response) throws Exception {
+                        JsonParser jsonParser = new JsonParser(response);
+                        Utils.showToast(jsonParser.getDescription(), Login.this);
                     switch(jsonParser.getStatus()) {
                         case 202:
                         case 401:
@@ -163,7 +172,7 @@ public class Login extends AppCompatActivity {
                                    Utils.showToast(jsonParser.getDescription(), Login.this);
                                    switch (jsonParser.getStatus()) {
                                        case 200:
-                                           goToPage(StudentOperation.class);
+                                           goToPage(StudentOperation.class, null);
                                            break;
                                        case 201:
                                            goToPage(TeacherClass.class, jsonParser.getCourses());
@@ -176,7 +185,7 @@ public class Login extends AppCompatActivity {
                 }));
     }
 
-    private void goToPage(Class page, HashMap... courseList) {
+    private void goToPage(Class page, HashMap courseList) {
         Intent intent = new Intent();
         intent.putExtra("username", username);
         intent.putExtra("userId", userId);

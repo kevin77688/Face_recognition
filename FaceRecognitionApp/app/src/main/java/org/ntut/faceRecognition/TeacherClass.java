@@ -26,11 +26,11 @@ import retrofit2.Retrofit;
 
 public class TeacherClass extends AppCompatActivity {
 
-    private String teacherName;
-    private String teacherId;
+    private String teacherName, teacherId;
     private HashMap<String, String> courses;
-    private Intent courseButtonPage;
     private ArrayList<String> coursesId;
+    private Button returnButton;
+    private TextView title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,20 +38,36 @@ public class TeacherClass extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_class);
 
-        teacherName = getIntent().getStringExtra("username");
-        teacherId = getIntent().getStringExtra("userId");
-        courses = (HashMap<String, String>) getIntent().getSerializableExtra("courses");
+        getExtras();
         coursesId = new ArrayList<>(courses.keySet());
 
+        findView();
         setTitle();
         setCourseDateView();
+        setReturnButton();
+    }
 
+    private void getExtras() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            teacherName = getIntent().getStringExtra("username");
+            teacherId = getIntent().getStringExtra("userId");
+            courses = (HashMap<String, String>) getIntent().getSerializableExtra("courses");
+        } else
+            throw new RuntimeException("Passing extras between activity failed !");
+    }
 
+    private void findView() {
+        returnButton = findViewById(R.id.return_button);
+        title = findViewById(R.id.title_text);
+    }
+
+    private void setReturnButton() {
+        returnButton.setOnClickListener(Utils.setReturnButton(TeacherClass.this));
     }
 
     private void setTitle() {
-        TextView textView_show_teacher_name = findViewById(R.id.title_text);
-        textView_show_teacher_name.setText("\n歡迎" + teacherName + "教授");
+        title.setText("\n歡迎" + teacherName + "教授");
     }
 
     private void setCourseDateView() {
@@ -67,7 +83,6 @@ public class TeacherClass extends AppCompatActivity {
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    courseButtonPage = new Intent();
                     CompositeDisposable compositeDisposable = new CompositeDisposable();
                     // Init Services
                     Retrofit retrofitClient = RetrofitClient.getInstance();
@@ -83,8 +98,7 @@ public class TeacherClass extends AppCompatActivity {
                                     Iterator<String> date = jsonObject.getJSONObject("dates").keys();
                                     while (date.hasNext())
                                         dates.add((String) jsonObject.getJSONObject("dates").get(date.next()));
-                                    courseButtonPage.putExtra("courseDate", dates);
-                                    gotoPage(courseName, courseId);
+                                    gotoPage(courseName, courseId, dates);
                                 }
                             }));
                 }
@@ -93,10 +107,12 @@ public class TeacherClass extends AppCompatActivity {
         }
     }
 
-    private void gotoPage(String courseName, String courseId) {
-        courseButtonPage.putExtra("courseName", courseName);
-        courseButtonPage.putExtra("courseId", courseId);
-        courseButtonPage.setClass(this, TeacherClassDate.class);
-        startActivity(courseButtonPage);
+    private void gotoPage(String courseName, String courseId, ArrayList<String> courseDates) {
+        Intent intent = new Intent();
+        intent.putExtra("courseName", courseName);
+        intent.putExtra("courseId", courseId);
+        intent.putExtra("courseDate", courseDates);
+        intent.setClass(this, TeacherClassDate.class);
+        startActivity(intent);
     }
 }

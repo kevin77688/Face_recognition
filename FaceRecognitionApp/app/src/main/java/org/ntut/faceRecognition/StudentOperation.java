@@ -10,17 +10,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class StudentOperation extends AppCompatActivity {
 
-    private String _username;
-    private String _userId;
+    private String _username, _userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_operation);
 
-        // Get Extra
-        _username = getIntent().getStringExtra("username");
-        _userId = getIntent().getStringExtra("userId");
+        getExtras();
+
 
         TextView upview_text = findViewById(R.id.title_text);
         upview_text.setText("\n歡迎" + _username + "學生");
@@ -29,6 +27,15 @@ public class StudentOperation extends AppCompatActivity {
         uploadPhotoButton();
         checkAttendanceButton();
         returnButton();
+    }
+
+    private void getExtras() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            _username = getIntent().getStringExtra("username");
+            _userId = getIntent().getStringExtra("userId");
+        } else
+            throw new RuntimeException("Passing extras between activity failed !");
     }
 
     private void checkPhotoButton() {
