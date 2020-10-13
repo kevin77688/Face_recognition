@@ -86,18 +86,18 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
 
 
         LinearLayout mainLinerLayout = (LinearLayout) this.findViewById(R.id.roll_call_layout);
-        LinearLayout top = new LinearLayout(this);
-        top.setOrientation(LinearLayout.HORIZONTAL);
+//        LinearLayout top = new LinearLayout(this);
+//        top.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout show_top_linear = (LinearLayout) this.findViewById(R.id.show_top_linear);
 
-        TextView tx1= new TextView(this);
+        TextView tx1 = new TextView(this);
         tx1.setTextSize(30);
         tx1.setWidth(350);   //設定寬度
         tx1.setHeight(120);
         tx1.setGravity(Gravity.CENTER);
         tx1.setText("姓名");
 
-        TextView tx2= new TextView(this);
+        TextView tx2 = new TextView(this);
         tx2.setTextSize(30);
         tx2.setWidth(235);   //設定寬度
         tx2.setHeight(120);
