@@ -191,7 +191,7 @@ public class Login extends AppCompatActivity {
         intent.putExtra("username", username);
         intent.putExtra("userId", userId);
         if (courseList != null)
-            intent.putExtra("courses", courseList[0]);
+            intent.putExtra("courses", courseList);
         intent.setClass(Login.this, page);
         startActivity(intent);
     }
