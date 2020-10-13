@@ -76,6 +76,7 @@ public class StudentCheckRollCall extends AppCompatActivity {
         top.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout show_top_linear = this.findViewById(R.id.show_top_linear);
 
+        // TODO optimize code
         TextView tx1 = new TextView(this);
         tx1.setText("課程");
         TextView tx2 = new TextView(this);

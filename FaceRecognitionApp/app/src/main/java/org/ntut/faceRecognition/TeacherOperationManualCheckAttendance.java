@@ -31,7 +31,6 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private String courseName, courseDate, courseId;
     private ArrayList<Student> students;
-    private ArrayList<ArrayList<CheckBox>> checkBoxesRow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +46,8 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
             courseDate = extras.getString("courseDate");
             courseId = extras.getString("courseId");
         } else
-            throw new RuntimeException("Login error ! Cannot find userName");
+            throw new RuntimeException("Transfer extra between activity failed");
         students = new ArrayList<>();
-        checkBoxesRow = new ArrayList<>();
         getStudentList();
     }
 
@@ -73,11 +71,9 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
                 }));
     }
 
-    public void setButton() {
-        LinearLayout mainLinerLayout = (LinearLayout) this.findViewById(R.id.roll_call_layout);
-        LinearLayout top = new LinearLayout(this);
-        top.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout show_top_linear = (LinearLayout) this.findViewById(R.id.show_top_linear);
+    private void setButton() {
+        LinearLayout mainLinerLayout = (LinearLayout) findViewById(R.id.roll_call_layout);
+        LinearLayout show_top_linear = (LinearLayout) findViewById(R.id.show_top_linear);
 
         ArrayList<String> titles = new ArrayList<>(
                 Arrays.asList("姓名", "準時", "遲到", "缺席"));
@@ -91,10 +87,12 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
             show_top_linear.addView(textView);
         }
 
-        LinearLayout li = new LinearLayout(this);
-        li.setOrientation(LinearLayout.HORIZONTAL);
-        int studentCount = 0;
-        for (Student student : students) {
+
+//        int studentCount = 0;
+        for (final Student student : students) {
+            LinearLayout linearLayout = new LinearLayout(this);
+            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
             // Set student name
             TextView textView = new TextView(this);
             textView.setTextSize(30);
@@ -102,50 +100,45 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
             textView.setHeight(120);
             textView.setGravity(Gravity.CENTER);
             textView.setText(student.getName());
-            li.addView(textView);
+            linearLayout.addView(textView);
 
             ArrayList<CheckBox> checkBoxesColumn = new ArrayList();
             // Set checkbox
             for (int i = 0; i < 3; i++) {
-                final CheckBox checkBox = new CheckBox(this);
+                CheckBox checkBox = new CheckBox(this);
                 checkBox.setTextSize(30);
                 checkBox.setWidth(230);   //設定寬度
                 checkBox.setHeight(150);
                 checkBox.setGravity(Gravity.CENTER);
                 checkBox.setChecked(false);
-                checkBox.setTag(studentCount);
                 checkBox.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ArrayList<CheckBox> currentRow;
-                        currentRow = checkBoxesRow.get((int) v.getTag());
-                        for (CheckBox checkBox1 : currentRow)
-                            checkBox1.setChecked(false);
-                        checkBox.setChecked(true);
+                        for (Student st : students) {
+                            if (st.setAttendanceCheckBoxChecked((CheckBox) v)) ;
+                            return;
+                        }
+                        throw new RuntimeException("Checkbox find parent failed !");
                     }
                 });
                 checkBoxesColumn.add(checkBox);
-                li.addView(checkBox);
-                studentCount += 1;
+                linearLayout.addView(checkBox);
             }
             if (student.getAttandanceStatus() != -1)
                 checkBoxesColumn.get(student.getAttandanceStatus()).setChecked(true);
-            checkBoxesRow.add(checkBoxesColumn);
-            mainLinerLayout.addView(li);
+            student.setAttendanceView(checkBoxesColumn);
+            mainLinerLayout.addView(linearLayout);
         }
     }
 
     public void _finish(View v) {
-        Integer count = 0;
-        for (ArrayList<CheckBox> checkBoxArrayList : checkBoxesRow)
-            for (CheckBox checkBox : checkBoxArrayList)
-                if (checkBox.isChecked())
-                    count += 1;
-        if (count == students.size()) {
-            updateRecord();
-            finish();
-        } else
-            Toast.makeText(TeacherOperationManualCheckAttendance.this, "還有學生未點到名", Toast.LENGTH_SHORT).show();
+        for (Student student : students)
+            if (!student.checkAttendanceSet()) {
+                Toast.makeText(TeacherOperationManualCheckAttendance.this, "還有學生未點到名", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        updateRecord();
+        finish();
     }
 
     private void updateRecord() {
