@@ -2,6 +2,8 @@ package org.ntut.faceRecognition;
 
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -37,6 +39,13 @@ public class StudentCheckRollCall extends AppCompatActivity {
 
         courseList = new ArrayList<>();
         findRollCall(getIntent().getStringExtra("userId"));
+        Button returnButton = (Button) findViewById(R.id.return_button);
+        returnButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
     synchronized private void findRollCall(String userId) {

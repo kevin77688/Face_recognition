@@ -51,7 +51,6 @@
         android:layout_height="58dp"
         android:layout_marginTop="56dp"
         android:background="@drawable/button_white"
-        android:onClick="_return"
         android:text="確定"
         android:textColor="#41BCE3"
         app:layout_constraintEnd_toEndOf="parent"
