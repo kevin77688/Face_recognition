@@ -29,7 +29,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".TeacherOperationManualCheckAttendance"></activity>
-        <activity android:name=".StudentClass" />
         <activity android:name=".StudentCheckRollCall" />
         <activity android:name=".TeacherClassDate" />
         <activity android:name=".TeacherOperation" />

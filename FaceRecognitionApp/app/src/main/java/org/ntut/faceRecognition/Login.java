@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +18,8 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.ntut.faceRecognition.Retrofit.IMyService;
 import org.ntut.faceRecognition.Retrofit.RetrofitClient;
+
+import java.util.HashMap;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -33,7 +34,7 @@ public class Login extends AppCompatActivity {
     private MaterialEditText edt_login_email, edt_login_password;
     private Button btn_login;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private Intent nextPage;
+    private String username, userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +46,10 @@ public class Login extends AppCompatActivity {
         iMyService = retrofitClient.create(IMyService.class);
 
         // Init view
-        edt_login_email = findViewById(R.id.edt_email);
-        edt_login_password = findViewById(R.id.edt_password);
+        edt_login_email = findViewById(R.id.email_field);
+        edt_login_password = findViewById(R.id.password_field);
 
-        btn_login = findViewById(R.id.btn_login);
+        btn_login = findViewById(R.id.login_button);
         btn_login.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -57,7 +58,7 @@ public class Login extends AppCompatActivity {
             }
         });
 
-        txt_create_account = findViewById(R.id.txt_create_account);
+        txt_create_account = findViewById(R.id.create_account_text);
         txt_create_account.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,28 +82,28 @@ public class Login extends AppCompatActivity {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 final boolean[] count = {false};
-                                MaterialEditText edt_register_email = register_layout.findViewById(R.id.edt_email);
-                                MaterialEditText edt_register_name = register_layout.findViewById(R.id.edt_name);
-                                MaterialEditText edt_register_password = register_layout.findViewById(R.id.edt_password);
-                                MaterialEditText edt_register_id = register_layout.findViewById(R.id.edt_id);
+                                MaterialEditText edt_register_email = register_layout.findViewById(R.id.email_field);
+                                MaterialEditText edt_register_name = register_layout.findViewById(R.id.name_field);
+                                MaterialEditText edt_register_password = register_layout.findViewById(R.id.password_field);
+                                MaterialEditText edt_register_id = register_layout.findViewById(R.id.id_field);
 
                                 if (TextUtils.isEmpty(edt_register_email.getText().toString())) {
-                                    Toast.makeText(Login.this, "Email cannot be null or empty", Toast.LENGTH_SHORT).show();
+                                    Utils.showToast("Email cannot be null or empty", Login.this);
                                     return;
                                 }
 
                                 if (TextUtils.isEmpty(edt_register_name.getText().toString())) {
-                                    Toast.makeText(Login.this, "Name cannot be null or empty", Toast.LENGTH_SHORT).show();
+                                    Utils.showToast("Name cannot be null or empty", Login.this);
                                     return;
                                 }
 
                                 if (TextUtils.isEmpty(edt_register_password.getText().toString())) {
-                                    Toast.makeText(Login.this, "Password cannot be null or empty", Toast.LENGTH_SHORT).show();
+                                    Utils.showToast("Password cannot be null or empty", Login.this);
                                     return;
                                 }
 
                                 if (TextUtils.isEmpty(edt_register_id.getText().toString())) {
-                                    Toast.makeText(Login.this, "ID cannot be null or empty", Toast.LENGTH_SHORT).show();
+                                    Utils.showToast("ID cannot be null or empty", Login.this);
                                     return;
                                 }
 
@@ -127,7 +128,7 @@ public class Login extends AppCompatActivity {
                 @Override
                 public void accept(String response) throws Exception {
                     JsonParser jsonParser = new JsonParser(response);
-                    showToast(jsonParser.getDescription());
+                    Utils.showToast(jsonParser.getDescription(), Login.this);
                     switch(jsonParser.getStatus()) {
                         case 202:
                         case 401:
@@ -141,12 +142,12 @@ public class Login extends AppCompatActivity {
 
     synchronized private void loginUser(String email, String password) {
         if (TextUtils.isEmpty(email)) {
-            Toast.makeText(this, "Email cannot be null or empty", Toast.LENGTH_SHORT).show();
+            Utils.showToast("Email cannot be null or empty", Login.this);
             return;
         }
 
         if (TextUtils.isEmpty(password)) {
-            Toast.makeText(this, "Password cannot be null or empty", Toast.LENGTH_SHORT).show();
+            Utils.showToast("Password cannot be null or empty", Login.this);
             return;
         }
 
@@ -157,144 +158,31 @@ public class Login extends AppCompatActivity {
                                @Override
                                public void accept(String response) throws Exception {
                                    JsonParser jsonParser = new JsonParser(response);
-                                   nextPage = new Intent();
-                                   nextPage.putExtra("username", jsonParser.getName());
-                                   nextPage.putExtra("userId", jsonParser.getId());
-                                   showToast(jsonParser.getDescription());
+                                   username = jsonParser.getName();
+                                   userId = jsonParser.getId();
+                                   Utils.showToast(jsonParser.getDescription(), Login.this);
                                    switch (jsonParser.getStatus()) {
                                        case 200:
                                            goToPage(StudentOperation.class);
                                            break;
                                        case 201:
-                                           nextPage.putExtra("courses", jsonParser.getCourses());
-                                           goToPage(TeacherClass.class);
+                                           goToPage(TeacherClass.class, jsonParser.getCourses());
                                            break;
                                        case 400:
                                        case 402:
                                            break;
                                    }
-//                        getClassDate("作業系統");
-//                        getClassDate("實務專題(二)");
-//                        getClassDate("財務管理");
-//                        getClassDate("物件導向程式設計實習");
-//                        getClassDate("體育");
-//                        getClassDate("設計樣式");
-//                        getClassDate("智慧財產權");
-//                        getClassDate("人工智慧概論");
-//                        getClassDate("雲端應用實務");
-//                        getClassDate("職涯進擊講座");
-//                        getClassDate("國際觀培養講座");
-
-//                        if("\"Login student\"".equals(response)){
-//                            Log.e("同學", userdata.getId());
-//                            getStudentInformation(Integer.valueOf(userdata.getId()));
-//
-//                            goToPage(StudentOperation.class);
-//                        }else if("\"Login teacher\"".equals(response)){
-//                            getClassInformation(Integer.valueOf(userdata.getId()));
-////                            Log.e("走囉", String.valueOf(userdata.class_information.size()));
-//                            goToPage(TeacherClass.class);
-//                        }
-
-                               }}
-                ));
+                               }
+                }));
     }
 
-
-
-    private void goToPage(Class page) {
-        nextPage.setClass(this, page);
-        startActivity(nextPage);
+    private void goToPage(Class page, HashMap... courseList) {
+        Intent intent = new Intent();
+        intent.putExtra("username", username);
+        intent.putExtra("userId", userId);
+        if (courseList != null)
+            intent.putExtra("courses", courseList);
+        intent.setClass(Login.this, page);
+        startActivity(intent);
     }
-
-    private void showToast(String message){
-        Toast.makeText(Login.this, message, Toast.LENGTH_SHORT).show();
-    }
-
-    //    synchronized private void findUser(String email) {
-//        compositeDisposable.add(iMyService.findName(email)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Consumer<String>() {
-//                    @Override
-//                    public void accept(String response) throws Exception {
-//                        JSONObject jsonobj = new JSONObject(response);
-//                        String name = jsonobj.getString("name");
-//                        String id = jsonobj.getString("id");
-//                        userdata.setName(name);
-//                        userdata.setId(id);
-//                    }
-//                }));
-//    }
-
-//    synchronized public void getClassInformation(Integer id) {
-//        compositeDisposable.add(iMyService.findClass(id)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Consumer<String>() {
-//                    @Override
-//                    public void accept(String response) throws Exception {
-//                        GlobalVariable userdata = (GlobalVariable)getApplicationContext();
-//                        Log.e("json", response);
-//                        JSONObject jsonarr = new JSONObject(response);
-//                        String jsonOb = jsonarr.getString("class");
-//
-//                        String[] names = jsonOb.replaceAll("\\[", "")
-//                                        .replaceAll("\\]", "").split(",");
-//                        ArrayList<String> name = new ArrayList<String>();
-//                        for(Integer i =0; i<names.length;i++){
-//                            name.add(names[i]);
-//                            Log.e("getClassInformation", names[i]);
-////                            getClassDate(names[i]);
-//                        }
-//
-//                        userdata.setClassInformation(name);
-//                    }
-//                }));
-//    }
-//
-//    synchronized public void getClassDate(String class_name) {
-//        Log.e("getClassDate", class_name);
-//        compositeDisposable.add(iMyService.findClassDate(class_name)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Consumer<String>() {
-//                    @Override
-//                    public void accept(String response) throws Exception {
-//                        JSONObject jsonarr = new JSONObject(response);
-//                        String jsonOb = jsonarr.getString("date");
-//                        String[] names = jsonOb.replaceAll("\\[", "")
-//                                .replaceAll("\\]", "").split(",");
-//                        Log.e("names", names[1]);
-//                        GlobalVariable userdata = (GlobalVariable)getApplicationContext();
-//                        userdata.setClassDate(jsonarr.getString("name"), names);
-//                    }}));
-//    }
-//
-//    synchronized public void getStudentInformation(Integer id) {
-//        compositeDisposable.add(iMyService.findStudentClass(id)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Consumer<String>() {
-//                    @Override
-//                    public void accept(String response) throws Exception {
-//                        GlobalVariable userdata = (GlobalVariable)getApplicationContext();
-//                        Log.e("json", response);
-//                        JSONObject jsonarr = new JSONObject(response);
-//                        String jsonOb = jsonarr.getString("class");
-//                        Log.e("getClassInformation", jsonOb);
-//                        String[] names = jsonOb.replaceAll("\\[", "")
-//                                .replaceAll("\\]", "").split(",");
-//                        ArrayList<String> name = new ArrayList<String>();
-//                        for(Integer i =0; i<names.length;i++){
-//                            name.add(names[i]);
-//                            Log.e("getClassInformation", names[i]);
-////                            getClassDate(names[i]);
-//                        }
-//
-//                        userdata.setClassInformation(name);
-//                    }
-//                }));
-//    }
-
 }

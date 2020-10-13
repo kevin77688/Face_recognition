@@ -4,4 +4,28 @@
     <string name="title">拍照點名系統</string>
     <string name="title_activity_login_page">login_page</string>
     <string name="hello_world">Hello Square World!</string>
+
+    <string name="create_account_text">+ 註冊學生帳號</string>
+
+    // Field
+    <string name="email_field">Email</string>
+    <string name="password_field">Password</string>
+    <string name="name_field">Name</string>
+    <string name="id_field">ID</string>
+
+    // Title
+    <string name="student_operation_title">歡迎同學</string>
+    <string name="teacher_operation_title">歡迎老師</string>
+
+    // Button
+    <string name="login_and_register_button">登入與註冊</string>
+    <string name="help_button">使用說明</string>
+    <string name="contact_button">聯絡我們</string>
+    <string name="login_button">登入</string>
+    <string name="confirm_button">確定</string>
+    <string name="check_photo_button">查看圖片</string>
+    <string name="upload_photo_button">上傳圖片</string>
+    <string name="check_attendance_button">查看出缺席名單</string>
+    <string name="auto_check_attendance_button">拍照點名</string>
+    <string name="manual_check_attendance_button">手動點名</string>
 </resources>

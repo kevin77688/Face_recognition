@@ -2,7 +2,6 @@ package org.ntut.faceRecognition;
 
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -39,13 +38,8 @@ public class StudentCheckRollCall extends AppCompatActivity {
 
         courseList = new ArrayList<>();
         findRollCall(getIntent().getStringExtra("userId"));
-        Button confirmButton = (Button) findViewById(R.id.confirmButton);
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        Button confirmButton = (Button) findViewById(R.id.confirm_button);
+        confirmButton.setOnClickListener(Utils.setReturnButton(StudentCheckRollCall.this));
     }
 
     synchronized private void findRollCall(String userId) {
@@ -80,8 +74,8 @@ public class StudentCheckRollCall extends AppCompatActivity {
     }
 
     private void setButton() {
-        LinearLayout mainLinerLayout = this.findViewById(R.id.roll_call_layout);
-        LinearLayout show_top_linear = this.findViewById(R.id.show_top_linear);
+        LinearLayout mainLinerLayout = findViewById(R.id.attendance_layout);
+        LinearLayout show_top_linear = findViewById(R.id.title_text);
         ArrayList<String> titles = new ArrayList<>(Arrays.asList("課程", "時間", "出席"));
         for (String title : titles) {
             TextView tx = new TextView(this);

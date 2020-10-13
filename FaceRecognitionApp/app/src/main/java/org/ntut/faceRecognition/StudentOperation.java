@@ -3,6 +3,7 @@ package org.ntut.faceRecognition;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,27 +22,55 @@ public class StudentOperation extends AppCompatActivity {
         _username = getIntent().getStringExtra("username");
         _userId = getIntent().getStringExtra("userId");
 
-        TextView upview_text = findViewById(R.id.upview_text);
+        TextView upview_text = findViewById(R.id.title_text);
         upview_text.setText("\n歡迎" + _username + "學生");
-    }
-    public void onclick(View v) {
-        Intent intent = new Intent();
-        switch(v.getId()){
-            case R.id.dcchect_photo_button:
-                // TODO show student picture view
-                break;
-            case R.id.upload_button:
-                intent.setClass(this, StudentUpload.class);
-                break;
-            case R.id.check_presentation_record_button:
-                intent.setClass(this , StudentCheckRollCall.class);
-                break;
-            case R.id.return_button:
-                finish();
-        }
-        intent.putExtra("username", _username);
-        intent.putExtra("userId", _userId);
-        startActivity(intent);
+
+        checkPhotoButton();
+        uploadPhotoButton();
+        checkAttendanceButton();
+        returnButton();
     }
 
+    private void checkPhotoButton() {
+        Button button = (Button) findViewById(R.id.check_photo_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO student check photo view
+            }
+        });
+    }
+
+    private void uploadPhotoButton() {
+        Button button = (Button) findViewById(R.id.upload_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gotoPage(StudentUpload.class);
+            }
+        });
+    }
+
+    private void checkAttendanceButton() {
+        Button button = (Button) findViewById(R.id.check_attendance_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gotoPage(StudentCheckRollCall.class);
+            }
+        });
+    }
+
+    private void returnButton() {
+        Button button = (Button) findViewById(R.id.manual_check_attendance_button);
+        button.setOnClickListener(Utils.setReturnButton(StudentOperation.this));
+    }
+
+    private void gotoPage(Class c) {
+        Intent intent = new Intent();
+        intent.putExtra("username", _username);
+        intent.putExtra("userId", _userId);
+        intent.setClass(this, c);
+        startActivity(intent);
+    }
 }

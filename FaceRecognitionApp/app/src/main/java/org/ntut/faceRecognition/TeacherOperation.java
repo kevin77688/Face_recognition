@@ -3,6 +3,7 @@ package org.ntut.faceRecognition;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,42 +28,61 @@ public class TeacherOperation extends AppCompatActivity {
         } else
             throw new RuntimeException("pass data between activity error");
 
-        TextView textView_show_teacher_name = findViewById(R.id.textView_show_teacher_name);
+        setTitle();
+        setAutoCheckAttendanceButton();
+        setManualCheckAttendanceButton();
+        setAttendanceListButton();
+        setReturnButton();
+    }
+
+    private void setTitle() {
+        TextView textView_show_teacher_name = findViewById(R.id.title_text);
         textView_show_teacher_name.setText("\n" + courseName + "\n" + courseDate + "課程");
-
-        findViewById(R.id.button_take_photo_auto).setOnClickListener(onClickListener());
-        findViewById(R.id.button_take_photo).setOnClickListener(onClickListener());
-        findViewById(R.id.button_check_absence_record).setOnClickListener(onClickListener());
-
     }
 
-    private View.OnClickListener onClickListener() {
-        return new View.OnClickListener() {
+    private void setAutoCheckAttendanceButton() {
+        Button button = findViewById(R.id.auto_check_attendance_button);
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.putExtra("courseName", courseName);
-                intent.putExtra("courseId", courseId);
-                intent.putExtra("courseDate", courseDate);
-                switch (v.getId()) {
-                    case R.id.button_take_photo_auto:
-                        // TODO switch to take picture check attendance
-                        break;
-                    case R.id.button_take_photo:
-                        intent.putExtra("take_picture", "false");
-                        intent.setClass(TeacherOperation.this, TeacherOperationManualCheckAttendance.class);
-                        break;
-                    case R.id.button_check_absence_record:
-                        break;
-                }
-                startActivity(intent);
+            public void onClick(View view) {
+                // TODO auto check attendance action
             }
-        };
+        });
     }
 
-    public void _return(View v) {
-        TeacherOperation.this.finish();
+    private void setManualCheckAttendanceButton() {
+        Button button = findViewById(R.id.auto_check_attendance_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gotoPage(TeacherOperationManualCheckAttendance.class);
+            }
+        });
     }
 
+    private void setAttendanceListButton() {
+        Button button = findViewById(R.id.auto_check_attendance_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO check attendance list ???
+            }
+        });
+    }
+
+
+    private void setReturnButton() {
+        Button button = findViewById(R.id.return_button);
+        button.setOnClickListener(Utils.setReturnButton(TeacherOperation.this));
+    }
+
+    private void gotoPage(Class c) {
+        Intent intent = new Intent();
+        intent.putExtra("courseName", courseName);
+        intent.putExtra("courseId", courseId);
+        intent.putExtra("courseDate", courseDate);
+        intent.setClass(TeacherOperation.this, c);
+        startActivity(intent);
+    }
 
 }

@@ -1,6 +1,6 @@
 package org.ntut.faceRecognition.Retrofit;
 
-import org.json.JSONObject;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 
@@ -92,7 +92,7 @@ public interface IMyService {
 
     @POST("uploadAttendanceList")
     @FormUrlEncoded
-    Call uploadAttendanceList(
-            @Field("studentAttendantList") JSONObject jsonObject
+    Call<String> uploadAttendanceList(
+            @Field("studentAttendantList") JsonObject jsonObject
     );
 }

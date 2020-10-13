@@ -7,7 +7,7 @@
     tools:context=".TeacherOperationTakePhoto">
 
     <ImageView
-        android:id="@+id/gray_return_button"
+        android:id="@+id/main_background"
         android:layout_width="755dp"
         android:layout_height="940dp"
         android:background="#C4C4C4"
@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:id="@+id/show_top_linear"
+        android:id="@+id/title_text"
         android:layout_width="390dp"
         android:layout_height="75dp"
         android:layout_marginTop="16dp"
@@ -25,7 +25,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.476"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/confirmButton"></LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/confirm_button"></LinearLayout>
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -35,17 +35,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.384"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/show_top_linear">
+        app:layout_constraintTop_toBottomOf="@+id/title_text">
 
         <LinearLayout
-            android:id="@+id/roll_call_layout"
+            android:id="@+id/attendance_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" />
     </ScrollView>
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/logo_icon"
         android:layout_width="56dp"
         android:layout_height="88dp"
         android:layout_marginTop="32dp"
@@ -56,18 +56,17 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/confirmButton"
+        android:id="@+id/confirm_button"
         android:layout_width="0dp"
         android:layout_height="58dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         android:background="@drawable/button_white"
-        android:onClick="_finish"
-        android:text="確定"
+        android:text="@string/confirm_button"
         android:textColor="#41BCE3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/logo_icon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

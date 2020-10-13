@@ -25,11 +25,11 @@
                 android:src="@drawable/login" />
 
             <TextView
-                android:id="@+id/txt_create_account"
+                android:id="@+id/create_account_text"
                 android:layout_width="117dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                android:text="+ 註冊學生帳號"
+                android:text="@string/create_account_text"
                 android:textColor="@android:color/holo_blue_light"
                 android:textStyle="bold" />
 
@@ -47,10 +47,10 @@
 
 
         <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/edt_email"
+            android:id="@+id/email_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email"
+            android:hint="@string/email_field"
             android:inputType="textEmailAddress"
             android:textSize="14sp"
             app:met_baseColor="@color/wordColor"
@@ -59,10 +59,10 @@
             app:met_textColor="@color/wordColor" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/edt_password"
+            android:id="@+id/password_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Password"
+            android:hint="@string/password_field"
             android:inputType="textPassword"
             android:textSize="14sp"
             app:met_baseColor="@color/wordColor"
@@ -73,12 +73,12 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/btn_login"
+        android:id="@+id/login_button"
         android:layout_width="381dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:background="@drawable/button_border_lightblue"
-        android:text="登入"
+        android:text="@string/login_button"
         android:textColor="@android:color/white"
         android:textSize="14sp" />
 

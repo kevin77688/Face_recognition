@@ -4,12 +4,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.gson.JsonObject;
 
 import org.json.JSONObject;
 import org.ntut.faceRecognition.Retrofit.IMyService;
@@ -52,6 +54,7 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
             throw new RuntimeException("Transfer extra between activity failed");
         students = new ArrayList<>();
         getStudentList();
+        setConfirmButton();
     }
 
     synchronized private void getStudentList() {
@@ -71,14 +74,14 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
                             String studentAttendance = attendance.getString("attendance");
                             students.add(new Student(studentId, studentName, studentAttendance));
                         }
-                        setButton();
+                        setView();
                     }
                 }));
     }
 
-    private void setButton() {
-        LinearLayout mainLinerLayout = (LinearLayout) findViewById(R.id.roll_call_layout);
-        LinearLayout show_top_linear = (LinearLayout) findViewById(R.id.show_top_linear);
+    private void setView() {
+        LinearLayout mainLinerLayout = (LinearLayout) findViewById(R.id.attendance_layout);
+        LinearLayout show_top_linear = (LinearLayout) findViewById(R.id.title_text);
 
         ArrayList<String> titles = new ArrayList<>(
                 Arrays.asList("姓名", "準時", "遲到", "缺席"));
@@ -134,91 +137,50 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
         }
     }
 
-    public void _finish(View v) {
-        for (Student student : students)
-            if (!student.checkAttendanceSet()) {
-                Toast.makeText(TeacherOperationManualCheckAttendance.this, "還有學生未點到名", Toast.LENGTH_SHORT).show();
-                return;
+    private void setConfirmButton() {
+        Button button = (Button) findViewById(R.id.confirm_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for (Student student : students)
+                    if (!student.checkAttendanceSet()) {
+                        Utils.showToast("還有學生未點到名", TeacherOperationManualCheckAttendance.this);
+                        return;
+                    }
+                updateRecord();
+                finish();
             }
-        updateRecord();
-        finish();
+        });
     }
 
     private void updateRecord() {
-        // TODO update record need to reformat
-        JSONObject responseData = new JSONObject();
+        JsonObject responseData = new JsonObject();
         try {
-            responseData.put("courseId", courseId);
-            responseData.put("courseDate", courseDate);
-            JSONObject studentsJson = new JSONObject();
+            responseData.addProperty("courseId", courseId);
+            responseData.addProperty("courseDate", courseDate);
+            JsonObject studentsJson = new JsonObject();
             for (Student student : students) {
-                JSONObject studentJson = new JSONObject();
-                studentJson.put("userId", student.getId());
-                studentJson.put("attendance", student.getAttendanceStatus());
-                studentsJson.put("student", studentJson);
+                JsonObject studentJson = new JsonObject();
+                studentJson.addProperty("userId", student.getId());
+                studentJson.addProperty("attendance", student.getAttendanceStatus());
+                studentsJson.add("student", studentJson);
             }
-            responseData.put("students", studentsJson);
+            responseData.add("students", studentsJson);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Call<JSONObject> call = iMyService.uploadAttendanceList(responseData);
-        call.enqueue(new Callback() {
+        Call<String> call = iMyService.uploadAttendanceList(responseData);
+        call.enqueue(new Callback<String>() {
             @Override
-            public void onResponse(Call call, Response response) {
-                Log.i("Response", "success");
+            public void onResponse(Call<String> call, Response<String> response) {
+                Log.i("Response", "successful");
             }
 
             @Override
-            public void onFailure(Call call, Throwable t) {
-                Log.e("Response", "failed");
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.i("Response", "error");
             }
         });
-
-//        ArrayList<String> names = new ArrayList<>();
-//        for (Student student : students)
-//            names.add(student.getName());
-//        Call call = iMyService.uploadAttendanceList(names);
-//        call.enqueue(new Callback() {
-//            @Override
-//            public void onResponse(Call call, Response response) {
-//                Log.i("Response", "success");
-//            }
-//
-//            @Override
-//            public void onFailure(Call call, Throwable t) {
-//                Log.i("Response", "failure");
-//            }
-//        });
-
-
-//        for (ArrayList<CheckBox> checkBoxArrayList : checkBoxesRow){
-//
-//        }
-//
-//
-//
-//        ArrayList<Integer> roll = new ArrayList<Integer>();
-//        for(int i=0;i<studentName.length;i++){
-//            for(int j=i*3;j<i*3+3;j++){
-//                if(cb_listb.get(j).isChecked()){
-//                    roll.add(j%3);
-//                    // 0 準時
-//                    // 1 遲到
-//                    // 2 缺席
-//                }
-//            }
-//        }
-//
-////        Log.e("roll_call", roll_call.get(studentName[0]));
-////        Log.e("roll_call", roll_call.get(studentName[1]));
-//        Log.e("roll_call", "roll_call.get(studentName[2])");
-//        compositeDisposable.add(iMyService.rollCallUpdate(classDate, className, studentName, roll)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Consumer<String>() {
-//                    @Override
-//                    public void accept(String response) throws Exception {
-//                    }
-//                }));
     }
+
 }

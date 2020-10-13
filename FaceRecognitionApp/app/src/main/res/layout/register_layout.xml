@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="20dp">
 
     <com.rengwuxian.materialedittext.MaterialEditText
-        android:id="@+id/edt_email"
+        android:id="@+id/email_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Email"
+        android:hint="@string/email_field"
         android:inputType="textEmailAddress"
         app:met_baseColor="@color/wordColor"
         app:met_iconPadding="0dp"
@@ -19,10 +18,10 @@
         app:met_textColor="@color/wordColor" />
 
     <com.rengwuxian.materialedittext.MaterialEditText
-        android:id="@+id/edt_name"
+        android:id="@+id/name_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Name"
+        android:hint="@string/name_field"
         android:inputType="text"
         app:met_baseColor="@color/wordColor"
         app:met_iconPadding="0dp"
@@ -30,10 +29,10 @@
         app:met_textColor="@color/wordColor" />
 
     <com.rengwuxian.materialedittext.MaterialEditText
-        android:id="@+id/edt_password"
+        android:id="@+id/password_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
+        android:hint="@string/password_field"
         android:inputType="textPassword"
         app:met_baseColor="@color/wordColor"
         app:met_iconPadding="0dp"
@@ -41,11 +40,11 @@
         app:met_textColor="@color/wordColor" />
 
     <com.rengwuxian.materialedittext.MaterialEditText
-        android:id="@+id/edt_id"
+        android:id="@+id/id_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="ID"
-        android:inputType="textPassword"
+        android:hint="@string/id_field"
+        android:inputType="text"
         app:met_baseColor="@color/wordColor"
         app:met_iconPadding="0dp"
         app:met_primaryColor="@color/wordColor"
@@ -56,7 +55,7 @@
         android:layout_height="match_parent">
 
         <Button
-            android:id="@+id/teacher_login_button"
+            android:id="@+id/return_button"
             android:layout_width="104dp"
             android:layout_height="89dp"
             android:background="@drawable/home_white"

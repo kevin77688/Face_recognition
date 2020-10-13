@@ -27,10 +27,18 @@ public class TeacherClassDate extends AppCompatActivity {
         courseId = getIntent().getStringExtra("courseId");
         courseDates = getIntent().getStringArrayListExtra("courseDate");
 
-        TextView textView_show_teacher_name = findViewById(R.id.textView_show_teacher_name);
-        textView_show_teacher_name.setText("\n" + courseName);
-        LinearLayout mainLinerLayout = this.findViewById(R.id.layout_teacher_class);
+        setTitle();
+        setCourseButton();
+        setReturnButton();
+    }
 
+    private void setTitle() {
+        TextView textView_show_teacher_name = findViewById(R.id.title_text);
+        textView_show_teacher_name.setText("\n" + courseName);
+    }
+
+    private void setCourseButton() {
+        LinearLayout mainLinerLayout = this.findViewById(R.id.teacher_class_layout);
         for (final String date : courseDates) {
             Button btn = new Button(this);
             btn.setTextSize(30);
@@ -53,11 +61,12 @@ public class TeacherClassDate extends AppCompatActivity {
         }
     }
 
-    public void _return(View v) {
-        TeacherClassDate.this.finish();
+    private void setReturnButton() {
+        Button button = (Button) findViewById(R.id.manual_check_attendance_button);
+        button.setOnClickListener(Utils.setReturnButton(TeacherClassDate.this));
     }
 
-    public void gotoPage() {
+    private void gotoPage() {
         dateIntent.setClass(this, TeacherOperation.class);
         startActivity(dateIntent);
     }

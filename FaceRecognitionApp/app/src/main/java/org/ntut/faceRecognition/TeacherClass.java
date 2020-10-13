@@ -30,6 +30,7 @@ public class TeacherClass extends AppCompatActivity {
     private String teacherId;
     private HashMap<String, String> courses;
     private Intent courseButtonPage;
+    private ArrayList<String> coursesId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,13 +41,21 @@ public class TeacherClass extends AppCompatActivity {
         teacherName = getIntent().getStringExtra("username");
         teacherId = getIntent().getStringExtra("userId");
         courses = (HashMap<String, String>) getIntent().getSerializableExtra("courses");
+        coursesId = new ArrayList<>(courses.keySet());
 
-        TextView textView_show_teacher_name = findViewById(R.id.textView_show_teacher_name);
+        setTitle();
+        setCourseDateView();
+
+
+    }
+
+    private void setTitle() {
+        TextView textView_show_teacher_name = findViewById(R.id.title_text);
         textView_show_teacher_name.setText("\n歡迎" + teacherName + "教授");
+    }
 
-        ArrayList<String> coursesId = new ArrayList<>(courses.keySet());
-
-        LinearLayout mainLinerLayout = this.findViewById(R.id.layout_teacher_class);
+    private void setCourseDateView() {
+        LinearLayout mainLinerLayout = this.findViewById(R.id.teacher_class_layout);
         for (final String courseId : coursesId) {
             final String courseName = courses.get(courseId);
             Button btn = new Button(this);
@@ -84,18 +93,10 @@ public class TeacherClass extends AppCompatActivity {
         }
     }
 
-    public void _return(View v) {
-        TeacherClass.this.finish();
-    }
-
     private void gotoPage(String courseName, String courseId) {
         courseButtonPage.putExtra("courseName", courseName);
         courseButtonPage.putExtra("courseId", courseId);
         courseButtonPage.setClass(this, TeacherClassDate.class);
         startActivity(courseButtonPage);
-    }
-
-    synchronized private void getCourseDate(String courseId) {
-
     }
 }

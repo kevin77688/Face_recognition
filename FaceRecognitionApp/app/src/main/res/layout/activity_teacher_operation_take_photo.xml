@@ -7,7 +7,7 @@
     tools:context=".TeacherOperationTakePhoto">
 
     <ImageView
-        android:id="@+id/gray_return_button"
+        android:id="@+id/main_background"
         android:layout_width="755dp"
         android:layout_height="940dp"
         android:background="#C4C4C4"
@@ -17,20 +17,20 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button_take_photo"
+        android:id="@+id/manual_check_attendance_button"
         android:layout_width="146dp"
         android:layout_height="56dp"
         android:layout_marginTop="24dp"
         android:background="@drawable/button_white"
         android:text="拍照"
         android:textColor="#41BCE3"
-        app:layout_constraintEnd_toStartOf="@+id/confirmButton"
+        app:layout_constraintEnd_toStartOf="@+id/confirm_button"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/logo_icon" />
 
     <LinearLayout
-        android:id="@+id/show_top_linear"
+        android:id="@+id/title_text"
         android:layout_width="390dp"
         android:layout_height="75dp"
         android:layout_marginTop="20dp"
@@ -38,7 +38,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.476"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_take_photo"></LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/manual_check_attendance_button"></LinearLayout>
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -47,17 +47,17 @@
         android:layout_marginTop="84dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_take_photo">
+        app:layout_constraintTop_toBottomOf="@+id/manual_check_attendance_button">
 
         <LinearLayout
-            android:id="@+id/roll_call_layout"
+            android:id="@+id/attendance_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" />
     </ScrollView>
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/logo_icon"
         android:layout_width="56dp"
         android:layout_height="88dp"
         android:layout_marginTop="32dp"
@@ -68,16 +68,15 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/confirmButton"
+        android:id="@+id/confirm_button"
         android:layout_width="147dp"
         android:layout_height="58dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="44dp"
         android:background="@drawable/button_white"
-        android:onClick="_finish"
         android:text="確定"
         android:textColor="#41BCE3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/logo_icon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
