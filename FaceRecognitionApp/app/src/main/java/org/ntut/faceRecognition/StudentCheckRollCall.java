@@ -39,8 +39,8 @@ public class StudentCheckRollCall extends AppCompatActivity {
 
         courseList = new ArrayList<>();
         findRollCall(getIntent().getStringExtra("userId"));
-        Button returnButton = (Button) findViewById(R.id.return_button);
-        returnButton.setOnClickListener(new View.OnClickListener() {
+        Button confirmButton = (Button) findViewById(R.id.confirmButton);
+        confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();

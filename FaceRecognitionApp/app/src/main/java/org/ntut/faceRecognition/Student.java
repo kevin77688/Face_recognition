@@ -25,7 +25,7 @@ public class Student {
         return _studentName;
     }
 
-    public int getAttandanceStatus() {
+    public int getAttendanceStatus() {
         return _attendanceStatus;
     }
 
@@ -41,10 +41,11 @@ public class Student {
     }
 
     public boolean setAttendanceCheckBoxChecked(CheckBox checkBox) {
-        for (CheckBox cb : _attendanceView)
-            if (cb == checkBox) {
+        for (int index = 0; index < _attendanceView.size(); index++)
+            if (_attendanceView.get(index) == checkBox) {
                 setCheckboxClear();
-                cb.setChecked(true);
+                _attendanceView.get(index).setChecked(true);
+                _attendanceStatus = index;
                 return true;
             }
         return false;

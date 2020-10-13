@@ -127,8 +127,8 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
                 checkBoxesColumn.add(checkBox);
                 linearLayout.addView(checkBox);
             }
-            if (student.getAttandanceStatus() != -1)
-                checkBoxesColumn.get(student.getAttandanceStatus()).setChecked(true);
+            if (student.getAttendanceStatus() != -1)
+                checkBoxesColumn.get(student.getAttendanceStatus()).setChecked(true);
             student.setAttendanceView(checkBoxesColumn);
             mainLinerLayout.addView(linearLayout);
         }
@@ -146,10 +146,22 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
 
     private void updateRecord() {
         // TODO update record need to reformat
-        ArrayList<String> names = new ArrayList<>();
-        for (Student student : students)
-            names.add(student.getName());
-        Call call = iMyService.uploadAttendanceList(names);
+        JSONObject responseData = new JSONObject();
+        try {
+            responseData.put("courseId", courseId);
+            responseData.put("courseDate", courseDate);
+            JSONObject studentsJson = new JSONObject();
+            for (Student student : students) {
+                JSONObject studentJson = new JSONObject();
+                studentJson.put("userId", student.getId());
+                studentJson.put("attendance", student.getAttendanceStatus());
+                studentsJson.put("student", studentJson);
+            }
+            responseData.put("students", studentsJson);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Call<JSONObject> call = iMyService.uploadAttendanceList(responseData);
         call.enqueue(new Callback() {
             @Override
             public void onResponse(Call call, Response response) {
@@ -158,9 +170,27 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
 
             @Override
             public void onFailure(Call call, Throwable t) {
-                Log.i("Response", "failure");
+                Log.e("Response", "failed");
             }
         });
+
+//        ArrayList<String> names = new ArrayList<>();
+//        for (Student student : students)
+//            names.add(student.getName());
+//        Call call = iMyService.uploadAttendanceList(names);
+//        call.enqueue(new Callback() {
+//            @Override
+//            public void onResponse(Call call, Response response) {
+//                Log.i("Response", "success");
+//            }
+//
+//            @Override
+//            public void onFailure(Call call, Throwable t) {
+//                Log.i("Response", "failure");
+//            }
+//        });
+
+
 //        for (ArrayList<CheckBox> checkBoxArrayList : checkBoxesRow){
 //
 //        }

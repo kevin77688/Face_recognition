@@ -1,5 +1,7 @@
 package org.ntut.faceRecognition.Retrofit;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import io.reactivex.Observable;
@@ -7,7 +9,6 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Multipart;
@@ -90,5 +91,8 @@ public interface IMyService {
     );
 
     @POST("uploadAttendanceList")
-    Call uploadAttendanceList(@Body ArrayList<String> name);
+    @FormUrlEncoded
+    Call uploadAttendanceList(
+            @Field("studentAttendantList") JSONObject jsonObject
+    );
 }
