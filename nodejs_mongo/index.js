@@ -227,6 +227,20 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 				
 			}
         });
+		
+		app.post('/rollCallUpdate', async(request, response, next)=>{
+            var post_data = request.body;
+			var course_id = post_data.courseId;
+			var date = post_data.date;
+			var isRecorded = await CheckCourseDateRecorded(course_id, date);
+			console.log("called!");
+			if (isRecorded){
+				
+			}
+			else{
+				
+			}
+        });
 
         app.post('/teacherGetCourseAttendance', async(request, response, next)=>{
 			var userResponse = {};
