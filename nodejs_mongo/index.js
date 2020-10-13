@@ -216,16 +216,23 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 		}
 
         app.post('/uploadAttendanceList', async(request, response, next)=>{
+			var userResponse = {};
             var post_data = request.body;
-			var course_id = post_data.courseId;
-			var date = post_data.date;
+			var jsonData = JSON.parse(post_data.studentAttendantList);
+			var course_id = jsonData.courseId;
+			var date = jsonData.date;
+			var studentList = jsonData.students;
+			console.log(studentList[0].userId);
+			console.log(studentList[1]);
 			var isRecorded = await CheckCourseDateRecorded(course_id, date);
+			console.log(course_id);
 			if (isRecorded){
-				
+				userResponse.status = 300;
 			}
 			else{
-				
+				userResponse.status = 301;
 			}
+			response.json(userResponse);
         });
 		
 		app.post('/rollCallUpdate', async(request, response, next)=>{
