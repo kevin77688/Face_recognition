@@ -250,17 +250,16 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			var date = post_data.date;
 			var course_id = post_data.courseId;
             var isRecorded = await CheckCourseDateRecorded(course_id, date);
-			userResponse.rollCalls = {};
 			if (!isRecorded){
 				var studentList = await FindStudentListUsingDateAndCourseId(course_id);
 				for (let i = 0; i < studentList.length; i++){
-					userResponse.rollCalls[studentList[i].studentDetails[0].name] = '-1';
+					userResponse[studentList[i].studentId] = {name: studentList[i].studentDetails[0].name, attendance: '-1'};
 				}
 			}
 			else {
-				var rollCalls = await FindRollCallsUsingDateAndCourseId(course_id, date);
-				for (let i = 0; i < rollCalls.length; i++){
-					userResponse.rollCalls[rollCalls[i].studentId] = rollCalls[i].attendance;
+				var attendance = await FindAttendanceUsingDateAndCourseId(course_id, date);
+				for (let i = 0; i < attendance.length; i++){
+					userResponse[attendance[i].studentId] = {name: attendance[i].studentDetails[0].name, attendance: attendance[i].attendance}
 				}
 			}
 			console.log(userResponse);
@@ -296,7 +295,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			return studentList;
 		}
 		
-		function FindRollCallsUsingDateAndCourseId(course_id, date){
+		function FindAttendanceUsingDateAndCourseId(course_id, date){
 			var db = client.db('nodejsTest');
 			const pipeline = [
 				{
@@ -315,8 +314,8 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 					}
 				}
 			]
-			var rollCalls = db.collection('rollCall').aggregate(pipeline).toArray();
-			return rollCalls;
+			var attendance = db.collection('attendance').aggregate(pipeline).toArray();
+			return attendance;
 		}
 
         app.post('/findStudentClass', (request, response, next)=>{
@@ -350,27 +349,47 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
         app.post('/studentCheckAttendance', async(request, response, next)=>{
 			var userResponse = {};
             var post_data = request.body;
-            var _id = post_data._id ;
-            var rollCalls = findRollCallFromId(_id);
-			if (!rollCalls){
+            var student_id = post_data.studentId ;
+            var attendance = await findAttendanceUsingStudentId(student_id);
+			if (!attendance){
 				userResponse.description = "Get roll call failed";
 				userResponse.status = 403;
 			}
 			else {
 				userResponse.description = "Get roll call success"
 				userResponse.status = 203;
-				userResponse.courses = [];
-				for(var i = 0; i < rollcalls.length; i++){
-					userResponse.courses.push({'name': rollCalls[i].course_name, 'date': rollCall[i].date, 'attendance': rollCall[i].attendance});
+				userResponse.courses = {};
+				for(var i = 0; i < attendance.length; i++){
+					console.log(attendance[i]);
+					userResponse.courses[i] = {id: attendance[i].courseId, name: attendance[i].courseDetails[0].name, date: attendance[i].date, attendance: attendance[i].attendance};
 				}
 			}
+			console.log(userResponse)
+			console.log(userResponse.courses)
             response.json(userResponse);
         });
 		
-		function findRollCallUsingId(id){
+		function findAttendanceUsingStudentId(id){
 			var db = client.db('nodejsTest');
-			rollcalls = db.collection('rollcall').find({'_id': id}).toArray();
-			return rollCalls;
+			const pipeline = [
+				{
+					'$lookup':
+					{
+						from: 'course',
+						localField: 'courseId',
+						foreignField: '_id',
+						as: 'courseDetails'
+					}
+				},
+				{
+					'$match':
+					{
+						studentId: id
+					}
+				}
+			]
+			attendance = db.collection('attendance').aggregate(pipeline).toArray();
+			return attendance;
 		}
 
         app.post('/teacherFindCourseDate', async(request, response, next)=>{

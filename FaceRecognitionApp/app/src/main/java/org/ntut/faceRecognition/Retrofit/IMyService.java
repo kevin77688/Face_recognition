@@ -36,7 +36,7 @@ public interface IMyService {
     @POST("studentCheckAttendance")
     @FormUrlEncoded
     Observable<String> studentCheckAttendance(
-            @Field("userId") String studentId
+            @Field("studentId") String studentId
     );
 
     // 教授點課程時回傳日期

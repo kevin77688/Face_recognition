@@ -1,32 +1,38 @@
 use nodejsTest
 
 //建立課程資料
+
+db.Students.drop();
+db.professor.drop();
+db.rollcall.drop();
+db.testUri.drop();
+db.student.drop();
+
 
 db.course.drop();
-
 db.course.insertMany([
 
-    {_id: 268986, teacherId: 00001, requiredOrElective: "elective", name: "作業系統", englishName: "Operating Systems", code: 5903206, stage: 1, credits: 3},
+    {_id: '268986', teacherId: '00001', requiredOrElective: "elective", name: "作業系統", englishName: "Operating Systems", code: '5903206', stage: 1, credits: 3},
 
-    {_id: 268987, teacherId: 00001, requiredOrElective: "required", name: "實務專題(二)", englishName: "Special Project(II): 5903208", stage: 1, credits: 3},
+    {_id: '268987', teacherId: '00001', requiredOrElective: "required", name: "實務專題(二)", englishName: "Special Project(II)", code: "5903208", stage: 1, credits: 3},
 
-    {_id: 269469, teacherId: 00002, requiredOrElective: "elective", name: "財務管理", englishName: "Finance Management", code: "5702007", stage: 1, credits: 3},
+    {_id: '269469', teacherId: '00002', requiredOrElective: "elective", name: "財務管理", englishName: "Finance Management", code: "5702007", stage: 1, credits: 3},
 
-    {_id: 269481, teacherId: 00002, requiredOrElective: "required", name: "物件導向程式設計實習", englishName: "Object-Oriented Programming Labs", code: "5902209", stage: 1, credits: 2},
+    {_id: '269481', teacherId: '00002', requiredOrElective: "required", name: "物件導向程式設計實習", englishName: "Object-Oriented Programming Labs", code: "5902209", stage: 1, credits: 2},
 
-    {_id: 271547, teacherId: 00003, requiredOrElective: "required", name: "體育", englishName: "Physical Education", code: "1001001", stage: 6, credits: 0},
+    {_id: '271547', teacherId: '00003', requiredOrElective: "required", name: "體育", englishName: "Physical Education", code: "1001001", stage: 6, credits: 0},
 
-    {_id: 272986, teacherId: 00003, requiredOrElective: "elective", name: "設計樣式", englishName: "Design Pattern", code: "5904322", stage: 1, credits: 3},
+    {_id: '272986', teacherId: '00003', requiredOrElective: "elective", name: "設計樣式", englishName: "Design Pattern", code: "5904322", stage: 1, credits: 3},
 
-    {_id: 273941, teacherId: 00004, requiredOrElective: "required", name: "智慧財產權", englishName: "Intellectual Property", code: "1410145", stage: 1, credits: 2},
+    {_id: '273941', teacherId: '00004', requiredOrElective: "required", name: "智慧財產權", englishName: "Intellectual Property", code: "1410145", stage: 1, credits: 2},
 
-    {_id: 274128, teacherId: 00004, requiredOrElective: "required", name: "人工智慧概論", englishName: "Introduction to Artificial Intelligence", code: "1418015", stage: 1, credits: 2},
+    {_id: '274128', teacherId: '00004', requiredOrElective: "required", name: "人工智慧概論", englishName: "Introduction to Artificial Intelligence", code: "1418015", stage: 1, credits: 2},
 
-    {_id: 274202, teacherId: 00005, requiredOrElective: "elective", name: "雲端應用實務", lishName: "Cloud Applications Practice", code: "5902310", stage: 1, credits: 3},
+    {_id: '274202', teacherId: '00005', requiredOrElective: "elective", name: "雲端應用實務", lishName: "Cloud Applications Practice", code: "5902310", stage: 1, credits: 3},
 
-    {_id: 274250, teacherId: 00005, requiredOrElective: "elective", name: "職涯進擊講座", englishName: "Lecture: Increase capacity for career exploration", code: "AA04017", stage: 1, credits: 1},
+    {_id: '274250', teacherId: '00005', requiredOrElective: "elective", name: "職涯進擊講座", englishName: "Lecture: Increase capacity for career exploration", code: "AA04017", stage: 1, credits: 1},
 
-    {_id: 274340, teacherId: 00005, requiredOrElective: "elective", name: "國際觀培養講座", englishName: "Feast for the global perspective", code: "AA01023", stage: 1, credits: 1},
+    {_id: '274340', teacherId: '00005', requiredOrElective: "elective", name: "國際觀培養講座", englishName: "Feast for the global perspective", code: "AA01023", stage: 1, credits: 1},
 
 ]);
 
@@ -144,6 +150,6 @@ db.attendance.drop();
 
 
 db.attendance.insertMany([
-	{studentId: "陳小一", date: "陳小一", courseId: "陳小一", attendance: "陳小一"},
+	{studentId: "106820053", date: "2020-09-07", courseId: "268986", attendance: "1"},
 ]);
 

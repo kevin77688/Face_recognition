@@ -52,7 +52,7 @@ public class StudentCheckRollCall extends AppCompatActivity {
 
                         switch (status) {
                             case 203:
-                                JSONObject classes = jsonObject.getJSONObject("classes");
+                                JSONObject classes = jsonObject.getJSONObject("courses");
                                 Iterator<String> iter_class = classes.keys();
                                 while (iter_class.hasNext()) {
                                     JSONObject oneClass = (JSONObject) classes.get(iter_class.next());
