@@ -87,8 +87,8 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
                 Arrays.asList("姓名", "準時", "遲到", "缺席"));
         for (String title : titles) {
             TextView textView = new TextView(this);
-            textView.setTextSize(30);
-            textView.setWidth(350);   //設定寬度
+            textView.setTextSize(25);
+            textView.setWidth(300);   //設定寬度
             textView.setHeight(120);
             textView.setGravity(Gravity.CENTER);
             textView.setText(title);
@@ -160,11 +160,13 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
             responseData.addProperty("courseDate", courseDate);
             JsonObject studentsJson = new JsonObject();
             for (Student student : students) {
-                JsonObject studentJson = new JsonObject();
-                studentJson.addProperty("userId", student.getId());
-                studentJson.addProperty("attendance", student.getAttendanceStatus());
-                studentsJson.add("student", studentJson);
+//                JsonObject studentJson = new JsonObject();
+//                studentJson.addProperty("userId", student.getId());
+//                studentJson.addProperty("attendance", student.getAttendanceStatus());
+//                studentsJson.add("student", studentJson);
+                studentsJson.addProperty(student.getId(), student.getAttendanceStatus());
             }
+            Log.e("Total student : ", Integer.toString(students.size()));
             responseData.add("students", studentsJson);
         } catch (Exception e) {
             e.printStackTrace();

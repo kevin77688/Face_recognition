@@ -10,7 +10,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class StudentOperation extends AppCompatActivity {
 
-    private String _username, _userId;
+    private String username, userId;
+    private TextView title;
+    private Button checkPhotoButton, uploadButton, checkAttendanceButton, returnButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,29 +20,35 @@ public class StudentOperation extends AppCompatActivity {
         setContentView(R.layout.activity_student_operation);
 
         getExtras();
-
-
-        TextView upview_text = findViewById(R.id.title_text);
-        upview_text.setText("\n歡迎" + _username + "學生");
+        findView();
 
         checkPhotoButton();
         uploadPhotoButton();
         checkAttendanceButton();
         returnButton();
+
+        setTitle();
     }
 
     private void getExtras() {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            _username = getIntent().getStringExtra("username");
-            _userId = getIntent().getStringExtra("userId");
+            username = getIntent().getStringExtra("username");
+            userId = getIntent().getStringExtra("userId");
         } else
             throw new RuntimeException("Passing extras between activity failed !");
     }
 
+    private void findView() {
+        checkPhotoButton = findViewById(R.id.check_photo_button);
+        uploadButton = findViewById(R.id.upload_button);
+        checkAttendanceButton = findViewById(R.id.check_attendance_button);
+        returnButton = (Button) findViewById(R.id.return_button);
+        title = findViewById(R.id.title_text);
+    }
+
     private void checkPhotoButton() {
-        Button button = (Button) findViewById(R.id.check_photo_button);
-        button.setOnClickListener(new View.OnClickListener() {
+        checkPhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // TODO student check photo view
@@ -49,18 +57,17 @@ public class StudentOperation extends AppCompatActivity {
     }
 
     private void uploadPhotoButton() {
-        Button button = (Button) findViewById(R.id.upload_button);
-        button.setOnClickListener(new View.OnClickListener() {
+        uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // TODO Student upload View entry point
                 gotoPage(StudentUpload.class);
             }
         });
     }
 
     private void checkAttendanceButton() {
-        Button button = (Button) findViewById(R.id.check_attendance_button);
-        button.setOnClickListener(new View.OnClickListener() {
+        checkAttendanceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 gotoPage(StudentCheckRollCall.class);
@@ -69,14 +76,17 @@ public class StudentOperation extends AppCompatActivity {
     }
 
     private void returnButton() {
-        Button button = (Button) findViewById(R.id.manual_check_attendance_button);
-        button.setOnClickListener(Utils.setReturnButton(StudentOperation.this));
+        returnButton.setOnClickListener(Utils.setReturnButton(StudentOperation.this));
+    }
+
+    private void setTitle() {
+        title.setText("\n歡迎" + username + "學生");
     }
 
     private void gotoPage(Class c) {
         Intent intent = new Intent();
-        intent.putExtra("username", _username);
-        intent.putExtra("userId", _userId);
+        intent.putExtra("username", username);
+        intent.putExtra("userId", userId);
         intent.setClass(this, c);
         startActivity(intent);
     }

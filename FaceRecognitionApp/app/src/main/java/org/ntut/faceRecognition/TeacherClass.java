@@ -39,12 +39,12 @@ public class TeacherClass extends AppCompatActivity {
         setContentView(R.layout.activity_teacher_class);
 
         getExtras();
-        coursesId = new ArrayList<>(courses.keySet());
-
         findView();
-        setTitle();
+
         setCourseDateView();
         setReturnButton();
+
+        setTitle();
     }
 
     private void getExtras() {
@@ -53,6 +53,7 @@ public class TeacherClass extends AppCompatActivity {
             teacherName = getIntent().getStringExtra("username");
             teacherId = getIntent().getStringExtra("userId");
             courses = (HashMap<String, String>) getIntent().getSerializableExtra("courses");
+            coursesId = new ArrayList<>(courses.keySet());
         } else
             throw new RuntimeException("Passing extras between activity failed !");
     }

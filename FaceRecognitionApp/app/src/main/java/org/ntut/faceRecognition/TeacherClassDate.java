@@ -23,18 +23,18 @@ public class TeacherClassDate extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_class_date);
 
+        getExtras();
+
+        setCourseButton();
+        setReturnButton();
+
+        setTitle();
+    }
+
+    private void getExtras() {
         courseName = getIntent().getStringExtra("courseName");
         courseId = getIntent().getStringExtra("courseId");
         courseDates = getIntent().getStringArrayListExtra("courseDate");
-
-        setTitle();
-        setCourseButton();
-        setReturnButton();
-    }
-
-    private void setTitle() {
-        TextView textView_show_teacher_name = findViewById(R.id.title_text);
-        textView_show_teacher_name.setText("\n" + courseName);
     }
 
     private void setCourseButton() {
@@ -62,8 +62,13 @@ public class TeacherClassDate extends AppCompatActivity {
     }
 
     private void setReturnButton() {
-        Button button = (Button) findViewById(R.id.manual_check_attendance_button);
+        Button button = (Button) findViewById(R.id.return_button);
         button.setOnClickListener(Utils.setReturnButton(TeacherClassDate.this));
+    }
+
+    private void setTitle() {
+        TextView textView_show_teacher_name = findViewById(R.id.title_text);
+        textView_show_teacher_name.setText("\n" + courseName);
     }
 
     private void gotoPage() {

@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class TeacherOperation extends AppCompatActivity {
     private String courseName, courseId, courseDate;
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -20,6 +21,17 @@ public class TeacherOperation extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_operation);
 
+        getExtra();
+
+        setAutoCheckAttendanceButton();
+        setManualCheckAttendanceButton();
+        setAttendanceListButton();
+        setReturnButton();
+
+        setTitle();
+    }
+
+    private void getExtra() {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             courseName = extras.getString("courseName");
@@ -27,12 +39,6 @@ public class TeacherOperation extends AppCompatActivity {
             courseDate = extras.getString("courseDate");
         } else
             throw new RuntimeException("pass data between activity error");
-
-        setTitle();
-        setAutoCheckAttendanceButton();
-        setManualCheckAttendanceButton();
-        setAttendanceListButton();
-        setReturnButton();
     }
 
     private void setTitle() {
@@ -51,7 +57,7 @@ public class TeacherOperation extends AppCompatActivity {
     }
 
     private void setManualCheckAttendanceButton() {
-        Button button = findViewById(R.id.manual_check_attendance_button);
+        Button button = findViewById(R.id.return_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
