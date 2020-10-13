@@ -25,7 +25,7 @@ public class StudentCheckRollCall extends AppCompatActivity {
 
     private IMyService iMyService;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private ArrayList<Course> courses;
+    private ArrayList<Course> courseList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +35,7 @@ public class StudentCheckRollCall extends AppCompatActivity {
         Retrofit retrofitClient = RetrofitClient.getInstance();
         iMyService = retrofitClient.create(IMyService.class);
 
-        courses = new ArrayList<>();
+        courseList = new ArrayList<>();
         findRollCall(getIntent().getStringExtra("userId"));
     }
 
@@ -52,14 +52,14 @@ public class StudentCheckRollCall extends AppCompatActivity {
 
                         switch (status) {
                             case 203:
-                                JSONObject classes = jsonObject.getJSONObject("courses");
-                                Iterator<String> iter_class = classes.keys();
+                                JSONObject courses = jsonObject.getJSONObject("courses");
+                                Iterator<String> iter_class = courses.keys();
                                 while (iter_class.hasNext()) {
-                                    JSONObject oneClass = (JSONObject) classes.get(iter_class.next());
-                                    String className = oneClass.getString("name");
-                                    String classDate = oneClass.getString("date");
-                                    String classAttendance = oneClass.getString("attendance");
-                                    courses.add(new Course(className, classDate, classAttendance));
+                                    JSONObject course = (JSONObject) courses.get(iter_class.next());
+                                    String className = course.getString("name");
+                                    String classDate = course.getString("date");
+                                    String classAttendance = course.getString("attendance");
+                                    courseList.add(new Course(className, classDate, classAttendance));
                                 }
                                 setButton();
                                 break;
@@ -72,44 +72,30 @@ public class StudentCheckRollCall extends AppCompatActivity {
 
     private void setButton() {
         LinearLayout mainLinerLayout = this.findViewById(R.id.roll_call_layout);
-        LinearLayout top = new LinearLayout(this);
-        top.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout show_top_linear = this.findViewById(R.id.show_top_linear);
-
-        // TODO optimize code
-        TextView tx1 = new TextView(this);
-        tx1.setText("課程");
-        TextView tx2 = new TextView(this);
-        tx2.setText("時間");
-        TextView tx3 = new TextView(this);
-        tx3.setText("出席");
-        ArrayList<TextView> textViews = new ArrayList<TextView>(
-                Arrays.asList(tx1, tx2, tx3));
-        for (TextView tx : textViews) {
+        ArrayList<String> titles = new ArrayList<>(Arrays.asList("課程", "時間", "出席"));
+        for (String title : titles) {
+            TextView tx = new TextView(this);
             tx.setTextSize(30);
             tx.setWidth(350);   //設定寬度
             tx.setHeight(120);
             tx.setGravity(Gravity.CENTER);
+            tx.setText(title);
             show_top_linear.addView(tx);
         }
 
-        for (Course course : courses) {
+        for (Course course : courseList) {
             LinearLayout li = new LinearLayout(this);
             li.setOrientation(LinearLayout.HORIZONTAL);
-            TextView tv1 = new TextView(this);
-            tv1.setText(course.getName());
-            TextView tv2 = new TextView(this);
-            tv2.setText(course.getDate());
-            TextView tv3 = new TextView(this);
-            tv3.setText(course.getAttendance());
-            ArrayList<TextView> tvs = new ArrayList<TextView>(
-                    Arrays.asList(tx1, tx2, tx3));
-            for (TextView tv : tvs) {
-                tv.setTextSize(20);
-                tv.setWidth(350);   //設定寬度
-                tv.setHeight(150);
-                tv.setGravity(Gravity.CENTER);
-                li.addView(tv);
+            ArrayList<String> attendanceData = new ArrayList<>(Arrays.asList(course.getName(), course.getDate(), course.getAttendance()));
+            for (String data : attendanceData) {
+                TextView tx = new TextView(this);
+                tx.setTextSize(20);
+                tx.setWidth(350);   //設定寬度
+                tx.setHeight(150);
+                tx.setGravity(Gravity.CENTER);
+                tx.setText(data);
+                li.addView(tx);
             }
             mainLinerLayout.addView(li);
         }

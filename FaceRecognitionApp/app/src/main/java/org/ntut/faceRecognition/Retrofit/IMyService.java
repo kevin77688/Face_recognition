@@ -54,22 +54,6 @@ public interface IMyService {
             @Field("courseDate") String courseDate
     );
 
-//    @POST("getRollCall")
-//    @FormUrlEncoded
-//    Observable<String> getRollCall(
-//            @Field("class_data") String class_data,
-//            @Field("class_name") String class_name
-//    );
-
-
-    // TODO class name must use id  !!!!
-    @POST("teacherGetCourseAttendance")
-    @FormUrlEncoded
-    Observable<String> findStudent(
-            @Field("courseId") String courseId,
-            @Field("date") String courseDate
-    );
-
     @POST("findStudentClass")
     @FormUrlEncoded
     Observable<String> findStudentClass(
@@ -86,12 +70,20 @@ public interface IMyService {
             // @Part("other") RequestBody other
     );
 
+    @POST
+    @FormUrlEncoded
+    Observable<String> attendanceUpdate(
+            @Field("courseId") String class_data,
+            @Field("student_data") String[] student_data,
+            @Field("roll_call_data") ArrayList<Integer> roll_call_data
+    );
+
     @POST("rollCallUpdate")
     @FormUrlEncoded
     Observable<String> rollCallUpdate(
             @Field("class_data") String class_data,
             @Field("class_name") String class_name,
             @Field("student_data") String[] student_data,
-            @Field("roll_call_data")  ArrayList<Integer>  roll_call_data
+            @Field("roll_call_data") ArrayList<Integer> roll_call_data
     );
 }

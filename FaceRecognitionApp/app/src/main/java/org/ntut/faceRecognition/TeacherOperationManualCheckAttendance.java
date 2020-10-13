@@ -26,7 +26,6 @@ import retrofit2.Retrofit;
 
 public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
 
-    ArrayList<CheckBox> cb_listb = new ArrayList<CheckBox>();
     private IMyService iMyService;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private String courseName, courseDate, courseId;
@@ -88,8 +87,7 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
         }
 
 
-//        int studentCount = 0;
-        for (final Student student : students) {
+        for (Student student : students) {
             LinearLayout linearLayout = new LinearLayout(this);
             linearLayout.setOrientation(LinearLayout.HORIZONTAL);
 
@@ -114,10 +112,9 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
                 checkBox.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        for (Student st : students) {
-                            if (st.setAttendanceCheckBoxChecked((CheckBox) v)) ;
-                            return;
-                        }
+                        for (Student st : students)
+                            if (st.setAttendanceCheckBoxChecked((CheckBox) v))
+                                return;
                         throw new RuntimeException("Checkbox find parent failed !");
                     }
                 });
