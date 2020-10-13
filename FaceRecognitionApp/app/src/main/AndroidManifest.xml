@@ -28,16 +28,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".TeacherOperationManualCheckAttendance"></activity>
+        <activity android:name=".Login" />
+        <activity android:name=".StudentOperation" />
         <activity android:name=".StudentCheckRollCall" />
-        <activity android:name=".TeacherClassDate" />
-        <activity android:name=".TeacherOperation" />
-        <activity android:name=".CameraCapture" />
-        <activity android:name=".TeacherOperationTakePhoto" />
         <activity android:name=".StudentUpload" />
         <activity android:name=".TeacherClass" />
-        <activity android:name=".StudentOperation" />
-        <activity android:name=".Login" />
+        <activity android:name=".TeacherClassDate" />
+        <activity android:name=".TeacherOperation" />
+        <activity android:name=".TeacherOperationManualCheckAttendance" />
+        <activity android:name=".TeacherOperationTakePhoto" />
+        <activity android:name=".CameraCapture" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
