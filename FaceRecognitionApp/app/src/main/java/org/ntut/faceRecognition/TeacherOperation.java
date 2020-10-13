@@ -21,7 +21,7 @@ public class TeacherOperation extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_operation);
 
-        getExtra();
+        getExtras();
 
         setAutoCheckAttendanceButton();
         setManualCheckAttendanceButton();
@@ -31,7 +31,7 @@ public class TeacherOperation extends AppCompatActivity {
         setTitle();
     }
 
-    private void getExtra() {
+    private void getExtras() {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             courseName = extras.getString("courseName");
@@ -57,7 +57,7 @@ public class TeacherOperation extends AppCompatActivity {
     }
 
     private void setManualCheckAttendanceButton() {
-        Button button = findViewById(R.id.return_button);
+        Button button = findViewById(R.id.manual_check_attendance_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
