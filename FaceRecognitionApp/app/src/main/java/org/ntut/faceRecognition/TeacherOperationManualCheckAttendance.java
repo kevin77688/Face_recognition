@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.JsonObject;
+
 import org.json.JSONObject;
 import org.ntut.faceRecognition.Retrofit.IMyService;
 import org.ntut.faceRecognition.Retrofit.RetrofitClient;
@@ -26,7 +28,6 @@ import retrofit2.Retrofit;
 
 public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
 
-    ArrayList<CheckBox> cb_listb = new ArrayList<CheckBox>();
     private IMyService iMyService;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private String courseName, courseDate, courseId;
@@ -59,12 +60,13 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
                     @Override
                     public void accept(String response) throws Exception {
                         JSONObject jsonObject = new JSONObject(response);
-                        
-                        Iterator<String> studentIds = jsonObject.keys();
+                        JSONObject attendanceJson = jsonObject.getJSONObject("attendance");
+                        Iterator<String> studentIds = attendanceJson.keys();
                         while (studentIds.hasNext()) {
                             String studentId = studentIds.next();
-                            String studentName = jsonObject.getJSONObject(studentId).getString("name");
-                            String studentAttendance = jsonObject.getJSONObject(studentId).getString("attendance");
+                            JSONObject attendance = (JSONObject) attendanceJson.get(studentId);
+                            String studentName = attendance.getString("name");
+                            String studentAttendance = attendance.getString("attendance");
                             students.add(new Student(studentId, studentName, studentAttendance));
                         }
                         setButton();
@@ -89,8 +91,7 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
         }
 
 
-//        int studentCount = 0;
-        for (final Student student : students) {
+        for (Student student : students) {
             LinearLayout linearLayout = new LinearLayout(this);
             linearLayout.setOrientation(LinearLayout.HORIZONTAL);
 
@@ -115,10 +116,9 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
                 checkBox.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        for (Student st : students) {
-                            if (st.setAttendanceCheckBoxChecked((CheckBox) v)) ;
-                            return;
-                        }
+                        for (Student st : students)
+                            if (st.setAttendanceCheckBoxChecked((CheckBox) v))
+                                return;
                         throw new RuntimeException("Checkbox find parent failed !");
                     }
                 });
