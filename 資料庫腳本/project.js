@@ -146,8 +146,7 @@ db.user.insertMany([
 
 ]);
 
-db.attendance.drop();
-
+db.attendance.drop();
 
 db.attendance.insertMany([
 	{studentId: "106820053", date: "2020-09-07", courseId: "268986", attendance: "1"},

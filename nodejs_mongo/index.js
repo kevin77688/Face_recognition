@@ -215,33 +215,17 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			return courses;
 		}
 
-        app.post('/rollCallUpdate', (request, response, next)=>{
+        app.post('/uploadAttendanceList', async(request, response, next)=>{
             var post_data = request.body;
-            var class_data = post_data.class_data;
-            var class_name = post_data.class_name;
-            var student_data = post_data.student_data;
-            var roll_call_data = post_data.roll_call_data;
-
-            console.log(class_data);
-            console.log(class_name);
-            console.log(student_data);
-            console.log(roll_call_data);
-            var db = client.db('nodejsTest');
-            function isRollCallExist(data){
-                var thing = db.collection("rollcall").deleteOne(data);
-                return thing;
-            }
-            async function operation() {
-                for(let i=0;i<student_data.length;i++){
-                    let name = student_data[i].replace("\"","");
-                    name = name.replace("\"","");
-                    let insert_data = {date: class_data, class: class_name, name: name,  status: roll_call_data[i]};
-                    await isRollCallExist({date: class_data, class: class_name, name: name});
-                    db.collection("rollcall").insertOne(insert_data);
-                }
-                response.json("success");
-            }
-            operation();
+			var course_id = post_data.courseId;
+			var date = post_data.date;
+			var isRecorded = await CheckCourseDateRecorded(course_id, date);
+			if (isRecorded){
+				
+			}
+			else{
+				
+			}
         });
 
         app.post('/teacherGetCourseAttendance', async(request, response, next)=>{
@@ -252,7 +236,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
             var isRecorded = await CheckCourseDateRecorded(course_id, date);
 			userResponse.attendance = {}
 			if (!isRecorded){
-				var studentList = await FindStudentListUsingDateAndCourseId(course_id);
+				var studentList = await FindStudentListUsingCourseId(course_id);
 				for (let i = 0; i < studentList.length; i++){
 					userResponse.attendance[studentList[i].studentId] = {name: studentList[i].studentDetails[0].name, attendance: '-1'};
 				}
@@ -275,7 +259,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			return courseDate.isRecord;
 		}
 		
-		function FindStudentListUsingDateAndCourseId(course_id){
+		function FindStudentListUsingCourseId(course_id){
 			var db = client.db('nodejsTest');
 			const pipeline = [
 				{
@@ -355,11 +339,11 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
             var student_id = post_data.studentId ;
             var attendance = await findAttendanceUsingStudentId(student_id);
 			if (!attendance){
-				userResponse.description = "Get roll call failed";
+				userResponse.description = "Get attendance failed";
 				userResponse.status = 403;
 			}
 			else {
-				userResponse.description = "Get roll call success"
+				userResponse.description = "Get attendance success"
 				userResponse.status = 203;
 				userResponse.courses = {};
 				for(var i = 0; i < attendance.length; i++){
