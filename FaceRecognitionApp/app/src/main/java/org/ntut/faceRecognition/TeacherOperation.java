@@ -51,7 +51,7 @@ public class TeacherOperation extends AppCompatActivity {
     }
 
     private void setManualCheckAttendanceButton() {
-        Button button = findViewById(R.id.auto_check_attendance_button);
+        Button button = findViewById(R.id.manual_check_attendance_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -61,7 +61,7 @@ public class TeacherOperation extends AppCompatActivity {
     }
 
     private void setAttendanceListButton() {
-        Button button = findViewById(R.id.auto_check_attendance_button);
+        Button button = findViewById(R.id.check_attendance_list_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

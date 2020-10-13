@@ -27,22 +27,44 @@ public class StudentCheckRollCall extends AppCompatActivity {
     private IMyService iMyService;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private ArrayList<Course> courseList;
+    private String userId;
+    private Button confirmButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_check_roll_call);
 
+        courseList = new ArrayList<>();
+        getExtras();
+        findView();
+        setupConnection();
+
+        setConfirmButton();
+        getAttendanceList();
+    }
+
+    private void getExtras() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            userId = extras.getString("userId");
+        }
+    }
+
+    private void findView() {
+        confirmButton = findViewById(R.id.confirm_button);
+    }
+
+    private void setupConnection() {
         Retrofit retrofitClient = RetrofitClient.getInstance();
         iMyService = retrofitClient.create(IMyService.class);
+    }
 
-        courseList = new ArrayList<>();
-        findRollCall(getIntent().getStringExtra("userId"));
-        Button confirmButton = (Button) findViewById(R.id.confirm_button);
+    private void setConfirmButton() {
         confirmButton.setOnClickListener(Utils.setReturnButton(StudentCheckRollCall.this));
     }
 
-    synchronized private void findRollCall(String userId) {
+    synchronized private void getAttendanceList() {
         compositeDisposable.add(iMyService.studentCheckAttendance(userId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
