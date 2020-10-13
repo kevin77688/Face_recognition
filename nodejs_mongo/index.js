@@ -250,17 +250,20 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			var date = post_data.date;
 			var course_id = post_data.courseId;
             var isRecorded = await CheckCourseDateRecorded(course_id, date);
+			userResponse.attendance = {}
 			if (!isRecorded){
 				var studentList = await FindStudentListUsingDateAndCourseId(course_id);
 				for (let i = 0; i < studentList.length; i++){
-					userResponse[studentList[i].studentId] = {name: studentList[i].studentDetails[0].name, attendance: '-1'};
+					userResponse.attendance[studentList[i].studentId] = {name: studentList[i].studentDetails[0].name, attendance: '-1'};
 				}
+				userResponse.isRecorded = false;
 			}
 			else {
 				var attendance = await FindAttendanceUsingDateAndCourseId(course_id, date);
 				for (let i = 0; i < attendance.length; i++){
-					userResponse[attendance[i].studentId] = {name: attendance[i].studentDetails[0].name, attendance: attendance[i].attendance}
+					userResponse.attendance[attendance[i].studentId] = {name: attendance[i].studentDetails[0].name, attendance: attendance[i].attendance}
 				}
+				userResponse.isRecorded = true;
 			}
 			console.log(userResponse);
 			response.json(userResponse);

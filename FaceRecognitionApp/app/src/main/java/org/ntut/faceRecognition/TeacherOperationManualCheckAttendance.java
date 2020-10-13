@@ -59,6 +59,7 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
                     @Override
                     public void accept(String response) throws Exception {
                         JSONObject jsonObject = new JSONObject(response);
+                        
                         Iterator<String> studentIds = jsonObject.keys();
                         while (studentIds.hasNext()) {
                             String studentId = studentIds.next();
