@@ -18,39 +18,110 @@ import android.util.Log;
 import android.view.View;
 import android.widget.*;
 
+import org.ntut.faceRecognition.Retrofit.IMyService;
+import org.ntut.faceRecognition.Retrofit.RetrofitClient;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Date;
 import java.util.Objects;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Retrofit;
 
 public class StudentUploadTest extends AppCompatActivity implements View.OnClickListener{
     public static final String KEY_User_Document1 = "doc1";
-    ImageView IDProf;
-    Button Upload_Btn;
+    ImageView imageView;
+    Button uploadButton, returnButton;
+    TextView title;
 
     private String Document_img1="";
+    private String username, userId;
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private IMyService iMyService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_upload_test);
+        Retrofit retrofitClient = RetrofitClient.getInstance();
+        iMyService = retrofitClient.create(IMyService.class);
 
-        IDProf=(ImageView)findViewById(R.id.IdProf);
-        Upload_Btn=(Button)findViewById(R.id.UploadBtn);
+        getExtras();
+        findView();
+        setImageView();
+        uploadButton();
+        returnButton();
+        setTitle();
+    }
 
-        IDProf.setOnClickListener(new View.OnClickListener() {
+    private void getExtras() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            username = getIntent().getStringExtra("username");
+            userId = getIntent().getStringExtra("userId");
+        } else
+            throw new RuntimeException("Passing extras between activity failed !");
+    }
+
+    private void findView() {
+        imageView =(ImageView)findViewById(R.id.IdProf);
+        uploadButton =(Button)findViewById(R.id.UploadBtn);
+        returnButton = (Button) findViewById(R.id.return_button);
+        title = findViewById(R.id.title_text);
+    }
+
+    private void setImageView(){
+        imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 selectImage();
-
             }
         });
+    }
 
-        Upload_Btn.setOnClickListener(this);
+    private void uploadButton(){
+        uploadButton.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                File f = new File(Environment.getExternalStorageDirectory().toString());
+                for (File temp : f.listFiles()) {
+                    if (temp.getName().equals("temp.jpg")) {
+                        f = temp;
+                        break;
+                    }
+                }
+                RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), f);
+                MultipartBody.Part body = MultipartBody.Part.createFormData("image", f.getName(), requestFile);
+                RequestBody fullName = RequestBody.create(MediaType.parse("multipart/form-data"), userId);
+                compositeDisposable.add(iMyService.studentUpload(fullName, body)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<ResponseBody>() {
+                            @Override
+                            public void accept(ResponseBody responseBody) throws Exception {
+
+                            }
+                        }));
+            }
+        });
+    }
+
+    private void returnButton() {
+        returnButton.setOnClickListener(Utils.setReturnButton(StudentUploadTest.this));
+    }
+
+    private void setTitle() {
+        title.setText("\n歡迎" + username + "學生");
     }
 
 
@@ -102,27 +173,7 @@ public class StudentUploadTest extends AppCompatActivity implements View.OnClick
                     BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
                     bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(), bitmapOptions);
                     bitmap=getResizedBitmap(bitmap, 400);
-                    IDProf.setImageBitmap(bitmap);
-                    BitMapToString(bitmap);
-                    String path = android.os.Environment
-                            .getExternalStorageDirectory()
-                            + File.separator
-                            + "Phoenix" + File.separator + "default";
-                    f.delete();
-                    OutputStream outFile = null;
-                    File file = new File(path, String.valueOf(System.currentTimeMillis()) + ".jpg");
-                    try {
-                        outFile = new FileOutputStream(file);
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 85, outFile);
-                        outFile.flush();
-                        outFile.close();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    imageView.setImageBitmap(bitmap);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -137,17 +188,9 @@ public class StudentUploadTest extends AppCompatActivity implements View.OnClick
                 Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
                 thumbnail=getResizedBitmap(thumbnail, 400);
                 Log.w("path of image:", picturePath+"");
-                IDProf.setImageBitmap(thumbnail);
-                BitMapToString(thumbnail);
+                imageView.setImageBitmap(thumbnail);
             }
         }
-    }
-    public String BitMapToString(Bitmap userImage1) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        userImage1.compress(Bitmap.CompressFormat.PNG, 60, baos);
-        byte[] b = baos.toByteArray();
-        Document_img1 = Base64.encodeToString(b, Base64.DEFAULT);
-        return Document_img1;
     }
 
     public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
@@ -164,139 +207,6 @@ public class StudentUploadTest extends AppCompatActivity implements View.OnClick
         }
         return Bitmap.createScaledBitmap(image, width, height, true);
     }
-
-    private void SendDetail() {
-//        final ProgressDialog loading = new ProgressDialog(Uplode_Reg_Photo.this);
-//        loading.setMessage("Please Wait...");
-//        loading.show();
-//        loading.setCanceledOnTouchOutside(false);
-//        RetryPolicy mRetryPolicy = new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-//        StringRequest stringRequest = new StringRequest(Request.Method.POST, ConfiURL.Registration_URL,
-//                new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//                        try {
-//                            loading.dismiss();
-//                            Log.d("JSON", response);
-//
-//                            JSONObject eventObject = new JSONObject(response);
-//                            String error_status = eventObject.getString("error");
-//                            if (error_status.equals("true")) {
-//                                String error_msg = eventObject.getString("msg");
-//                                ContextThemeWrapper ctw = new ContextThemeWrapper( Uplode_Reg_Photo.this, R.style.Theme_AlertDialog);
-//                                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctw);
-//                                alertDialogBuilder.setTitle("Vendor Detail");
-//                                alertDialogBuilder.setCancelable(false);
-//                                alertDialogBuilder.setMessage(error_msg);
-//                                alertDialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
-//                                    public void onClick(DialogInterface dialog, int id) {
-//
-//                                    }
-//                                });
-//                                alertDialogBuilder.show();
-//
-//                            } else {
-//                                String error_msg = eventObject.getString("msg");
-//                                ContextThemeWrapper ctw = new ContextThemeWrapper( Uplode_Reg_Photo.this, R.style.Theme_AlertDialog);
-//                                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctw);
-//                                alertDialogBuilder.setTitle("Registration");
-//                                alertDialogBuilder.setCancelable(false);
-//                                alertDialogBuilder.setMessage(error_msg);
-////                                alertDialogBuilder.setIcon(R.drawable.doubletick);
-//                                alertDialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
-//                                    public void onClick(DialogInterface dialog, int id) {
-//                                        Intent intent=new Intent(Uplode_Reg_Photo.this,Log_In.class);
-//                                        startActivity(intent);
-//                                        finish();
-//                                    }
-//                                });
-//                                alertDialogBuilder.show();
-//                            }
-//                        }catch(Exception e){
-//                            Log.d("Tag", e.getMessage());
-//
-//                        }
-//                    }
-//                },
-//                new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        loading.dismiss();
-//                        if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-//                            ContextThemeWrapper ctw = new ContextThemeWrapper( Uplode_Reg_Photo.this, R.style.Theme_AlertDialog);
-//                            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctw);
-//                            alertDialogBuilder.setTitle("No connection");
-//                            alertDialogBuilder.setMessage(" Connection time out error please try again ");
-//                            alertDialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
-//                                public void onClick(DialogInterface dialog, int id) {
-//
-//                                }
-//                            });
-//                            alertDialogBuilder.show();
-//                        } else if (error instanceof AuthFailureError) {
-//                            ContextThemeWrapper ctw = new ContextThemeWrapper( Uplode_Reg_Photo.this, R.style.Theme_AlertDialog);
-//                            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctw);
-//                            alertDialogBuilder.setTitle("Connection Error");
-//                            alertDialogBuilder.setMessage(" Authentication failure connection error please try again ");
-//                            alertDialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
-//                                public void onClick(DialogInterface dialog, int id) {
-//
-//                                }
-//                            });
-//                            alertDialogBuilder.show();
-//                            //TODO
-//                        } else if (error instanceof ServerError) {
-//                            ContextThemeWrapper ctw = new ContextThemeWrapper( Uplode_Reg_Photo.this, R.style.Theme_AlertDialog);
-//                            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctw);
-//                            alertDialogBuilder.setTitle("Connection Error");
-//                            alertDialogBuilder.setMessage("Connection error please try again");
-//                            alertDialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
-//                                public void onClick(DialogInterface dialog, int id) {
-//
-//                                }
-//                            });
-//                            alertDialogBuilder.show();
-//                            //TODO
-//                        } else if (error instanceof NetworkError) {
-//                            ContextThemeWrapper ctw = new ContextThemeWrapper( Uplode_Reg_Photo.this, R.style.Theme_AlertDialog);
-//                            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctw);
-//                            alertDialogBuilder.setTitle("Connection Error");
-//                            alertDialogBuilder.setMessage("Network connection error please try again");
-//                            alertDialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
-//                                public void onClick(DialogInterface dialog, int id) {
-//
-//                                }
-//                            });
-//                            alertDialogBuilder.show();
-//                            //TODO
-//                        } else if (error instanceof ParseError) {
-//                            ContextThemeWrapper ctw = new ContextThemeWrapper( Uplode_Reg_Photo.this, R.style.Theme_AlertDialog);
-//                            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctw);
-//                            alertDialogBuilder.setTitle("Error");
-//                            alertDialogBuilder.setMessage("Parse error");
-//                            alertDialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
-//                                public void onClick(DialogInterface dialog, int id) {
-//
-//                                }
-//                            });
-//                            alertDialogBuilder.show();
-//                        }
-////                        Toast.makeText(Login_Activity.this,error.toString(), Toast.LENGTH_LONG ).show();
-//                    }
-//                }){
-//            @Override
-//            protected Map<String, String> getParams() throws AuthFailureError {
-//                Map<String,String> map = new HashMap<String,String>();
-//                map.put(KEY_User_Document1,Document_img1);
-//                return map;
-//            }
-//        };
-//
-//        RequestQueue requestQueue = Volley.newRequestQueue(this);
-//        stringRequest.setRetryPolicy(mRetryPolicy);
-//        requestQueue.add(stringRequest);
-    }
-
 
     @Override
     public void onClick(View v) {

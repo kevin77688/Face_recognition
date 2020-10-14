@@ -67,8 +67,7 @@ public interface IMyService {
     @Multipart
     @POST("studentUpload")
     Observable<ResponseBody> studentUpload(
-            // @Part("user_id") RequestBody id,
-            @Part("full_name") RequestBody fullName,
+            @Part("userId") RequestBody userId,
             @Part MultipartBody.Part image
             // @Part("other") RequestBody other
     );

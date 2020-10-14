@@ -444,7 +444,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			console.log(request.file);
 			console.log(request.file.originalname);
 			var db = client.db(dbName);
-			db.collection('avatar').insertOne({'userId': request.body._id, 'imageName': imageName}, function(error, res){
+			db.collection('avatar').insertOne({'userId': request.body.userId, 'imageName': imageName}, function(error, res){
                                 response.json('Upload success');
                                 console.log('Upload success');
                             })
