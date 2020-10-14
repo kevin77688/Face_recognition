@@ -1,8 +1,10 @@
-package org.ntut.faceRecognition;
+package org.ntut.faceRecognition.Teacher;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import org.ntut.faceRecognition.R;
 
 public class TeacherOperationTakePhoto extends AppCompatActivity {
 

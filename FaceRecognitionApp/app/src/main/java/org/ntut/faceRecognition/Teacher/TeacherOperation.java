@@ -1,4 +1,4 @@
-package org.ntut.faceRecognition;
+package org.ntut.faceRecognition.Teacher;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import org.ntut.faceRecognition.R;
+import org.ntut.faceRecognition.Utility.Utils;
 
 public class TeacherOperation extends AppCompatActivity {
     private String courseName, courseId, courseDate;
@@ -71,7 +74,7 @@ public class TeacherOperation extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO check attendance list ???
+                gotoPage(TeacherCheckRollCall.class);
             }
         });
     }

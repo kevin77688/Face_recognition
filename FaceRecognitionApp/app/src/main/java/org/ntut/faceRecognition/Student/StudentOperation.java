@@ -1,4 +1,4 @@
-package org.ntut.faceRecognition;
+package org.ntut.faceRecognition.Student;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import org.ntut.faceRecognition.R;
+import org.ntut.faceRecognition.Utility.Utils;
 
 public class StudentOperation extends AppCompatActivity {
 
@@ -43,7 +46,7 @@ public class StudentOperation extends AppCompatActivity {
         checkPhotoButton = findViewById(R.id.check_photo_button);
         uploadButton = findViewById(R.id.upload_button);
         checkAttendanceButton = findViewById(R.id.check_attendance_button);
-        returnButton = (Button) findViewById(R.id.return_button);
+        returnButton = findViewById(R.id.return_button);
         title = findViewById(R.id.title_text);
     }
 

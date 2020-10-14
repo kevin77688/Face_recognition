@@ -1,4 +1,4 @@
-package org.ntut.faceRecognition;
+package org.ntut.faceRecognition.Student;
 
 import android.os.Bundle;
 import android.view.Gravity;
@@ -9,8 +9,11 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.json.JSONObject;
+import org.ntut.faceRecognition.R;
 import org.ntut.faceRecognition.Retrofit.IMyService;
 import org.ntut.faceRecognition.Retrofit.RetrofitClient;
+import org.ntut.faceRecognition.Utility.Course;
+import org.ntut.faceRecognition.Utility.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

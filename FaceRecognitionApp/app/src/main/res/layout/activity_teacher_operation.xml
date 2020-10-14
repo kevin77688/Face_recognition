@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TeacherOperation">
+    tools:context=".Teacher.TeacherOperation">
 
     <TextView
         android:id="@+id/main_background"
