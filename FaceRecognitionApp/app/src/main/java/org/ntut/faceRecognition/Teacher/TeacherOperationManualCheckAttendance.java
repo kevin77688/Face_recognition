@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -98,14 +99,12 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
                 Arrays.asList("姓名", "準時", "遲到", "缺席"));
         for (String title : titles) {
             TextView textView = new TextView(this);
-            textView.setTextSize(25);
-            textView.setWidth(300);   //設定寬度
-            textView.setHeight(120);
+            textView.setLayoutParams(new TableLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
             textView.setGravity(Gravity.CENTER);
             textView.setText(title);
             show_top_linear.addView(textView);
         }
-
 
         for (Student student : students) {
             LinearLayout linearLayout = new LinearLayout(this);
@@ -113,9 +112,8 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
 
             // Set student name
             TextView textView = new TextView(this);
-            textView.setTextSize(30);
-            textView.setWidth(330);   //設定寬度
-            textView.setHeight(120);
+            textView.setLayoutParams(new TableLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
             textView.setGravity(Gravity.CENTER);
             textView.setText(student.getName());
             linearLayout.addView(textView);
@@ -124,9 +122,8 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
             // Set checkbox
             for (int i = 0; i < 3; i++) {
                 CheckBox checkBox = new CheckBox(this);
-                checkBox.setTextSize(30);
-                checkBox.setWidth(230);   //設定寬度
-                checkBox.setHeight(150);
+                checkBox.setLayoutParams(new TableLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
                 checkBox.setGravity(Gravity.CENTER);
                 checkBox.setChecked(false);
                 checkBox.setOnClickListener(new View.OnClickListener() {
@@ -171,10 +168,6 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
             responseData.addProperty("courseDate", courseDate);
             JsonObject studentsJson = new JsonObject();
             for (Student student : students) {
-//                JsonObject studentJson = new JsonObject();
-//                studentJson.addProperty("userId", student.getId());
-//                studentJson.addProperty("attendance", student.getAttendanceStatus());
-//                studentsJson.add("student", studentJson);
                 studentsJson.addProperty(student.getId(), student.getAttendanceStatus());
             }
             Log.e("Total student : ", Integer.toString(students.size()));
@@ -186,12 +179,12 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                Log.i("Response", "successful");
+                Utils.showToast("上傳成功", TeacherOperationManualCheckAttendance.this);
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                Log.i("Response", "error");
+                Utils.showToast("上傳失敗，請再試一次", TeacherOperationManualCheckAttendance.this);
             }
         });
     }

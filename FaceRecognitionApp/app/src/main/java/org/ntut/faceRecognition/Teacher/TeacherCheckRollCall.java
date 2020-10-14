@@ -134,6 +134,7 @@ public class TeacherCheckRollCall extends AppCompatActivity {
                     textView.setText(string);
                     linearLayout.addView(textView);
                 }
+                attendanceList.addView(linearLayout);
             }
         }
     }

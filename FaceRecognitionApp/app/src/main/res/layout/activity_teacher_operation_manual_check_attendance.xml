@@ -8,9 +8,10 @@
 
     <ImageView
         android:id="@+id/main_background"
-        android:layout_width="755dp"
-        android:layout_height="940dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="#C4C4C4"
+        android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,7 +38,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logo_icon"></LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/logo_icon" />
 
     <ScrollView
         android:id="@+id/scrollView"
