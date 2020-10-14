@@ -1,8 +1,4 @@
-package org.ntut.faceRecognition;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
+package org.ntut.faceRecognition.Student;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,20 +9,22 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
+
+import org.ntut.faceRecognition.R;
 import org.ntut.faceRecognition.Retrofit.IMyService;
 import org.ntut.faceRecognition.Retrofit.RetrofitClient;
+import org.ntut.faceRecognition.Utility.Utils;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Objects;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -75,9 +73,9 @@ public class StudentUploadTest extends AppCompatActivity implements View.OnClick
     }
 
     private void findView() {
-        imageView =(ImageView)findViewById(R.id.IdProf);
-        uploadButton =(Button)findViewById(R.id.UploadBtn);
-        returnButton = (Button) findViewById(R.id.return_button);
+        imageView = findViewById(R.id.IdProf);
+        uploadButton = findViewById(R.id.UploadBtn);
+        returnButton = findViewById(R.id.return_button);
         title = findViewById(R.id.title_text);
     }
 
