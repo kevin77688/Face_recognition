@@ -34,9 +34,10 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         android:orientation="horizontal"
+        android:scaleType="fitXY"
         app:layout_constraintEnd_toEndOf="@+id/main_background"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logo_icon"></LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/logo_icon" />
 
     <ScrollView
         android:id="@+id/scrollView"
