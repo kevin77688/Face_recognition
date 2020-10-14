@@ -7,9 +7,12 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.ntut.faceRecognition.Camera.CameraActivity;
+import org.ntut.faceRecognition.Camera.CameraCapture;
+
 public class MainActivity extends AppCompatActivity {
 
-    private Button login_button;
+    private Button login_button, contact_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,10 +21,12 @@ public class MainActivity extends AppCompatActivity {
 
         findView();
         setLoginButton();
+        setContactButton();
     }
 
     private void findView() {
         login_button = findViewById(R.id.login_button);
+        contact_button = findViewById(R.id.contact_button);
     }
 
     private void setLoginButton() {
@@ -29,6 +34,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 gotoPage(Login.class);
+            }
+        });
+    }
+
+    private void setContactButton(){
+        // TODO remember to delete this
+        contact_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gotoPage(CameraCapture.class);
             }
         });
     }

@@ -4,6 +4,7 @@
     <string name="title">拍照點名系統</string>
     <string name="title_activity_login_page">login_page</string>
     <string name="hello_world">Hello Square World!</string>
+    <string name="camera_error">This device may not support Camera2 API</string>
 
     <string name="create_account_text">+ 註冊學生帳號</string>
 

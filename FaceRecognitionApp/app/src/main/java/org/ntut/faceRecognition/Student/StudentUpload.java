@@ -17,7 +17,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.ntut.faceRecognition.CameraCapture;
 import org.ntut.faceRecognition.R;
 import org.ntut.faceRecognition.Retrofit.IMyService;
 import org.ntut.faceRecognition.Retrofit.RetrofitClient;
@@ -92,9 +91,10 @@ public class StudentUpload extends AppCompatActivity {
     }
 
     private void openCamera(){
-        Intent intent = new Intent();
-        intent.setClass(this, CameraCapture.class);
-        startActivity(intent);
+        // TODO camera entry point
+//        Intent intent = new Intent();
+//        intent.setClass(this, CameraCapture.class);
+//        startActivity(intent);
     }
 
     public String getPath(Uri uri) {
