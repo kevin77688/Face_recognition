@@ -1,4 +1,4 @@
-package org.ntut.faceRecognition;
+package org.ntut.faceRecognition.Teacher;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import org.ntut.faceRecognition.R;
+import org.ntut.faceRecognition.Utility.Utils;
 
 import java.util.ArrayList;
 
@@ -66,7 +69,7 @@ public class TeacherClassDate extends AppCompatActivity {
     }
 
     private void setReturnButton() {
-        Button button = (Button) findViewById(R.id.return_button);
+        Button button = findViewById(R.id.return_button);
         button.setOnClickListener(Utils.setReturnButton(TeacherClassDate.this));
     }
 

@@ -1,4 +1,4 @@
-package org.ntut.faceRecognition;
+package org.ntut.faceRecognition.Teacher;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -14,8 +14,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.gson.JsonObject;
 
 import org.json.JSONObject;
+import org.ntut.faceRecognition.R;
 import org.ntut.faceRecognition.Retrofit.IMyService;
 import org.ntut.faceRecognition.Retrofit.RetrofitClient;
+import org.ntut.faceRecognition.Utility.Student;
+import org.ntut.faceRecognition.Utility.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -88,8 +91,8 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
     }
 
     private void setView() {
-        LinearLayout mainLinerLayout = (LinearLayout) findViewById(R.id.attendance_layout);
-        LinearLayout show_top_linear = (LinearLayout) findViewById(R.id.title_text);
+        LinearLayout mainLinerLayout = findViewById(R.id.attendance_layout);
+        LinearLayout show_top_linear = findViewById(R.id.title_text);
 
         ArrayList<String> titles = new ArrayList<>(
                 Arrays.asList("姓名", "準時", "遲到", "缺席"));
@@ -146,7 +149,7 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
     }
 
     private void setConfirmButton() {
-        Button button = (Button) findViewById(R.id.confirm_button);
+        Button button = findViewById(R.id.confirm_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

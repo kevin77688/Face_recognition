@@ -1,4 +1,4 @@
-package org.ntut.faceRecognition;
+package org.ntut.faceRecognition.Utility;
 
 public class Course {
 

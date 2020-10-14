@@ -1,4 +1,4 @@
-package org.ntut.faceRecognition;
+package org.ntut.faceRecognition.Utility;
 
 import android.widget.CheckBox;
 
@@ -31,6 +31,24 @@ public class Student {
 
     public void setAttendanceView(ArrayList<CheckBox> checkBoxes) {
         _attendanceView = checkBoxes;
+    }
+
+    public String getAttendanceStatusString() {
+        String statusString;
+        switch (_attendanceStatus) {
+            case 0:
+                statusString = "準時";
+                break;
+            case 1:
+                statusString = "遲到";
+                break;
+            case 2:
+                statusString = "缺席";
+                break;
+            default:
+                throw new RuntimeException("Student does not have attendance status or is -1");
+        }
+        return statusString;
     }
 
     public boolean checkAttendanceSet() {

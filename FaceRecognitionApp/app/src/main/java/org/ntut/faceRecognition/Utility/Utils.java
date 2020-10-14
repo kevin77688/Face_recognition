@@ -1,4 +1,4 @@
-package org.ntut.faceRecognition;
+package org.ntut.faceRecognition.Utility;
 
 import android.app.Activity;
 import android.content.Context;
