@@ -29,22 +29,22 @@
         app:met_textColor="@color/wordColor" />
 
     <com.rengwuxian.materialedittext.MaterialEditText
-        android:id="@+id/password_field"
+        android:id="@+id/id_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/password_field"
-        android:inputType="textPassword"
+        android:hint="@string/id_field"
+        android:inputType="text"
         app:met_baseColor="@color/wordColor"
         app:met_iconPadding="0dp"
         app:met_primaryColor="@color/wordColor"
         app:met_textColor="@color/wordColor" />
 
     <com.rengwuxian.materialedittext.MaterialEditText
-        android:id="@+id/id_field"
+        android:id="@+id/password_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/id_field"
-        android:inputType="text"
+        android:hint="@string/password_field"
+        android:inputType="textPassword"
         app:met_baseColor="@color/wordColor"
         app:met_iconPadding="0dp"
         app:met_primaryColor="@color/wordColor"
