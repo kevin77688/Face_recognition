@@ -107,7 +107,7 @@ public class TeacherCheckRollCall extends AppCompatActivity {
             titleText.addView(textView);
         } else {
             ArrayList<String> titles = new ArrayList<>(
-                    Arrays.asList("姓名", "出缺席紀錄"));
+                    Arrays.asList("學號", "姓名", "出缺席紀錄"));
             for (String title : titles) {
                 TextView textView = new TextView(this);
                 textView.setLayoutParams(new TableLayout.LayoutParams(
@@ -124,7 +124,7 @@ public class TeacherCheckRollCall extends AppCompatActivity {
 
                 // Set layout
                 ArrayList<String> studentStatus = new ArrayList<>(
-                        Arrays.asList(student.getName(), student.getAttendanceStatusString())
+                        Arrays.asList(student.getId(), student.getName(), student.getAttendanceStatusString())
                 );
                 for (String string : studentStatus) {
                     TextView textView = new TextView(this);
