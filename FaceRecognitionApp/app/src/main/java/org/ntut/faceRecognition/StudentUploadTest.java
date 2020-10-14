@@ -90,6 +90,7 @@ public class StudentUploadTest extends AppCompatActivity implements View.OnClick
         });
     }
 
+    //圖庫上傳還沒做
     private void uploadButton(){
         uploadButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
