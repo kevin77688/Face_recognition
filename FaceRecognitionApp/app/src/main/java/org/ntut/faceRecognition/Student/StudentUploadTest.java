@@ -74,7 +74,7 @@ public class StudentUploadTest extends AppCompatActivity implements View.OnClick
 
     private void findView() {
         imageView = findViewById(R.id.IdProf);
-        uploadButton = findViewById(R.id.UploadBtn);
+        uploadButton = findViewById(R.id.deleterButton);
         returnButton = findViewById(R.id.return_button);
         title = findViewById(R.id.title_text);
     }

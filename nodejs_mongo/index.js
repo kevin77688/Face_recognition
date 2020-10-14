@@ -449,6 +449,21 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
                                 console.log('Upload success');
                             })
 		});
+		
+		// student check avatar
+		app.post('/studentCheckAvatar', async(request, response, next)=>{
+			var userResponse = {};
+			var post_data = request.body;
+			var student_id = post_data.studentId;
+			console.log(student_id);
+			var db = client.db(dbName);
+			var avatars = await db.collection('avatar').find({userId: student_id}).toArray();
+			if (avatars.length == 0){
+			}
+			else {
+				response.sendFile(__dirname + "/uploads/" + avatars[0].imageName);
+			}
+		});
 
         //Web server
         app.listen(3000, ()=>{

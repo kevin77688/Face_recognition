@@ -94,4 +94,10 @@ public interface IMyService {
     Call<String> uploadAttendanceList(
             @Field("studentAttendantList") JsonObject jsonObject
     );
+
+    @POST("studentCheckAvatar")
+    @FormUrlEncoded
+    Observable<ResponseBody> studentCheckAvatar(
+            @Field("studentId") String studentId
+    );
 }

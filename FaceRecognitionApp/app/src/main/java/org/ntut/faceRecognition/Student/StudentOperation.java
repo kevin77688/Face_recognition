@@ -55,6 +55,7 @@ public class StudentOperation extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // TODO student check photo view
+                gotoPage(StudentCheckAvatar.class);
             }
         });
     }

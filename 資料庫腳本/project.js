@@ -1,13 +1,13 @@
 use nodejsTest
 
 //建立課程資料
-
-db.Students.drop();
-db.professor.drop();
-db.rollcall.drop();
-db.testUri.drop();
-db.student.drop();
-
+
+db.Students.drop();
+db.professor.drop();
+db.rollcall.drop();
+db.testUri.drop();
+db.student.drop();
+
 
 db.course.drop();
 db.course.insertMany([
@@ -146,9 +146,9 @@ db.user.insertMany([
 
 ]);
 
-db.attendance.drop();
+db.attendance.drop();
 
-db.attendance.insertMany([
-	{studentId: "106820053", date: "2020-09-07", courseId: "268986", attendance: "1"},
-]);
+// db.attendance.insertMany([
+// 	{studentId: "106820053", date: "2020-09-07", courseId: "268986", attendance: "1"},
+// ]);
 
