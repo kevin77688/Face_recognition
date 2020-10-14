@@ -61,7 +61,7 @@ public class StudentOperation extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // TODO Student upload View entry point
-                gotoPage(StudentUpload.class);
+                gotoPage(StudentUploadTest.class);
             }
         });
     }
