@@ -52,6 +52,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.ntut.faceRecognition.R;
 import org.ntut.faceRecognition.Camera.env.ImageUtils;
 import org.ntut.faceRecognition.Camera.env.Logger;
+import org.ntut.faceRecognition.Utility.Utils;
 
 import java.nio.ByteBuffer;
 
@@ -68,8 +69,6 @@ public abstract class CameraActivity extends AppCompatActivity
     private static final String KEY_USE_FACING = "use_facing";
     protected int previewWidth = 0;
     protected int previewHeight = 0;
-    protected TextView frameValueTextView, cropValueTextView, inferenceTimeTextView;
-    protected ImageView bottomSheetArrowImageView;
     private boolean debug = false;
     private Handler handler;
     private HandlerThread handlerThread;
@@ -402,10 +401,9 @@ public abstract class CameraActivity extends AppCompatActivity
                     continue;
                 }
 
-
                 useCamera2API = (facing == CameraCharacteristics.LENS_FACING_EXTERNAL)
                         || isHardwareLevelSupported(
-                        characteristics, CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_FULL);
+                        characteristics, CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LIMITED);
 
 
                 LOGGER.i("Camera API lv2?: %s", useCamera2API);
@@ -427,13 +425,10 @@ public abstract class CameraActivity extends AppCompatActivity
         if (useCamera2API) {
             CameraConnectionFragment camera2Fragment =
                     CameraConnectionFragment.newInstance(
-                            new CameraConnectionFragment.ConnectionCallback() {
-                                @Override
-                                public void onPreviewSizeChosen(final Size size, final int rotation) {
-                                    previewHeight = size.getHeight();
-                                    previewWidth = size.getWidth();
-                                    CameraActivity.this.onPreviewSizeChosen(size, rotation);
-                                }
+                            (size, rotation) -> {
+                                previewHeight = size.getHeight();
+                                previewWidth = size.getWidth();
+                                CameraActivity.this.onPreviewSizeChosen(size, rotation);
                             },
                             this,
                             getLayoutId(),
@@ -441,20 +436,12 @@ public abstract class CameraActivity extends AppCompatActivity
 
             camera2Fragment.setCamera(cameraId);
             fragment = camera2Fragment;
-
+            getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
         } else {
-
-            int facing = (useFacing == CameraCharacteristics.LENS_FACING_BACK) ?
-                    Camera.CameraInfo.CAMERA_FACING_BACK :
-                    Camera.CameraInfo.CAMERA_FACING_FRONT;
-            LegacyCameraConnectionFragment frag = new LegacyCameraConnectionFragment(this,
-                    getLayoutId(),
-                    getDesiredPreviewFrameSize(), facing);
-            fragment = frag;
-
+            Utils.showToast("Sorry, your device does not support Camera2 API", CameraActivity.this);
+            finish();
         }
 
-        getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
     }
 
     protected void fillBytes(final Plane[] planes, final byte[][] yuvBytes) {

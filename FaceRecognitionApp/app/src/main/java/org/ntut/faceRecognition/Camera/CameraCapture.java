@@ -40,8 +40,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class CameraCapture extends CameraActivity implements OnImageAvailableListener {
-    private static final Logger LOGGER = new Logger();
-
     // MobileFaceNet
     private static final int TF_OD_API_INPUT_SIZE = 112;
     private static final boolean TF_OD_API_IS_QUANTIZED = false;
@@ -149,16 +147,13 @@ public class CameraCapture extends CameraActivity implements OnImageAvailableLis
         InputImage image = InputImage.fromBitmap(croppedBitmap, 0);
         faceDetector
                 .process(image)
-                .addOnSuccessListener(new OnSuccessListener<List<Face>>() {
-                    @Override
-                    public void onSuccess(final List<Face> faces) {
-                        if (faces.size() == 0) {
-                            updateResults(new LinkedList<SimilarityClassifier.Recognition>());
-                            return;
-                        }
-                        runInBackground(
-                                () -> onFacesDetected(faces, getPhoto));
+                .addOnSuccessListener(faces -> {
+                    if (faces.size() == 0) {
+                        updateResults(new LinkedList<>());
+                        return;
                     }
+                    runInBackground(
+                            () -> onFacesDetected(faces, getPhoto));
                 });
 
 
@@ -173,7 +168,6 @@ public class CameraCapture extends CameraActivity implements OnImageAvailableLis
     protected Size getDesiredPreviewFrameSize() {
         return DESIRED_PREVIEW_SIZE;
     }
-
 
     private void findView() {
         addButton = findViewById(R.id.add_button);
