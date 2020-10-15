@@ -19,9 +19,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
+import org.ntut.faceRecognition.Camera.CameraCapture;
+import org.ntut.faceRecognition.Camera.CameraPhotoSelection;
 import org.ntut.faceRecognition.R;
 import org.ntut.faceRecognition.Retrofit.IMyService;
 import org.ntut.faceRecognition.Retrofit.RetrofitClient;
+import org.ntut.faceRecognition.Utility.ImageSaver;
 import org.ntut.faceRecognition.Utility.Utils;
 
 import java.io.File;
@@ -37,7 +40,7 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Retrofit;
 
-public class StudentUploadTest extends AppCompatActivity implements View.OnClickListener {
+public class StudentUploadTest extends AppCompatActivity {
     public static final String KEY_User_Document1 = "doc1";
     ImageView imageView;
     Button uploadButton, returnButton;
@@ -90,28 +93,26 @@ public class StudentUploadTest extends AppCompatActivity implements View.OnClick
 
     //圖庫上傳還沒做
     private void uploadButton() {
-        uploadButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                File f = new File(Environment.getExternalStorageDirectory().toString());
-                for (File temp : f.listFiles()) {
-                    if (temp.getName().equals("temp.jpg")) {
-                        f = temp;
-                        break;
-                    }
+        uploadButton.setOnClickListener(v -> {
+            File f = new File(Environment.getExternalStorageDirectory().toString());
+            for (File temp : f.listFiles()) {
+                if (temp.getName().equals("temp.jpg")) {
+                    f = temp;
+                    break;
                 }
-                RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), f);
-                MultipartBody.Part body = MultipartBody.Part.createFormData("image", f.getName(), requestFile);
-                RequestBody fullName = RequestBody.create(MediaType.parse("multipart/form-data"), userId);
-                compositeDisposable.add(iMyService.studentUpload(fullName, body)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Consumer<ResponseBody>() {
-                            @Override
-                            public void accept(ResponseBody responseBody) throws Exception {
-
-                            }
-                        }));
             }
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), f);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("image", f.getName(), requestFile);
+            RequestBody fullName = RequestBody.create(MediaType.parse("multipart/form-data"), userId);
+            compositeDisposable.add(iMyService.studentUpload(fullName, body)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<ResponseBody>() {
+                        @Override
+                        public void accept(ResponseBody responseBody) throws Exception {
+
+                        }
+                    }));
         });
     }
 
@@ -132,13 +133,8 @@ public class StudentUploadTest extends AppCompatActivity implements View.OnClick
             @Override
             public void onClick(DialogInterface dialog, int item) {
                 if (options[item].equals("Take Photo")) {
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
-                    Uri photoUri = FileProvider.getUriForFile(
-                            Objects.requireNonNull(getApplicationContext()),
-                            getPackageName() + ".fileprovider",
-                            f);
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                    Intent intent = new Intent();
+                    intent.setClass(StudentUploadTest.this, CameraCapture.class);
                     startActivityForResult(intent, 1);
                 } else if (options[item].equals("Choose from Gallery")) {
                     Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -154,25 +150,21 @@ public class StudentUploadTest extends AppCompatActivity implements View.OnClick
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            try {
+                Bitmap bitmap = new ImageSaver(this).
+                        setFileName("captureImage.png").
+                        setDirectoryName("images").
+                        load();
+                bitmap = Bitmap.createScaledBitmap(bitmap, 600, 600, true);
+                imageView.setImageBitmap(bitmap);
+                imageView.invalidate();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         if (resultCode == RESULT_OK) {
-            if (requestCode == 1) {
-                File f = new File(Environment.getExternalStorageDirectory().toString());
-                for (File temp : f.listFiles()) {
-                    if (temp.getName().equals("temp.jpg")) {
-                        f = temp;
-                        break;
-                    }
-                }
-                try {
-                    Bitmap bitmap;
-                    BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-                    bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(), bitmapOptions);
-                    bitmap = getResizedBitmap(bitmap, 400);
-                    imageView.setImageBitmap(bitmap);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else if (requestCode == 2) {
+            if (requestCode == 2) {
                 Uri selectedImage = data.getData();
                 String[] filePath = {MediaStore.Images.Media.DATA};
                 Cursor c = getContentResolver().query(selectedImage, filePath, null, null, null);
@@ -201,37 +193,5 @@ public class StudentUploadTest extends AppCompatActivity implements View.OnClick
             width = (int) (height * bitmapRatio);
         }
         return Bitmap.createScaledBitmap(image, width, height, true);
-    }
-
-    @Override
-    public void onClick(View v) {
-//        if (Document_img1.equals("") || Document_img1.equals(null)) {
-//            ContextThemeWrapper ctw = new ContextThemeWrapper( Uplode_Reg_Photo.this, R.style.Theme_AlertDialog);
-//            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctw);
-//            alertDialogBuilder.setTitle("Id Prof Can't Empty ");
-//            alertDialogBuilder.setMessage("Id Prof Can't empty please select any one document");
-//            alertDialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
-//                public void onClick(DialogInterface dialog, int id) {
-//
-//                }
-//            });
-//            alertDialogBuilder.show();
-//            return;
-//        }
-//        else{
-//
-//            if (AppStatus.getInstance(this).isOnline()) {
-//                SendDetail();
-//
-//
-//                //           Toast.makeText(this,"You are online!!!!",Toast.LENGTH_LONG).show();
-//
-//            } else {
-//
-//                Toast.makeText(this,"You are not online!!!!",Toast.LENGTH_LONG).show();
-//                Log.v("Home", "############################You are not online!!!!");
-//            }
-//
-//        }
     }
 }

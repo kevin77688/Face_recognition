@@ -56,21 +56,12 @@ public class CameraPhotoSelection extends AppCompatActivity {
     }
 
     private void setCameraButton() {
-        cameraButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gotoPage(CameraCapture.class);
-            }
-        });
+        cameraButton.setOnClickListener(v -> gotoPage(CameraCapture.class));
     }
 
     private void gotoPage(Class c) {
         Intent intent = new Intent();
         intent.setClass(CameraPhotoSelection.this, c);
-        new ImageSaver(this).
-                setFileName("captureImage.png").
-                setDirectoryName("images").
-                save(null);
         startActivityForResult(intent, GET_PHOTO_FORM_CAMERA);
     }
 }
