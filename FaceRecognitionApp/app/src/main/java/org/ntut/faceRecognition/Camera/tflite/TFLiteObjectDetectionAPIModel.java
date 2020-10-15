@@ -117,30 +117,16 @@ public class TFLiteObjectDetectionAPIModel
      *
      * @param assetManager  The asset manager to be used to load assets.
      * @param modelFilename The filepath of the model GraphDef protocol buffer.
-     * @param labelFilename The filepath of label file for classes.
      * @param inputSize     The size of image input
      * @param isQuantized   Boolean representing model is quantized or not
      */
     public static SimilarityClassifier create(
             final AssetManager assetManager,
             final String modelFilename,
-            final String labelFilename,
             final int inputSize,
-            final boolean isQuantized)
-            throws IOException {
+            final boolean isQuantized) {
 
         final TFLiteObjectDetectionAPIModel d = new TFLiteObjectDetectionAPIModel();
-
-        String actualFilename = labelFilename.split("file:///android_asset/")[1];
-        InputStream labelsInput = assetManager.open(actualFilename);
-        BufferedReader br = new BufferedReader(new InputStreamReader(labelsInput));
-        String line;
-        while ((line = br.readLine()) != null) {
-            LOGGER.w(line);
-            d.labels.add(line);
-        }
-        br.close();
-
         d.inputSize = inputSize;
 
         try {

@@ -499,7 +499,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
     @Override
     public void onClick(View v) {
-        setNumThreads(6);
+//        setNumThreads(6);
     }
 
     protected abstract void processImage();
@@ -510,7 +510,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
     protected abstract Size getDesiredPreviewFrameSize();
 
-    protected abstract void setNumThreads(int numThreads);
-
-    protected abstract void setUseNNAPI(boolean isChecked);
+//    protected abstract void setNumThreads(int numThreads);
+//
+//    protected abstract void setUseNNAPI(boolean isChecked);
 }
