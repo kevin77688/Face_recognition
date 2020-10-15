@@ -16,7 +16,6 @@ import android.os.SystemClock;
 import android.util.Size;
 import android.util.TypedValue;
 import android.view.View;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -26,7 +25,6 @@ import com.google.mlkit.vision.face.FaceDetection;
 import com.google.mlkit.vision.face.FaceDetector;
 import com.google.mlkit.vision.face.FaceDetectorOptions;
 
-import org.ntut.faceRecognition.R;
 import org.ntut.faceRecognition.Camera.customview.OverlayView;
 import org.ntut.faceRecognition.Camera.customview.OverlayView.DrawCallback;
 import org.ntut.faceRecognition.Camera.env.BorderedText;
@@ -35,15 +33,12 @@ import org.ntut.faceRecognition.Camera.env.Logger;
 import org.ntut.faceRecognition.Camera.tflite.SimilarityClassifier;
 import org.ntut.faceRecognition.Camera.tflite.TFLiteObjectDetectionAPIModel;
 import org.ntut.faceRecognition.Camera.tracking.MultiBoxTracker;
+import org.ntut.faceRecognition.R;
+import org.ntut.faceRecognition.Utility.Utils;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * An activity that uses a TensorFlowMultiBoxDetector and ObjectTracker to detect and then track
- * objects.
- */
 public class CameraCapture extends CameraActivity implements OnImageAvailableListener {
     private static final Logger LOGGER = new Logger();
 
@@ -57,10 +52,9 @@ public class CameraCapture extends CameraActivity implements OnImageAvailableLis
 
     private static final DetectorMode MODE = DetectorMode.TF_OD_API;
     // Minimum detection confidence to track a detection.
-    private static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.5f;
     private static final boolean MAINTAIN_ASPECT = false;
 
-    private static final Size DESIRED_PREVIEW_SIZE = new Size(640, 480);
+    private static final Size DESIRED_PREVIEW_SIZE = new Size(1920, 1080);
 
     private static final boolean SAVE_PREVIEW_BITMAP = false;
     private static final float TEXT_SIZE_DIP = 10;
@@ -75,7 +69,6 @@ public class CameraCapture extends CameraActivity implements OnImageAvailableLis
     private Bitmap cropCopyBitmap = null;
 
     private boolean computingDetection = false;
-    private boolean addPending = false;
 
     private long timestamp = 0;
 
@@ -94,51 +87,49 @@ public class CameraCapture extends CameraActivity implements OnImageAvailableLis
     // here the face is cropped and drawn
     private Bitmap faceBmp = null;
 
-    private FloatingActionButton fabAdd;
+    private FloatingActionButton addButton;
+    private boolean getPhoto;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_camera_capture);
 
-        fabAdd = findViewById(R.id.fab_add);
-        fabAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onAddClick();
-            }
-        });
+        findView();
+        createFaceDetector();
+        setAddButton();
+    }
 
-        // Real-time contour detection of multiple faces
+    private void findView() {
+        addButton = findViewById(R.id.add_button);
+    }
+
+    private void createFaceDetector() {
         FaceDetectorOptions options =
                 new FaceDetectorOptions.Builder()
                         .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_FAST)
                         .setContourMode(FaceDetectorOptions.LANDMARK_MODE_NONE)
                         .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_NONE)
                         .build();
-
-
-        FaceDetector detector = FaceDetection.getClient(options);
-
-        faceDetector = detector;
+        faceDetector = FaceDetection.getClient(options);
     }
 
-
-    private void onAddClick() {
-        addPending = true;
+    private void setAddButton() {
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getPhoto = true;
+            }
+        });
     }
 
     @Override
     public void onPreviewSizeChosen(final Size size, final int rotation) {
-        final float textSizePx =
-                TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP, TEXT_SIZE_DIP, getResources().getDisplayMetrics());
+        float textSizePx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, TEXT_SIZE_DIP, getResources().getDisplayMetrics());
         borderedText = new BorderedText(textSizePx);
         borderedText.setTypeface(Typeface.MONOSPACE);
 
         tracker = new MultiBoxTracker(this);
-
 
         try {
             detector =
@@ -149,25 +140,16 @@ public class CameraCapture extends CameraActivity implements OnImageAvailableLis
                             TF_OD_API_INPUT_SIZE,
                             TF_OD_API_IS_QUANTIZED);
             //cropSize = TF_OD_API_INPUT_SIZE;
-        } catch (final IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            LOGGER.e(e, "Exception initializing classifier!");
-            Toast toast =
-                    Toast.makeText(
-                            getApplicationContext(), "Classifier could not be initialized", Toast.LENGTH_SHORT);
-            toast.show();
+            Utils.showToast("Classifier could not be initialized", CameraCapture.this);
             finish();
         }
-
         previewWidth = size.getWidth();
         previewHeight = size.getHeight();
 
         sensorOrientation = rotation - getScreenOrientation();
-        LOGGER.i("Camera orientation relative to screen canvas: %d", sensorOrientation);
-
-        LOGGER.i("Initializing at size %dx%d", previewWidth, previewHeight);
         rgbFrameBitmap = Bitmap.createBitmap(previewWidth, previewHeight, Config.ARGB_8888);
-
 
         int targetW, targetH;
         if (sensorOrientation == 90 || sensorOrientation == 270) {
@@ -177,8 +159,8 @@ public class CameraCapture extends CameraActivity implements OnImageAvailableLis
             targetW = previewWidth;
             targetH = previewHeight;
         }
-        int cropW = (int) (targetW / 2.0);
-        int cropH = (int) (targetH / 2.0);
+        int cropW = (int) (targetW / 8.0);
+        int cropH = (int) (targetH / 8.0);
 
         croppedBitmap = Bitmap.createBitmap(cropW, cropH, Config.ARGB_8888);
 
@@ -191,22 +173,8 @@ public class CameraCapture extends CameraActivity implements OnImageAvailableLis
                         cropW, cropH,
                         sensorOrientation, MAINTAIN_ASPECT);
 
-//    frameToCropTransform =
-//            ImageUtils.getTransformationMatrix(
-//                    previewWidth, previewHeight,
-//                    previewWidth, previewHeight,
-//                    sensorOrientation, MAINTAIN_ASPECT);
-
         cropToFrameTransform = new Matrix();
         frameToCropTransform.invert(cropToFrameTransform);
-
-
-        Matrix frameToPortraitTransform =
-                ImageUtils.getTransformationMatrix(
-                        previewWidth, previewHeight,
-                        targetW, targetH,
-                        sensorOrientation, MAINTAIN_ASPECT);
-
 
         trackingOverlay = (OverlayView) findViewById(R.id.tracking_overlay);
         trackingOverlay.addCallback(
@@ -264,12 +232,10 @@ public class CameraCapture extends CameraActivity implements OnImageAvailableLis
                                 new Runnable() {
                                     @Override
                                     public void run() {
-                                        onFacesDetected(currTimestamp, faces, addPending);
-                                        addPending = false;
+                                        onFacesDetected(currTimestamp, faces, getPhoto);
                                     }
                                 });
                     }
-
                 });
 
 
@@ -342,64 +308,18 @@ public class CameraCapture extends CameraActivity implements OnImageAvailableLis
 
     }
 
-//    private void showAddFaceDialog(SimilarityClassifier.Recognition rec) {
-//
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        LayoutInflater inflater = getLayoutInflater();
-//        View dialogLayout = inflater.inflate(R.layout.image_edit_dialog, null);
-//        ImageView ivFace = dialogLayout.findViewById(R.id.dlg_image);
-//        TextView tvTitle = dialogLayout.findViewById(R.id.dlg_title);
-//        EditText etName = dialogLayout.findViewById(R.id.dlg_input);
-//
-//        tvTitle.setText("Add Face");
-//        ivFace.setImageBitmap(rec.getCrop());
-//        etName.setHint("Input name");
-//
-//        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dlg, int i) {
-//
-//                String name = etName.getText().toString();
-//                if (name.isEmpty()) {
-//                    return;
-//                }
-//                detector.register(name, rec);
-//                //knownFaces.put(name, rec);
-//                dlg.dismiss();
-//            }
-//        });
-//        builder.setView(dialogLayout);
-//        builder.show();
-//
-//    }
-
     private void updateResults(long currTimestamp, final List<SimilarityClassifier.Recognition> mappedRecognitions) {
 
         tracker.trackResults(mappedRecognitions, currTimestamp);
         trackingOverlay.postInvalidate();
         computingDetection = false;
-        //adding = false;
 
 
         if (mappedRecognitions.size() > 0) {
             LOGGER.i("Adding results");
             SimilarityClassifier.Recognition rec = mappedRecognitions.get(0);
-//            if (rec.getExtra() != null) {
-//                showAddFaceDialog(rec);
-//            }
 
         }
-
-        runOnUiThread(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        showFrameInfo(previewWidth + "x" + previewHeight);
-                        showCropInfo(croppedBitmap.getWidth() + "x" + croppedBitmap.getHeight());
-                        showInference(lastProcessingTimeMs + "ms");
-                    }
-                });
-
     }
 
     private void onFacesDetected(long currTimestamp, List<Face> faces, boolean add) {
@@ -410,13 +330,6 @@ public class CameraCapture extends CameraActivity implements OnImageAvailableLis
         paint.setColor(Color.RED);
         paint.setStyle(Style.STROKE);
         paint.setStrokeWidth(2.0f);
-
-        float minimumConfidence = MINIMUM_CONFIDENCE_TF_OD_API;
-        switch (MODE) {
-            case TF_OD_API:
-                minimumConfidence = MINIMUM_CONFIDENCE_TF_OD_API;
-                break;
-        }
 
         final List<SimilarityClassifier.Recognition> mappedRecognitions =
                 new LinkedList<SimilarityClassifier.Recognition>();
@@ -454,7 +367,7 @@ public class CameraCapture extends CameraActivity implements OnImageAvailableLis
 
             //final boolean goodConfidence = result.getConfidence() >= minimumConfidence;
             final boolean goodConfidence = true; //face.get;
-            if (boundingBox != null && goodConfidence) {
+            if (boundingBox != null) {
 
                 // maps crop coordinates to original
                 cropToFrameTransform.mapRect(boundingBox);
@@ -540,6 +453,11 @@ public class CameraCapture extends CameraActivity implements OnImageAvailableLis
                 result.setExtra(extra);
                 result.setCrop(crop);
                 mappedRecognitions.add(result);
+                if (crop != null) {
+                    // TODO return !
+//                    imageView.setImageBitmap(crop);
+                    getPhoto = false;
+                }
 
             }
 

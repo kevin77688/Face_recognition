@@ -70,7 +70,7 @@ public class TFLiteObjectDetectionAPIModel
     // Config values.
     private int inputSize;
     // Pre-allocated buffers.
-    private Vector<String> labels = new Vector<String>();
+    private final Vector<String> labels = new Vector<String>();
     private int[] intValues;
     // outputLocations: array of shape [Batchsize, NUM_DETECTIONS,4]
     // contains the location of detected boxes
@@ -94,7 +94,7 @@ public class TFLiteObjectDetectionAPIModel
     // Face Mask Detector Output
     private float[][] output;
 
-    private HashMap<String, Recognition> registered = new HashMap<>();
+    private final HashMap<String, Recognition> registered = new HashMap<>();
 
     private TFLiteObjectDetectionAPIModel() {
     }

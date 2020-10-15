@@ -101,7 +101,7 @@ public abstract class CameraActivity extends AppCompatActivity
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         LOGGER.d("onCreate " + this);
-        super.onCreate(savedInstanceState);
+        super.onCreate(null);
 
         Intent intent = getIntent();
         //useFacing = intent.getIntExtra(KEY_USE_FACING, CameraCharacteristics.LENS_FACING_FRONT);
@@ -110,7 +110,6 @@ public abstract class CameraActivity extends AppCompatActivity
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         setContentView(R.layout.activity_camera_capture);
-//        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         if (hasPermission()) {
             setFragment();
@@ -118,25 +117,16 @@ public abstract class CameraActivity extends AppCompatActivity
             requestPermission();
         }
 
-        btnSwitchCam = findViewById(R.id.fab_switchcam);
-
-
+        btnSwitchCam = findViewById(R.id.switch_camera_button);
         btnSwitchCam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onSwitchCamClick();
+                switchCamera();
             }
         });
 
     }
-
-    private void onSwitchCamClick() {
-
-        switchCamera();
-
-    }
-
-    public void switchCamera() {
+    private void switchCamera() {
 
         Intent intent = getIntent();
 
@@ -159,6 +149,7 @@ public abstract class CameraActivity extends AppCompatActivity
         startActivity(intent);
         overridePendingTransition(0, 0);
     }
+
 
     protected int[] getRgbBytes() {
         imageConverter.run();
@@ -504,26 +495,11 @@ public abstract class CameraActivity extends AppCompatActivity
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//        setUseNNAPI(isChecked);
-//        if (isChecked) apiSwitchCompat.setText("NNAPI");
-//        else apiSwitchCompat.setText("TFLITE");
     }
 
     @Override
     public void onClick(View v) {
         setNumThreads(6);
-    }
-
-    protected void showFrameInfo(String frameInfo) {
-//        frameValueTextView.setText(frameInfo);
-    }
-
-    protected void showCropInfo(String cropInfo) {
-//        cropValueTextView.setText(cropInfo);
-    }
-
-    protected void showInference(String inferenceTime) {
-//        inferenceTimeTextView.setText(inferenceTime);
     }
 
     protected abstract void processImage();
