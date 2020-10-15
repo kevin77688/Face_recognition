@@ -400,10 +400,11 @@ public abstract class CameraActivity extends AppCompatActivity
                     continue;
                 }
 
-                useCamera2API = (facing == CameraCharacteristics.LENS_FACING_EXTERNAL)
-                        || isHardwareLevelSupported(
-                        characteristics, CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LIMITED);
-
+                useCamera2API = (
+                    (facing == CameraCharacteristics.LENS_FACING_EXTERNAL) ||
+                    (isHardwareLevelSupported(characteristics, CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LIMITED)) ||
+                    (isHardwareLevelSupported(characteristics, CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_FULL)) ||
+                    (isHardwareLevelSupported(characteristics, CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_3)));
 
                 LOGGER.i("Camera API lv2?: %s", useCamera2API);
                 return cameraId;
