@@ -6,6 +6,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 const { request, response } = require('express');
 const multer = require('multer');
+const fs = require('fs');
 
 //收到大頭貼時存到uploads資料夾
 var imageName;
@@ -487,6 +488,11 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			var db = client.db(dbName);
 			var avatars = await db.collection('avatar').find({userId: student_id}).toArray();
 			await db.collection('avatar').deleteOne({userId: student_id, imageName: avatars[index].imageName});
+			try{
+				fs.unlinkSync(__dirname + "/uploads/" + avatars[index].imageName);	
+			} catch (err){
+				
+			}
 			response.json(userResponse);
 		});
 
