@@ -35,8 +35,8 @@ public class TeacherCheckRollCall extends AppCompatActivity {
     private Button confirmButton;
     private String courseName, courseDate, courseId;
     private IMyService iMyService;
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private ArrayList<Student> students = new ArrayList<>();
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private final ArrayList<Student> students = new ArrayList<>();
     private boolean attendanceRecord;
 
     @Override

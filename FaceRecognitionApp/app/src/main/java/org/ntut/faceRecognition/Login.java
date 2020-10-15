@@ -37,7 +37,7 @@ public class Login extends AppCompatActivity {
     private TextView txt_create_account;
     private MaterialEditText edt_login_email, edt_login_password;
     private Button btn_login;
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private String username, userId;
 
     @Override
@@ -143,16 +143,17 @@ public class Login extends AppCompatActivity {
                     public void accept(String response) throws Exception {
                         JsonParser jsonParser = new JsonParser(response);
                         Utils.showToast(jsonParser.getDescription(), Login.this);
-                    switch(jsonParser.getStatus()) {
-                        case 202:
-                        case 401:
-                        case 405:
-                            break;
-                        default:
-                            throw new RuntimeException("Status code: " + jsonParser.getStatus() + " error !");
+                        switch (jsonParser.getStatus()) {
+                            case 202:
+                            case 401:
+                            case 405:
+                                break;
+                            default:
+                                throw new RuntimeException("Status code: " + jsonParser.getStatus() + " error !");
+                        }
                     }
-                }}));
-}
+                }));
+    }
 
     synchronized private void loginUser(String email, String password) {
         if (TextUtils.isEmpty(email)) {
@@ -169,24 +170,24 @@ public class Login extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
-                               @Override
-                               public void accept(String response) throws Exception {
-                                   JsonParser jsonParser = new JsonParser(response);
-                                   username = jsonParser.getName();
-                                   userId = jsonParser.getId();
-                                   Utils.showToast(jsonParser.getDescription(), Login.this);
-                                   switch (jsonParser.getStatus()) {
-                                       case 200:
-                                           goToPage(StudentOperation.class, null);
-                                           break;
-                                       case 201:
-                                           goToPage(TeacherClass.class, jsonParser.getCourses());
-                                           break;
-                                       case 400:
-                                       case 402:
-                                           break;
-                                   }
-                               }
+                    @Override
+                    public void accept(String response) throws Exception {
+                        JsonParser jsonParser = new JsonParser(response);
+                        username = jsonParser.getName();
+                        userId = jsonParser.getId();
+                        Utils.showToast(jsonParser.getDescription(), Login.this);
+                        switch (jsonParser.getStatus()) {
+                            case 200:
+                                goToPage(StudentOperation.class, null);
+                                break;
+                            case 201:
+                                goToPage(TeacherClass.class, jsonParser.getCourses());
+                                break;
+                            case 400:
+                            case 402:
+                                break;
+                        }
+                    }
                 }));
     }
 

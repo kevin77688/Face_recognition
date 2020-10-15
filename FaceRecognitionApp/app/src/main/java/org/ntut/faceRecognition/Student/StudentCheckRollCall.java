@@ -28,7 +28,7 @@ import retrofit2.Retrofit;
 public class StudentCheckRollCall extends AppCompatActivity {
 
     private IMyService iMyService;
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private ArrayList<Course> courseList;
     private String userId;
     private Button confirmButton;

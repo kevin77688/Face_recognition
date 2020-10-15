@@ -18,17 +18,17 @@ public class JsonParser {
             _description = _jsonObject.getString("description");
             _username = _jsonObject.getString("username");
             _userId = _jsonObject.getString("userId");
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    public int getStatus(){
+    public int getStatus() {
         return _status;
     }
 
-    public String getDescription(){
+    public String getDescription() {
         return _description;
     }
 
