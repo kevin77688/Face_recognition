@@ -1,11 +1,14 @@
 package org.ntut.faceRecognition.Student;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -14,13 +17,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 
 import org.ntut.faceRecognition.Camera.CameraCapture;
-import org.ntut.faceRecognition.Camera.CameraPhotoSelection;
 import org.ntut.faceRecognition.R;
 import org.ntut.faceRecognition.Retrofit.IMyService;
 import org.ntut.faceRecognition.Retrofit.RetrofitClient;
@@ -28,7 +31,6 @@ import org.ntut.faceRecognition.Utility.ImageSaver;
 import org.ntut.faceRecognition.Utility.Utils;
 
 import java.io.File;
-import java.util.Objects;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -45,6 +47,9 @@ public class StudentUploadTest extends AppCompatActivity {
     ImageView imageView;
     Button uploadButton, returnButton;
     TextView title;
+
+    public static final int READ_PERMISSION_CODE = 1000;
+    public static final int CAMERA_AND_WRITE_PERMISSION_CODE = 1001;
 
     private final String Document_img1 = "";
     private String username, userId;
@@ -138,6 +143,17 @@ public class StudentUploadTest extends AppCompatActivity {
         title.setText("\n歡迎" + username + "學生");
     }
 
+    private void openCamera(){
+        Intent intent = new Intent();
+        intent.setClass(StudentUploadTest.this, CameraCapture.class);
+        startActivityForResult(intent, 1);
+    }
+
+    private void openGallery(){
+        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, 2);
+    }
+
 
     private void selectImage() {
         final CharSequence[] options = {"Take Photo", "Choose from Gallery", "Cancel"};
@@ -147,18 +163,48 @@ public class StudentUploadTest extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int item) {
                 if (options[item].equals("Take Photo")) {
-                    Intent intent = new Intent();
-                    intent.setClass(StudentUploadTest.this, CameraCapture.class);
-                    startActivityForResult(intent, 1);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                        if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                            String[] permission = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                            requestPermissions(permission, CAMERA_AND_WRITE_PERMISSION_CODE);
+                        } else
+                            //system os < marshmallow or permission already granted
+                            openCamera();
                 } else if (options[item].equals("Choose from Gallery")) {
-                    Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(intent, 2);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                            String[] permission = {Manifest.permission.READ_EXTERNAL_STORAGE};
+                            requestPermissions(permission, READ_PERMISSION_CODE);
+                        } else
+                            //system os < marshmallow or permission already granted
+                            openGallery();
                 } else if (options[item].equals("Cancel")) {
                     dialog.dismiss();
                 }
             }
         });
         builder.show();
+    }
+
+    //handling permission result
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case READ_PERMISSION_CODE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openGallery();
+                } else {
+                    Toast.makeText(this, "Permission denied...", Toast.LENGTH_SHORT).show();
+                }
+            }
+            case CAMERA_AND_WRITE_PERMISSION_CODE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openCamera();
+                } else {
+                    Toast.makeText(this, "Permission denied...", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
     }
 
     @Override
@@ -206,11 +252,11 @@ public class StudentUploadTest extends AppCompatActivity {
                 picturePath = c.getString(columnIndex);
                 c.close();
                 Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
-                thumbnail = getResizedBitmap(thumbnail, 400);
+                //thumbnail = getResizedBitmap(thumbnail, 400);
                 Log.w("path of image:", picturePath + "");
                 imageView.setImageBitmap(thumbnail);
                 uploadCate = 2;
-            
+
         }
     }
 
