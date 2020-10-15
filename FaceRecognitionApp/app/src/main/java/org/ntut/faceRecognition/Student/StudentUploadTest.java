@@ -19,9 +19,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
+import org.ntut.faceRecognition.Camera.CameraCapture;
+import org.ntut.faceRecognition.Camera.CameraPhotoSelection;
 import org.ntut.faceRecognition.R;
 import org.ntut.faceRecognition.Retrofit.IMyService;
 import org.ntut.faceRecognition.Retrofit.RetrofitClient;
+import org.ntut.faceRecognition.Utility.ImageSaver;
 import org.ntut.faceRecognition.Utility.Utils;
 
 import java.io.File;
@@ -37,15 +40,15 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Retrofit;
 
-public class StudentUploadTest extends AppCompatActivity implements View.OnClickListener{
+public class StudentUploadTest extends AppCompatActivity {
     public static final String KEY_User_Document1 = "doc1";
     ImageView imageView;
     Button uploadButton, returnButton;
     TextView title;
 
-    private String Document_img1="";
+    private final String Document_img1 = "";
     private String username, userId;
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private IMyService iMyService;
     private boolean uploadLock = true;
 
@@ -80,7 +83,7 @@ public class StudentUploadTest extends AppCompatActivity implements View.OnClick
         title = findViewById(R.id.title_text);
     }
 
-    private void setImageView(){
+    private void setImageView() {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,29 +133,20 @@ public class StudentUploadTest extends AppCompatActivity implements View.OnClick
 
 
     private void selectImage() {
-        final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
+        final CharSequence[] options = {"Take Photo", "Choose from Gallery", "Cancel"};
         AlertDialog.Builder builder = new AlertDialog.Builder(StudentUploadTest.this);
         builder.setTitle("Add Photo!");
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                if (options[item].equals("Take Photo"))
-                {
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
-                    Uri photoUri = FileProvider.getUriForFile(
-                            Objects.requireNonNull(getApplicationContext()),
-                            getPackageName() + ".fileprovider",
-                            f);
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                if (options[item].equals("Take Photo")) {
+                    Intent intent = new Intent();
+                    intent.setClass(StudentUploadTest.this, CameraCapture.class);
                     startActivityForResult(intent, 1);
-                }
-                else if (options[item].equals("Choose from Gallery"))
-                {
-                    Intent intent = new   Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                } else if (options[item].equals("Choose from Gallery")) {
+                    Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(intent, 2);
-                }
-                else if (options[item].equals("Cancel")) {
+                } else if (options[item].equals("Cancel")) {
                     dialog.dismiss();
                 }
             }
@@ -163,6 +157,19 @@ public class StudentUploadTest extends AppCompatActivity implements View.OnClick
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            try {
+                Bitmap bitmap = new ImageSaver(this).
+                        setFileName("captureImage.png").
+                        setDirectoryName("images").
+                        load();
+                bitmap = Bitmap.createScaledBitmap(bitmap, 600, 600, true);
+                imageView.setImageBitmap(bitmap);
+                imageView.invalidate();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         if (resultCode == RESULT_OK) {
             if (requestCode == 1) {
                 File f = new File(Environment.getExternalStorageDirectory().toString());
@@ -184,15 +191,15 @@ public class StudentUploadTest extends AppCompatActivity implements View.OnClick
                 uploadLock = false;
             } else if (requestCode == 2) {
                 Uri selectedImage = data.getData();
-                String[] filePath = { MediaStore.Images.Media.DATA };
-                Cursor c = getContentResolver().query(selectedImage,filePath, null, null, null);
+                String[] filePath = {MediaStore.Images.Media.DATA};
+                Cursor c = getContentResolver().query(selectedImage, filePath, null, null, null);
                 c.moveToFirst();
                 int columnIndex = c.getColumnIndex(filePath[0]);
                 String picturePath = c.getString(columnIndex);
                 c.close();
                 Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
-                thumbnail=getResizedBitmap(thumbnail, 400);
-                Log.w("path of image:", picturePath+"");
+                thumbnail = getResizedBitmap(thumbnail, 400);
+                Log.w("path of image:", picturePath + "");
                 imageView.setImageBitmap(thumbnail);
             }
         }
@@ -202,7 +209,7 @@ public class StudentUploadTest extends AppCompatActivity implements View.OnClick
         int width = image.getWidth();
         int height = image.getHeight();
 
-        float bitmapRatio = (float)width / (float) height;
+        float bitmapRatio = (float) width / (float) height;
         if (bitmapRatio > 1) {
             width = maxSize;
             height = (int) (width / bitmapRatio);
@@ -211,37 +218,5 @@ public class StudentUploadTest extends AppCompatActivity implements View.OnClick
             width = (int) (height * bitmapRatio);
         }
         return Bitmap.createScaledBitmap(image, width, height, true);
-    }
-
-    @Override
-    public void onClick(View v) {
-//        if (Document_img1.equals("") || Document_img1.equals(null)) {
-//            ContextThemeWrapper ctw = new ContextThemeWrapper( Uplode_Reg_Photo.this, R.style.Theme_AlertDialog);
-//            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctw);
-//            alertDialogBuilder.setTitle("Id Prof Can't Empty ");
-//            alertDialogBuilder.setMessage("Id Prof Can't empty please select any one document");
-//            alertDialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
-//                public void onClick(DialogInterface dialog, int id) {
-//
-//                }
-//            });
-//            alertDialogBuilder.show();
-//            return;
-//        }
-//        else{
-//
-//            if (AppStatus.getInstance(this).isOnline()) {
-//                SendDetail();
-//
-//
-//                //           Toast.makeText(this,"You are online!!!!",Toast.LENGTH_LONG).show();
-//
-//            } else {
-//
-//                Toast.makeText(this,"You are not online!!!!",Toast.LENGTH_LONG).show();
-//                Log.v("Home", "############################You are not online!!!!");
-//            }
-//
-//        }
     }
 }

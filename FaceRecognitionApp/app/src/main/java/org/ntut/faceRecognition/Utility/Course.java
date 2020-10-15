@@ -2,7 +2,9 @@ package org.ntut.faceRecognition.Utility;
 
 public class Course {
 
-    private String _className, _classDate, _attendance;
+    private final String _className;
+    private final String _classDate;
+    private final String _attendance;
 
     public Course(String className, String classDate, String attendance) {
         _className = className;

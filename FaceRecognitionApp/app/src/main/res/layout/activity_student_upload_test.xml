@@ -55,7 +55,8 @@
         app:layout_constraintBottom_toTopOf="@+id/deleterButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/background_color" />
+        app:layout_constraintTop_toTopOf="@+id/background_color"
+        app:srcCompat="@drawable/avatar_1" />
 
     <Button
         android:id="@+id/deleterButton"
