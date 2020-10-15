@@ -455,14 +455,39 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			var userResponse = {};
 			var post_data = request.body;
 			var student_id = post_data.studentId;
-			console.log(student_id);
+			var index = post_data.index;
 			var db = client.db(dbName);
 			var avatars = await db.collection('avatar').find({userId: student_id}).toArray();
 			if (avatars.length == 0){
 			}
 			else {
-				response.sendFile(__dirname + "/uploads/" + avatars[0].imageName);
+				response.sendFile(__dirname + "/uploads/" + avatars[index].imageName);
 			}
+		});
+		
+		// student get total avatar
+		app.post('/studentGetTotalAvatar', async(request, response, next)=>{
+			var userResponse = {};
+			var post_data = request.body;
+			var student_id = post_data.studentId;
+			console.log(student_id);
+			var db = client.db(dbName);
+			userResponse.amount = await db.collection('avatar').find({userId: student_id}).count();
+			console.log(userResponse);
+			response.json(userResponse);
+		});
+		
+		// student delete avatar
+		app.post('/studentDeleteAvatar', async(request, response, next)=>{
+			var userResponse = {};
+			var post_data = request.body;
+			var student_id = post_data.studentId;
+			var index = post_data.index;
+			console.log(student_id);
+			var db = client.db(dbName);
+			var avatars = await db.collection('avatar').find({userId: student_id}).toArray();
+			await db.collection('avatar').deleteOne({userId: student_id, imageName: avatars[index].imageName});
+			response.json(userResponse);
 		});
 
         //Web server

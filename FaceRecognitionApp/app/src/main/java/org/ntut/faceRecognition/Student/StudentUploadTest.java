@@ -47,6 +47,7 @@ public class StudentUploadTest extends AppCompatActivity implements View.OnClick
     private String username, userId;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private IMyService iMyService;
+    private boolean uploadLock = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +93,10 @@ public class StudentUploadTest extends AppCompatActivity implements View.OnClick
     private void uploadButton(){
         uploadButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
+                if (uploadLock){
+                    return;
+                }
+                uploadLock = true;
                 File f = new File(Environment.getExternalStorageDirectory().toString());
                 for (File temp : f.listFiles()) {
                     if (temp.getName().equals("temp.jpg")) {
@@ -108,7 +113,7 @@ public class StudentUploadTest extends AppCompatActivity implements View.OnClick
                         .subscribe(new Consumer<ResponseBody>() {
                             @Override
                             public void accept(ResponseBody responseBody) throws Exception {
-
+                                    returnButton.callOnClick();
                             }
                         }));
             }
@@ -176,6 +181,7 @@ public class StudentUploadTest extends AppCompatActivity implements View.OnClick
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                uploadLock = false;
             } else if (requestCode == 2) {
                 Uri selectedImage = data.getData();
                 String[] filePath = { MediaStore.Images.Media.DATA };

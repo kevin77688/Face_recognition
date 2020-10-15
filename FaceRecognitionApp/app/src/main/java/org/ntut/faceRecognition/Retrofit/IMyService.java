@@ -98,6 +98,20 @@ public interface IMyService {
     @POST("studentCheckAvatar")
     @FormUrlEncoded
     Observable<ResponseBody> studentCheckAvatar(
+            @Field("studentId") String studentId,
+            @Field("index") int index
+    );
+
+    @POST("studentGetTotalAvatar")
+    @FormUrlEncoded
+    Observable<String> studentGetTotalAvatar(
             @Field("studentId") String studentId
+    );
+
+    @POST("studentDeleteAvatar")
+    @FormUrlEncoded
+    Observable<String> studentDeleteAvatar(
+            @Field("studentId") String studentId,
+            @Field("index") int index
     );
 }
