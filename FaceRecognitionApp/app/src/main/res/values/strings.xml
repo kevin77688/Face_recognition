@@ -29,4 +29,5 @@
     <string name="check_attendance_button">查看出缺席名單</string>
     <string name="auto_check_attendance_button">拍照點名</string>
     <string name="manual_check_attendance_button">手動點名</string>
+    <string name="take_photo_button">拍照</string>
 </resources>

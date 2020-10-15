@@ -1,5 +1,9 @@
 package org.ntut.faceRecognition.Camera;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
@@ -12,7 +16,9 @@ import android.graphics.Typeface;
 import android.hardware.camera2.CameraCharacteristics;
 import android.media.ImageReader.OnImageAvailableListener;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.SystemClock;
+import android.util.Log;
 import android.util.Size;
 import android.util.TypedValue;
 import android.view.View;
@@ -34,8 +40,12 @@ import org.ntut.faceRecognition.Camera.tflite.SimilarityClassifier;
 import org.ntut.faceRecognition.Camera.tflite.TFLiteObjectDetectionAPIModel;
 import org.ntut.faceRecognition.Camera.tracking.MultiBoxTracker;
 import org.ntut.faceRecognition.R;
+import org.ntut.faceRecognition.Utility.ImageSaver;
 import org.ntut.faceRecognition.Utility.Utils;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -289,10 +299,22 @@ public class CameraCapture extends CameraActivity implements OnImageAvailableLis
                 result.setColor(color);
                 result.setLocation(boundingBox);
                 mappedRecognitions.add(result);
-                if (crop != null) {
-                    // TODO return !
-                    getPhoto = false;
+                if (getPhoto){
+                    if (crop != null) {
+                        // TODO return !
+                        Intent returnIntent = new Intent();
+                        new ImageSaver(this).
+                                setFileName("captureImage.png").
+                                setDirectoryName("images").
+                                save(crop);
+                        setResult(Activity.RESULT_OK, returnIntent);
+                        finish();
+                    }
                 }
+                else{
+//                    Utils.showToast("Did not detect faces, Please try again", CameraCapture.this);
+                }
+                getPhoto = false;
             }
         }
         updateResults(mappedRecognitions);

@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import org.ntut.faceRecognition.Camera.CameraActivity;
 import org.ntut.faceRecognition.Camera.CameraCapture;
+import org.ntut.faceRecognition.Camera.CameraPhotoSelection;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         contact_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gotoPage(CameraCapture.class);
+                gotoPage(CameraPhotoSelection.class);
             }
         });
     }
