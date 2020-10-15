@@ -25,11 +25,8 @@ import android.util.Pair;
 import org.ntut.faceRecognition.Camera.env.Logger;
 import org.tensorflow.lite.Interpreter;
 
-import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
@@ -66,11 +63,12 @@ public class TFLiteObjectDetectionAPIModel
 
     // Number of threads in the java app
     private static final int NUM_THREADS = 4;
+    // Pre-allocated buffers.
+    private final Vector<String> labels = new Vector<String>();
+    private final HashMap<String, Recognition> registered = new HashMap<>();
     private boolean isModelQuantized;
     // Config values.
     private int inputSize;
-    // Pre-allocated buffers.
-    private final Vector<String> labels = new Vector<String>();
     private int[] intValues;
     // outputLocations: array of shape [Batchsize, NUM_DETECTIONS,4]
     // contains the location of detected boxes
@@ -84,17 +82,11 @@ public class TFLiteObjectDetectionAPIModel
     // numDetections: array of shape [Batchsize]
     // contains the number of detected boxes
     private float[] numDetections;
-
     private float[][] embeedings;
-
     private ByteBuffer imgData;
-
     private Interpreter tfLite;
-
     // Face Mask Detector Output
     private float[][] output;
-
-    private final HashMap<String, Recognition> registered = new HashMap<>();
 
     private TFLiteObjectDetectionAPIModel() {
     }

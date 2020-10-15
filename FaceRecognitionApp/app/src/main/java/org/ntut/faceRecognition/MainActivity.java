@@ -7,8 +7,6 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.ntut.faceRecognition.Camera.CameraActivity;
-import org.ntut.faceRecognition.Camera.CameraCapture;
 import org.ntut.faceRecognition.Camera.CameraPhotoSelection;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void setContactButton(){
+    private void setContactButton() {
         // TODO remember to delete this
         contact_button.setOnClickListener(new View.OnClickListener() {
             @Override

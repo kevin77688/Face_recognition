@@ -39,15 +39,15 @@ public class StudentUpload extends AppCompatActivity {
     public static final int IMAGE_CAPTURED_CODE = 1001;
     public static final String IMAGE_UNSPECIFIED = "image/*";
     private ImageView imageView = null;
-    private Button buttonUpload = null;
+    private final Button buttonUpload = null;
     private Button buttonCapture = null;
     private Button buttonConfirm = null;
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private IMyService iMyService;
     private Uri image_uri;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_upload);
 
@@ -58,21 +58,20 @@ public class StudentUpload extends AppCompatActivity {
         imageView = findViewById(R.id.imageView5);
         buttonCapture = findViewById(R.id.capture_button);
         buttonConfirm = findViewById(R.id.conform_button);
-        buttonCapture.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
+        buttonCapture.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                    if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+                    if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
                         String[] permission = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
                         requestPermissions(permission, PERMISSION_CODE);
-                    }
-                else
-                    //system os < marshmallow or permission already granted
-                    openCamera();
+                    } else
+                        //system os < marshmallow or permission already granted
+                        openCamera();
             }
         });
 
-        buttonConfirm.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
+        buttonConfirm.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
                 File f = new File(getPath(image_uri));
                 RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), f);
                 MultipartBody.Part body = MultipartBody.Part.createFormData("image", f.getName(), requestFile);
@@ -90,7 +89,7 @@ public class StudentUpload extends AppCompatActivity {
         });
     }
 
-    private void openCamera(){
+    private void openCamera() {
         // TODO camera entry point
 //        Intent intent = new Intent();
 //        intent.setClass(this, CameraCapture.class);
@@ -108,12 +107,11 @@ public class StudentUpload extends AppCompatActivity {
     //handling permission result
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch(requestCode){
-            case PERMISSION_CODE:{
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        switch (requestCode) {
+            case PERMISSION_CODE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     openCamera();
-                }
-                else {
+                } else {
                     Toast.makeText(this, "Permission denied...", Toast.LENGTH_SHORT).show();
                 }
             }

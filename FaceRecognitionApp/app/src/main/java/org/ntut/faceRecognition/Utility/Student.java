@@ -6,7 +6,9 @@ import java.util.ArrayList;
 
 public class Student {
 
-    private String _studentId, _studentName, _attendance;
+    private final String _studentId;
+    private final String _studentName;
+    private final String _attendance;
     private int _attendanceStatus;
     private ArrayList<CheckBox> _attendanceView;
 

@@ -40,8 +40,6 @@ import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -49,9 +47,9 @@ import androidx.appcompat.widget.SwitchCompat;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import org.ntut.faceRecognition.R;
 import org.ntut.faceRecognition.Camera.env.ImageUtils;
 import org.ntut.faceRecognition.Camera.env.Logger;
+import org.ntut.faceRecognition.R;
 import org.ntut.faceRecognition.Utility.Utils;
 
 import java.nio.ByteBuffer;
@@ -69,12 +67,12 @@ public abstract class CameraActivity extends AppCompatActivity
     private static final String KEY_USE_FACING = "use_facing";
     protected int previewWidth = 0;
     protected int previewHeight = 0;
-    private boolean debug = false;
+    private final boolean debug = false;
     private Handler handler;
     private HandlerThread handlerThread;
     private boolean useCamera2API;
     private boolean isProcessingFrame = false;
-    private byte[][] yuvBytes = new byte[3][];
+    private final byte[][] yuvBytes = new byte[3][];
     private int[] rgbBytes = null;
     private int yRowStride;
     private Runnable postInferenceCallback;
@@ -125,6 +123,7 @@ public abstract class CameraActivity extends AppCompatActivity
         });
 
     }
+
     private void switchCamera() {
 
         Intent intent = getIntent();

@@ -37,9 +37,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import org.ntut.faceRecognition.R;
 import org.ntut.faceRecognition.Camera.customview.AutoFitTextureView;
 import org.ntut.faceRecognition.Camera.env.Logger;
+import org.ntut.faceRecognition.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -140,33 +140,6 @@ public class CameraConnectionFragment extends Fragment {
      */
     private Handler backgroundHandler;
     /**
-     * {@link TextureView.SurfaceTextureListener} handles several lifecycle events on a {@link
-     * TextureView}.
-     */
-    private final TextureView.SurfaceTextureListener surfaceTextureListener =
-            new TextureView.SurfaceTextureListener() {
-                @Override
-                public void onSurfaceTextureAvailable(
-                        final SurfaceTexture texture, final int width, final int height) {
-                    openCamera(width, height);
-                }
-
-                @Override
-                public void onSurfaceTextureSizeChanged(
-                        final SurfaceTexture texture, final int width, final int height) {
-                    configureTransform(width, height);
-                }
-
-                @Override
-                public boolean onSurfaceTextureDestroyed(final SurfaceTexture texture) {
-                    return true;
-                }
-
-                @Override
-                public void onSurfaceTextureUpdated(final SurfaceTexture texture) {
-                }
-            };
-    /**
      * An {@link ImageReader} that handles preview frame capture.
      */
     private ImageReader previewReader;
@@ -207,6 +180,33 @@ public class CameraConnectionFragment extends Fragment {
                     if (null != activity) {
                         activity.finish();
                     }
+                }
+            };
+    /**
+     * {@link TextureView.SurfaceTextureListener} handles several lifecycle events on a {@link
+     * TextureView}.
+     */
+    private final TextureView.SurfaceTextureListener surfaceTextureListener =
+            new TextureView.SurfaceTextureListener() {
+                @Override
+                public void onSurfaceTextureAvailable(
+                        final SurfaceTexture texture, final int width, final int height) {
+                    openCamera(width, height);
+                }
+
+                @Override
+                public void onSurfaceTextureSizeChanged(
+                        final SurfaceTexture texture, final int width, final int height) {
+                    configureTransform(width, height);
+                }
+
+                @Override
+                public boolean onSurfaceTextureDestroyed(final SurfaceTexture texture) {
+                    return true;
+                }
+
+                @Override
+                public void onSurfaceTextureUpdated(final SurfaceTexture texture) {
                 }
             };
 
@@ -305,7 +305,7 @@ public class CameraConnectionFragment extends Fragment {
 
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
-        textureView = (AutoFitTextureView) view.findViewById(R.id.texture);
+        textureView = view.findViewById(R.id.texture);
     }
 
     @Override
