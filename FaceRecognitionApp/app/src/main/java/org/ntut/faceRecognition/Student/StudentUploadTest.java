@@ -50,7 +50,8 @@ public class StudentUploadTest extends AppCompatActivity {
     private String username, userId;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private IMyService iMyService;
-    private boolean uploadLock = true;
+    private int uploadCate = 0;
+    private String picturePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,17 +97,23 @@ public class StudentUploadTest extends AppCompatActivity {
     private void uploadButton(){
         uploadButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                if (uploadLock){
+                File f;
+                if (uploadCate == 0){
                     return;
                 }
-                uploadLock = true;
-                File f = new File(Environment.getExternalStorageDirectory().toString());
-                for (File temp : f.listFiles()) {
-                    if (temp.getName().equals("temp.jpg")) {
-                        f = temp;
-                        break;
+                else if (uploadCate == 1){
+                    f = new File(Environment.getExternalStorageDirectory().toString());
+                    for (File temp : f.listFiles()) {
+                        if (temp.getName().equals("temp.jpg")) {
+                            f = temp;
+                            break;
+                        }
                     }
                 }
+                else {
+                    f = new File(picturePath);
+                }
+                uploadCate = 0;
                 RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), f);
                 MultipartBody.Part body = MultipartBody.Part.createFormData("image", f.getName(), requestFile);
                 RequestBody fullName = RequestBody.create(MediaType.parse("multipart/form-data"), userId);
@@ -170,38 +177,40 @@ public class StudentUploadTest extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-        if (resultCode == RESULT_OK) {
-            if (requestCode == 1) {
-                File f = new File(Environment.getExternalStorageDirectory().toString());
-                for (File temp : f.listFiles()) {
-                    if (temp.getName().equals("temp.jpg")) {
-                        f = temp;
-                        break;
-                    }
-                }
-                try {
-                    Bitmap bitmap;
-                    BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-                    bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(), bitmapOptions);
-                    bitmap=getResizedBitmap(bitmap, 400);
-                    imageView.setImageBitmap(bitmap);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                uploadLock = false;
-            } else if (requestCode == 2) {
+//        if (resultCode == RESULT_OK) {
+//            if (requestCode == 1) {
+//                File f = new File(Environment.getExternalStorageDirectory().toString());
+//                for (File temp : f.listFiles()) {
+//                    if (temp.getName().equals("temp.jpg")) {
+//                        f = temp;
+//                        break;
+//                    }
+//                }
+//                try {
+//                    Bitmap bitmap;
+//                    BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+//                    bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(), bitmapOptions);
+//                    bitmap=getResizedBitmap(bitmap, 400);
+//                    imageView.setImageBitmap(bitmap);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                uploadCate = 1;
+//            } else if (requestCode == 2) {
+        if (requestCode == 2){
                 Uri selectedImage = data.getData();
                 String[] filePath = {MediaStore.Images.Media.DATA};
                 Cursor c = getContentResolver().query(selectedImage, filePath, null, null, null);
                 c.moveToFirst();
                 int columnIndex = c.getColumnIndex(filePath[0]);
-                String picturePath = c.getString(columnIndex);
+                picturePath = c.getString(columnIndex);
                 c.close();
                 Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
                 thumbnail = getResizedBitmap(thumbnail, 400);
                 Log.w("path of image:", picturePath + "");
                 imageView.setImageBitmap(thumbnail);
-            }
+                uploadCate = 2;
+            
         }
     }
 
