@@ -205,7 +205,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 		
 		function findUserExistenceUsingId(id){
 			var db = client.db(dbName);
-			var number = db.collection('user').findOne({'_id': id}).count();
+			var number = db.collection('user').find({'_id': id}).count();
 			return number;
 		}
 		
