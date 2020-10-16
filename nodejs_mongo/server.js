@@ -137,6 +137,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 					}
 				})
 			}
+			
 			response.json(userResponse);
         });
 
@@ -204,8 +205,8 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 		
 		function findUserExistenceUsingId(id){
 			var db = client.db(dbName);
-			var user = db.collection('user').findOne({'_id': id});
-			return user;
+			var number = db.collection('user').findOne({'_id': id}).count();
+			return number;
 		}
 		
 		function findStudentsUsingCourseId(course_id) {
