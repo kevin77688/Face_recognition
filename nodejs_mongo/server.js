@@ -115,7 +115,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 				userResponse.status = 401;
 				console.log('Email already exists');
 			}
-			var numberOfSameId = await findUserExistUsingId();
+			var numberOfSameId = await findUserExistenceUsingId();
 			if (numberOfSameId != 0){
 				userResponse.description = "Register id exist";
 				userResponse.status = 405;

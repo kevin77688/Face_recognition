@@ -98,7 +98,6 @@ public class StudentUploadTest extends AppCompatActivity {
         });
     }
 
-    //圖庫上傳還沒做
     private void uploadButton(){
         uploadButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
@@ -219,6 +218,7 @@ public class StudentUploadTest extends AppCompatActivity {
                 bitmap = Bitmap.createScaledBitmap(bitmap, 600, 600, true);
                 imageView.setImageBitmap(bitmap);
                 imageView.invalidate();
+                uploadCate = 1;
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -244,6 +244,7 @@ public class StudentUploadTest extends AppCompatActivity {
 //                uploadCate = 1;
 //            } else if (requestCode == 2) {
         if (requestCode == 2){
+            if (data != null) {
                 Uri selectedImage = data.getData();
                 String[] filePath = {MediaStore.Images.Media.DATA};
                 Cursor c = getContentResolver().query(selectedImage, filePath, null, null, null);
@@ -256,7 +257,7 @@ public class StudentUploadTest extends AppCompatActivity {
                 Log.w("path of image:", picturePath + "");
                 imageView.setImageBitmap(thumbnail);
                 uploadCate = 2;
-
+            }
         }
     }
 
