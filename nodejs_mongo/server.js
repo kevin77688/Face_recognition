@@ -65,18 +65,18 @@ var dbName = 'nodejsTest'
 MongoClient.connect(url, {useNewParser: true}, function(err, client){
 	
 	// Response code : 
-	// 100 Database insertion error
 	// 200 student login
     // 201 teacher login
     // 202 register success
 	// 203 Get data success
 	// 204 insert data success
-	// 205 update date success
+	// 205 update data success
     // 400 login password error
     // 401 register email exist
 	// 402 login email not exist
 	// 403 Get data failed
 	// 405 register id exist
+	// 406 insert data failed
     if (err)
         console.log('Unable to connect to MongoDB', err);
     else{
@@ -132,8 +132,9 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 						console.log('Registration success');
 					}
 					else {
-						userResponse.description = "Database insertion error";
-						userResponse.status = 100;
+						userResponse.description = "insert data error";
+						userResponse.status = 406;
+						console.log("insert data error");
 					}
 				})
 			}
@@ -446,10 +447,19 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			console.log(request.file);
 			console.log(request.file.originalname);
 			var db = client.db(dbName);
+			var userResponse = {};
 			db.collection('avatar').insertOne({'userId': request.body.userId, 'imageName': imageName}, function(error, res){
-                                response.json('Upload success');
-                                console.log('Upload success');
-                            })
+				if (error){
+					userResponse.status = 406;
+					userResponse.description = "insert data failed";
+				}
+				else {
+					userResponse.status = 204;
+					userResponse.description = "insert data success";
+				}
+				console.log(userResponse);
+				response.json(userResponse);
+			});
 		});
 		
 		// student check avatar
@@ -461,6 +471,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			var db = client.db(dbName);
 			var avatars = await db.collection('avatar').find({userId: student_id}).toArray();
 			if (avatars.length == 0){
+				response.json("avatar not exist");
 			}
 			else {
 				response.sendFile(__dirname + "/uploads/" + avatars[index].imageName);

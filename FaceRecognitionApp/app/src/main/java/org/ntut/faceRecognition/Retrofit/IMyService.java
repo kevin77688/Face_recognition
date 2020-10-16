@@ -63,7 +63,7 @@ public interface IMyService {
             @Field("id") String id
     );
 
-
+    //學生上傳圖片
     @Multipart
     @POST("studentUpload")
     Observable<ResponseBody> studentUpload(
@@ -95,6 +95,7 @@ public interface IMyService {
             @Field("studentAttendantList") JsonObject jsonObject
     );
 
+    //學生查看圖片
     @POST("studentCheckAvatar")
     @FormUrlEncoded
     Observable<ResponseBody> studentCheckAvatar(

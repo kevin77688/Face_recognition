@@ -11,7 +11,10 @@ public class RetrofitClient {
     public static Retrofit getInstance() {
         if (instance == null)
             instance = new Retrofit.Builder()
-                    .baseUrl("http://nodejsserver.ddns.net:3000/")
+                    //remote
+                    //.baseUrl("http://nodejsserver.ddns.net:3000/")
+                    //localhost
+                    .baseUrl("http://10.0.2.2:3000/")
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();
