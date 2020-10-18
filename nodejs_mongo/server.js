@@ -58,7 +58,12 @@ app.use(bodyParser.urlencoded({extended: true}));
 var MongoClient = mongodb.MongoClient;
 
 //Connection URL
-var url = 'mongodb+srv://admin:BYvnxe7GKR7yTHF4@cluster0.bso7x.gcp.mongodb.net/nodejsTest?retryWrites=true&w=majority'
+
+// remote
+// var url = 'mongodb+srv://admin:BYvnxe7GKR7yTHF4@cluster0.bso7x.gcp.mongodb.net/nodejsTest?retryWrites=true&w=majority'
+
+// localhost
+var url = 'mongodb://localhost:27017'
 
 var dbName = 'nodejsTest'
 
@@ -208,12 +213,6 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			var db = client.db(dbName);
 			var number = db.collection('user').find({'_id': id}).count();
 			return number;
-		}
-		
-		function findStudentsUsingCourseId(course_id) {
-			var db = client.db(dbName);
-			var students = db.collection("studentCourse").find({_id: course_id}).toArray();
-			return students;
 		}
 		
 		function findCoursesUsingTeacherId(teacher_id){
@@ -507,6 +506,74 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			}
 			response.json(userResponse);
 		});
+		
+		// try python
+		app.post('/pythonAdd', (request, response, next)=>{
+			let spawn = require("child_process").spawn
+
+			let process = spawn('python', [
+				"./process.py",
+				request.body.number1,
+				request.body.number2
+			])
+
+			process.stdout.on('data', (data) => {
+				const parsedString = JSON.parse(data)
+				console.log(parsedString)
+				response.json(parsedString)
+			})
+		});
+		
+		// get course id and using it to get student avatars, then pass them to python file
+		app.post('/giveStudentAvatarsToPythonProcess', async(request, response, next)=>{
+			var course_id = request.body.courseId;
+			console.log(course_id);
+			var db = client.db(dbName);
+			var studentList = await FindStudentListWithAvatarUsingCourseId(course_id)//db.collection('studentCourse').find({courseId: course_id}).toArray();
+			console.log(studentList)
+			let spawn = require("child_process").spawn
+			let testArray = [];
+			for (let i = 0; i < studentList.length; i++){
+				for (let j = 0; j < studentList[i].avatars.length; j++){
+					testArray.push(studentList[i].studentId);
+					testArray.push(studentList[i].avatars[j].imageName)
+				}
+			}
+			let testJson = {"name": "kenny"}
+			let process = spawn('python', [
+				"./process2.py",
+				testArray
+			])
+
+			process.stdout.on('data', (data) => {
+				const parsedString = JSON.parse(data)
+				console.log(parsedString)
+				response.json(parsedString)
+			})
+		});
+		
+		function FindStudentListWithAvatarUsingCourseId(course_id){
+			var db = client.db(dbName);
+			const pipeline = [
+				{
+					'$lookup':
+					{
+						from: 'avatar',
+						localField: 'studentId',
+						foreignField: 'userId',
+						as: 'avatars'
+					}
+				},
+				{
+					'$match':
+					{
+						courseId: course_id
+					}
+				}
+			]
+			var studentList = db.collection('studentCourse').aggregate(pipeline).toArray();
+			return studentList;
+		}
 
         //Web server
         app.listen(3000, ()=>{
