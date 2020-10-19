@@ -444,7 +444,6 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 		app.post('/studentUpload', upload.single('image'), async(request, response, next)=>{
 			console.log(request.body);
 			console.log(request.file);
-			console.log(request.file.originalname);
 			var db = client.db(dbName);
 			var userResponse = {};
 			db.collection('avatar').insertOne({'userId': request.body.userId, 'imageName': imageName}, function(error, res){
