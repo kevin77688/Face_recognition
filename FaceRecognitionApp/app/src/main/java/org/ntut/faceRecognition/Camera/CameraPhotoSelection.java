@@ -42,7 +42,6 @@ public class CameraPhotoSelection extends AppCompatActivity {
                 bitmap = Bitmap.createScaledBitmap(bitmap, 600, 600, true);
                 captureView.setImageBitmap(bitmap);
                 captureView.invalidate();
-                captureView.postInvalidate();
             } catch (Exception e) {
                 e.printStackTrace();
             }

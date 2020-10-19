@@ -72,7 +72,7 @@ public class ImageSaver {
     }
 
     @NonNull
-    private File createFile() {
+    public File createFile() {
         File directory;
         if (external) {
             directory = getAlbumStorageDir(directoryName);

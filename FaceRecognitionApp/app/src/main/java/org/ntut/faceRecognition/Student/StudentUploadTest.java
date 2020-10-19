@@ -106,13 +106,10 @@ public class StudentUploadTest extends AppCompatActivity {
                     return;
                 }
                 else if (uploadCate == 1){
-                    f = new File(Environment.getExternalStorageDirectory().toString());
-                    for (File temp : f.listFiles()) {
-                        if (temp.getName().equals("temp.jpg")) {
-                            f = temp;
-                            break;
-                        }
-                    }
+                    f = new ImageSaver(StudentUploadTest.this).
+                            setFileName("captureImage.png").
+                            setDirectoryName("images").
+                            createFile();
                 }
                 else {
                     f = new File(picturePath);
