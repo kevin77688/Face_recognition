@@ -7,6 +7,7 @@ from PIL import Image
 def detectFace(dataFace_dir, detectPicture):
     known_faces = []
     fileNames = []
+    distance = []
     # import knownFaces to dlib
     for filename in os.listdir(dataFace_dir):
         if filename.endswith(".jpg") or filename.endswith(".png"):
@@ -22,29 +23,25 @@ def detectFace(dataFace_dir, detectPicture):
     unknownFace_encoding = face_recognition.face_encodings(unknownFace)[0]
     
     # compare with dataset
-    results = face_recognition.compare_faces(known_faces, unknownFace_encoding, 0.15)
-    resultJson = "{"
+    distance = face_recognition.face_distance(known_faces, unknownFace_encoding)
+    for index in range(len(fileNames)):
+        print("{} : {}".format(fileNames[index], distance[index]))
+    results = face_recognition.compare_faces(known_faces, unknownFace_encoding, 0.45)
+    resultDict = {}
     # print result
-    for index in range(len(results) - 1):
-        resultJson += fileNames[index] + ":" + results[index] + ","
-    resultJson += fileNames[len(results) - 1] + ":" +　results[len(results) - 1]
-    return resultJson
+    for index in range(len(results)):
+        if results[index]:
+            resultDict[fileNames[index]] = "1";
+        else:
+            resultDict[fileNames[index]] = "0";
+    return resultDict
 
 def main():
-    print("t")
     array = sys.argv[2].split(',')
     jsonParsed = json.dumps(array)
-
-    img = Image.open("./uploads/" + sys.argv[1] + ".png")
-    img.show()
-
-    try:
-        result = detectFace("./uploads/", "./uploads/" + sys.argv[1] + ".png")
-        print("1")
-    except Exception as e:
-        print(json.dumps[e])
+    resultDict = detectFace("./uploads/", "./teacherUploads/" + sys.argv[1] + ".png")
+    print(json.dumps(resultDict))
     sys.stdout.flush()
 
 if __name__ == '__main__':
     main()
-

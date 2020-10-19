@@ -19,7 +19,19 @@ var storage = multer.diskStorage(
         }
     }
 );
+
+var storage2 = multer.diskStorage(
+    {
+        destination: './teacherUploads/',
+        filename: function ( req, file, cb ) {
+			imageName = file.originalname + ".png";
+			cb(null, imageName);
+        }
+    }
+);
+
 var upload = multer( { storage: storage } );
+var upload2 = multer( { storage: storage2 } );
 
 //password crypto
 var getRandomString = function(length){
@@ -60,10 +72,10 @@ var MongoClient = mongodb.MongoClient;
 //Connection URL
 
 // remote
-// var url = 'mongodb+srv://admin:BYvnxe7GKR7yTHF4@cluster0.bso7x.gcp.mongodb.net/nodejsTest?retryWrites=true&w=majority'
+var url = 'mongodb+srv://admin:BYvnxe7GKR7yTHF4@cluster0.bso7x.gcp.mongodb.net/nodejsTest?retryWrites=true&w=majority'
 
 // localhost
-var url = 'mongodb://localhost:27017'
+// var url = 'mongodb://localhost:27017'
 
 var dbName = 'nodejsTest'
 
@@ -575,7 +587,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 		}
 		
 		//teacherUpload
-		app.post('/teacherUpload', upload.single('image'), async(request, response, next)=>{
+		app.post('/teacherUpload', upload2.single('image'), async(request, response, next)=>{
 			console.log(request.body);
 			console.log(request.file);
 			var db = client.db(dbName);
@@ -585,6 +597,12 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			var db = client.db(dbName);
 			var studentList = await FindStudentListWithAvatarUsingCourseId(courseId)//db.collection('studentCourse').find({courseId: course_id}).toArray();
 			console.log(studentList)
+			//刪掉教師傳的圖片
+			// try{
+				// fs.unlinkSync(__dirname + "/uploads/" + request.file.filename);	
+			// } catch (err){
+				
+			// }
 			let spawn = require("child_process").spawn
 			let testArray = [];
 			for (let i = 0; i < studentList.length; i++){
@@ -595,17 +613,13 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			}
 			let testJson = {"name": "kenny"}
 			let process = spawn('python', [
-				"../dlib/recognition/recogize_face.py",
+				"./test.py",
 				courseId,
 				testArray
 			])
-			if (process.error){
-				console.log("Error: " + process.error)
-				response.json(process.error)
-			}
 			process.stdout.on('data', (data) => {
-				// const parsedString = JSON.parse(data)
-				const parseString = data
+				const parsedString = JSON.parse(data)
+				// const parsedString = data
 				console.log(parsedString)
 				response.json(parsedString)
 			})
