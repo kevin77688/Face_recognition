@@ -577,6 +577,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 
         //Web server
         app.listen(3000, ()=>{
+            console.log('Testing github webhooks')
             console.log('Connected to MongoDB server with port 3000')
         })
     }
