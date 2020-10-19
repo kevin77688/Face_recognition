@@ -285,14 +285,14 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
             var courseDate = await GetCourseDateByIdAndDate(course_id, date);
 			var isRecorded = courseDate.isRecord;
 			userResponse.attendance = {}
-			if (!isRecorded){
-				var studentList = await FindStudentListUsingCourseId(course_id);
-				for (let i = 0; i < studentList.length; i++){
-					userResponse.attendance[studentList[i].studentId] = {name: studentList[i].studentDetails[0].name, attendance: '-1'};
-				}
-				userResponse.isRecorded = false;
+			//預設都沒有點名，從學生課程清單裡面抓學生清單，把點名欄位設為-1
+			var studentList = await FindStudentListUsingCourseId(course_id);
+			for (let i = 0; i < studentList.length; i++){
+				userResponse.attendance[studentList[i].studentId] = {name: studentList[i].studentDetails[0].name, attendance: '-1'};
 			}
-			else {
+			userResponse.isRecorded = false;
+			//如果有點名，把有點名的人設為已存在值
+			if (isRecorded) {
 				var attendance = await FindAttendanceUsingDateAndCourseId(course_id, date);
 				for (let i = 0; i < attendance.length; i++){
 					userResponse.attendance[attendance[i].studentId] = {name: attendance[i].studentDetails[0].name, attendance: attendance[i].attendance}
@@ -591,18 +591,12 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			console.log(request.body);
 			console.log(request.file);
 			var db = client.db(dbName);
-			var userResponse = {};
-			var courseId = request.file.originalname;
-			console.log(courseId);
+			var course_id = request.file.originalname;
+			var date = request.body.date;
+			console.log(course_id);
 			var db = client.db(dbName);
-			var studentList = await FindStudentListWithAvatarUsingCourseId(courseId)//db.collection('studentCourse').find({courseId: course_id}).toArray();
+			var studentList = await FindStudentListWithAvatarUsingCourseId(course_id)
 			console.log(studentList)
-			//刪掉教師傳的圖片
-			// try{
-				// fs.unlinkSync(__dirname + "/uploads/" + request.file.filename);	
-			// } catch (err){
-				
-			// }
 			let spawn = require("child_process").spawn
 			let testArray = [];
 			for (let i = 0; i < studentList.length; i++){
@@ -614,14 +608,22 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			let testJson = {"name": "kenny"}
 			let process = spawn('python', [
 				"./test.py",
-				courseId,
+				course_id,
 				testArray
 			])
-			process.stdout.on('data', (data) => {
-				const parsedString = JSON.parse(data)
-				// const parsedString = data
-				console.log(parsedString)
-				response.json(parsedString)
+			process.stdout.on('data', async(data) => {
+				const parsedstudentIdList = JSON.parse(data)
+				const parsedString = data
+				insertDocs = [];
+				for (var i = 0; i < parsedstudentIdList.length; i++) {
+					insertDocs.push({studentId: parsedstudentIdList[i], date: date, courseId: course_id, attendance: "0"});
+				}
+				await db.collection('attendance').insertMany(insertDocs);
+				var filter = {courseId: course_id, date: date};
+				var updateValue = { $set: { isRecord: true } };
+				await db.collection('courseDate').updateOne(filter, updateValue);
+				console.log(parsedstudentIdList)
+				response.json(parsedstudentIdList)
 			})
 		});
 

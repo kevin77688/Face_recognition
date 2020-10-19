@@ -23,24 +23,22 @@ def detectFace(dataFace_dir, detectPicture):
     unknownFace_encoding = face_recognition.face_encodings(unknownFace)[0]
     
     # compare with dataset
-    distance = face_recognition.face_distance(known_faces, unknownFace_encoding)
-    for index in range(len(fileNames)):
-        print("{} : {}".format(fileNames[index], distance[index]))
+    # distance = face_recognition.face_distance(known_faces, unknownFace_encoding)
+    # for index in range(len(fileNames)):
+        # print("{} : {}".format(fileNames[index], distance
     results = face_recognition.compare_faces(known_faces, unknownFace_encoding, 0.45)
-    resultDict = {}
+    resultStack = []
     # print result
     for index in range(len(results)):
         if results[index]:
-            resultDict[fileNames[index]] = "1";
-        else:
-            resultDict[fileNames[index]] = "0";
-    return resultDict
+            resultStack.append(fileNames[index][0:-4])
+    return resultStack
 
 def main():
     array = sys.argv[2].split(',')
     jsonParsed = json.dumps(array)
-    resultDict = detectFace("./uploads/", "./teacherUploads/" + sys.argv[1] + ".png")
-    print(json.dumps(resultDict))
+    resultStack = detectFace("./uploads/", "./teacherUploads/" + sys.argv[1] + ".png")
+    print(json.dumps(resultStack))
     sys.stdout.flush()
 
 if __name__ == '__main__':
