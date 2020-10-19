@@ -115,4 +115,10 @@ public interface IMyService {
             @Field("studentId") String studentId,
             @Field("index") int index
     );
+
+    @POST("teacherUpload")
+    @Multipart
+    Observable<ResponseBody> teacherUpload(
+            @Part MultipartBody.Part image
+    );
 }

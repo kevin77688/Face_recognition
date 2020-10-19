@@ -14,7 +14,7 @@ var storage = multer.diskStorage(
     {
         destination: './uploads/',
         filename: function ( req, file, cb ) {
-			imageName = Date.now() + '_' + file.originalname;
+			imageName = file.originalname + ".png";
 			cb(null, imageName);
         }
     }
@@ -573,6 +573,43 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			var studentList = db.collection('studentCourse').aggregate(pipeline).toArray();
 			return studentList;
 		}
+		
+		//teacherUpload
+		app.post('/teacherUpload', upload.single('image'), async(request, response, next)=>{
+			console.log(request.body);
+			console.log(request.file);
+			var db = client.db(dbName);
+			var userResponse = {};
+			var courseId = request.file.originalname;
+			console.log(courseId);
+			var db = client.db(dbName);
+			var studentList = await FindStudentListWithAvatarUsingCourseId(courseId)//db.collection('studentCourse').find({courseId: course_id}).toArray();
+			console.log(studentList)
+			let spawn = require("child_process").spawn
+			let testArray = [];
+			for (let i = 0; i < studentList.length; i++){
+				for (let j = 0; j < studentList[i].avatars.length; j++){
+					testArray.push(studentList[i].studentId);
+					testArray.push(studentList[i].avatars[j].imageName)
+				}
+			}
+			let testJson = {"name": "kenny"}
+			let process = spawn('python', [
+				"../dlib/recognition/recogize_face.py",
+				courseId,
+				testArray
+			])
+			if (process.error){
+				console.log("Error: " + process.error)
+				response.json(process.error)
+			}
+			process.stdout.on('data', (data) => {
+				// const parsedString = JSON.parse(data)
+				const parseString = data
+				console.log(parsedString)
+				response.json(parsedString)
+			})
+		});
 
         //Web server
         app.listen(3000, ()=>{

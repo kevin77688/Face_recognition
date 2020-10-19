@@ -116,7 +116,7 @@ public class StudentUploadTest extends AppCompatActivity {
                 }
                 uploadCate = 0;
                 RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), f);
-                MultipartBody.Part body = MultipartBody.Part.createFormData("image", f.getName(), requestFile);
+                MultipartBody.Part body = MultipartBody.Part.createFormData("image", userId, requestFile);
                 RequestBody fullName = RequestBody.create(MediaType.parse("multipart/form-data"), userId);
                 compositeDisposable.add(iMyService.studentUpload(fullName, body)
                         .subscribeOn(Schedulers.io())
@@ -220,26 +220,6 @@ public class StudentUploadTest extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-//        if (resultCode == RESULT_OK) {
-//            if (requestCode == 1) {
-//                File f = new File(Environment.getExternalStorageDirectory().toString());
-//                for (File temp : f.listFiles()) {
-//                    if (temp.getName().equals("temp.jpg")) {
-//                        f = temp;
-//                        break;
-//                    }
-//                }
-//                try {
-//                    Bitmap bitmap;
-//                    BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-//                    bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(), bitmapOptions);
-//                    bitmap=getResizedBitmap(bitmap, 400);
-//                    imageView.setImageBitmap(bitmap);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                uploadCate = 1;
-//            } else if (requestCode == 2) {
         if (requestCode == 2){
             if (data != null) {
                 Uri selectedImage = data.getData();
@@ -256,20 +236,5 @@ public class StudentUploadTest extends AppCompatActivity {
                 uploadCate = 2;
             }
         }
-    }
-
-    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
-        int width = image.getWidth();
-        int height = image.getHeight();
-
-        float bitmapRatio = (float) width / (float) height;
-        if (bitmapRatio > 1) {
-            width = maxSize;
-            height = (int) (width / bitmapRatio);
-        } else {
-            height = maxSize;
-            width = (int) (height * bitmapRatio);
-        }
-        return Bitmap.createScaledBitmap(image, width, height, true);
     }
 }

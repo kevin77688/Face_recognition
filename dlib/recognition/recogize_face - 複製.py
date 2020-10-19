@@ -4,8 +4,8 @@ from skimage import io
 import cv2
 import imutils
 
-if len(sys.argv) != 3:
-  print ("缺少要辨識的圖片名稱、學生資料")
+if len(sys.argv) != 2:
+  print ("缺少要辨識的圖片名稱")
   exit()
 
 
@@ -16,10 +16,10 @@ predictor_path = "weight/shape_predictor_68_face_landmarks.dat"
 face_rec_model_path = "weight/dlib_face_recognition_resnet_model_v1.dat"
 
 # 比對人臉圖片資料夾名稱
-faces_folder_path = "../../nodejs_mongo/uploads"
+faces_folder_path = "./rec"
 
 # 需要辨識的人臉圖片名稱
-img_path = "../../nodejs_mongo/uploads/" + sys.argv[1] + ".png";
+img_path = sys.argv[1]
 
 # 載入人臉檢測器
 detector = dlib.get_frontal_face_detector()
