@@ -60,10 +60,10 @@ var MongoClient = mongodb.MongoClient;
 //Connection URL
 
 // remote
-// var url = 'mongodb+srv://admin:BYvnxe7GKR7yTHF4@cluster0.bso7x.gcp.mongodb.net/nodejsTest?retryWrites=true&w=majority'
+var url = 'mongodb+srv://admin:BYvnxe7GKR7yTHF4@cluster0.bso7x.gcp.mongodb.net/nodejsTest?retryWrites=true&w=majority'
 
 // localhost
-var url = 'mongodb://localhost:27017'
+// var url = 'mongodb://localhost:27017'
 
 var dbName = 'nodejsTest'
 
