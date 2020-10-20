@@ -583,12 +583,14 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 				response.json("[]");
 				return;
 			}
+			console.log("before recognize");
 			let process = spawn('python3', [
 				"./recognize.py",
 				course_id,
 				filePathList
 			])
 			process.stdout.on('data', async(data) => {
+				console.log("after recognize")
 				const parsedstudentIdList = JSON.parse(data)
 				const parsedString = data
 				insertDocs = [];
@@ -596,10 +598,13 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 					insertDocs.push({studentId: parsedstudentIdList[i], date: date, courseId: course_id, attendance: "0"});
 				}
 				if (insertDocs.length != 0){
+					console.log("before delete data");
 					await db.collection('attendance').remove({studentId: {'$in':parsedstudentIdList}, courseId: course_id, date: date});
+					console.log("before insert data");
 					await db.collection('attendance').insertMany(insertDocs);
 					var filter = {courseId: course_id, date: date};
 					var updateValue = { $set: { isRecord: true } };
+					console.log("before update data");
 					await db.collection('courseDate').updateOne(filter, updateValue);	
 				}
 				var imageName = request.file.originalname + ".png";
