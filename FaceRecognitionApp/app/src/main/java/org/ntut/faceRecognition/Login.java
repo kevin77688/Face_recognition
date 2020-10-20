@@ -68,7 +68,25 @@ public class Login extends AppCompatActivity {
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginUser(edt_login_email.getText().toString(), edt_login_password.getText().toString());
+                boolean isValid = true;
+                if (TextUtils.isEmpty(edt_login_email.getText().toString())) {
+                    edt_login_email.setError("Email cannot be null or empty");
+                    isValid = false;
+                }else
+                    edt_login_email.setError(null);
+
+                if (!Utils.isEmailValid(edt_login_email.getText().toString())) {
+                    edt_login_email.setError("Email format error");
+                    isValid = false;
+                }else
+                    edt_login_email.setError(null);
+                if (TextUtils.isEmpty(edt_login_password.getText().toString())) {
+                    edt_login_password.setError("Password cannot be null or empty");
+                    isValid = false;
+                }else
+                    edt_login_password.setError(null);
+                if (isValid)
+                    loginUser(edt_login_email.getText().toString(), edt_login_password.getText().toString());
             }
         });
     }
@@ -84,6 +102,7 @@ public class Login extends AppCompatActivity {
                         .setTitle("REGISTRATION")
                         .setDescription("Please fill all fields")
                         .setCustomView(register_layout)
+                        .autoDismiss(false)
                         .setNegativeText("CANCEL")
                         .onNegative(new MaterialDialog.SingleButtonCallback() {
                             @Override
@@ -96,38 +115,50 @@ public class Login extends AppCompatActivity {
 
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                final boolean[] count = {false};
                                 MaterialEditText edt_register_email = register_layout.findViewById(R.id.email_field);
                                 MaterialEditText edt_register_name = register_layout.findViewById(R.id.name_field);
                                 MaterialEditText edt_register_password = register_layout.findViewById(R.id.password_field);
                                 MaterialEditText edt_register_id = register_layout.findViewById(R.id.id_field);
-
+                                boolean isValid = true;
                                 if (TextUtils.isEmpty(edt_register_email.getText().toString())) {
-                                    Utils.showToast("Email cannot be null or empty", Login.this);
-                                    return;
-                                }
+                                    edt_register_email.setError("Email cannot be null or empty");
+                                    isValid = false;
+                                }else
+                                    edt_register_email.setError(null);
+
+                                if (!Utils.isEmailValid(edt_register_email.getText().toString())) {
+                                    edt_register_email.setError("Email format error");
+                                    isValid = false;
+                                }else
+                                    edt_register_email.setError(null);
 
                                 if (TextUtils.isEmpty(edt_register_name.getText().toString())) {
-                                    Utils.showToast("Name cannot be null or empty", Login.this);
-                                    return;
-                                }
+                                    edt_register_name.setError("Name cannot be null or empty");
+                                    isValid = false;
+                                }else
+                                    edt_register_name.setError(null);
 
                                 if (TextUtils.isEmpty(edt_register_password.getText().toString())) {
-                                    Utils.showToast("Password cannot be null or empty", Login.this);
-                                    return;
-                                }
+                                    edt_register_password.setError("Password cannot be null or empty");
+                                    isValid = false;
+                                }else
+                                    edt_register_password.setError(null);
 
-                                if (TextUtils.isEmpty(edt_register_id.getText().toString())) {
-                                    Utils.showToast("ID cannot be null or empty", Login.this);
-                                    return;
+                                if (TextUtils.isEmpty(edt_register_id.getText().toString()) ||
+                                        edt_register_id.getText().toString().trim().length() != 9) {
+                                    edt_register_id.setError("Id need to be 9 digit");
+                                    isValid = false;
+                                }else
+                                    edt_register_id.setError(null);
+                                if (isValid){
+                                    registerUser(
+                                            edt_register_email.getText().toString(),
+                                            edt_register_name.getText().toString(),
+                                            edt_register_password.getText().toString(),
+                                            edt_register_id.getText().toString()
+                                    );
+                                    dialog.dismiss();
                                 }
-
-                                registerUser(
-                                        edt_register_email.getText().toString(),
-                                        edt_register_name.getText().toString(),
-                                        edt_register_password.getText().toString(),
-                                        edt_register_id.getText().toString()
-                                );
                             }
                         }).show();
             }
@@ -156,16 +187,6 @@ public class Login extends AppCompatActivity {
     }
 
     synchronized private void loginUser(String email, String password) {
-        if (TextUtils.isEmpty(email)) {
-            Utils.showToast("Email cannot be null or empty", Login.this);
-            return;
-        }
-
-        if (TextUtils.isEmpty(password)) {
-            Utils.showToast("Password cannot be null or empty", Login.this);
-            return;
-        }
-
         compositeDisposable.add(iMyService.loginUser(email, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
