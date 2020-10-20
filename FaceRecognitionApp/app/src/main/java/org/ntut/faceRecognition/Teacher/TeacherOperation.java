@@ -54,7 +54,6 @@ public class TeacherOperation extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO auto check attendance action
                 gotoPage(TeacherOperationTakePhoto.class);
             }
         });

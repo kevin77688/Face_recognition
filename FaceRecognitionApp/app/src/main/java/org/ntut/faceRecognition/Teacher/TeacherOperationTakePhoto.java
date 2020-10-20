@@ -43,16 +43,14 @@ import retrofit2.Retrofit;
 
 public class TeacherOperationTakePhoto extends AppCompatActivity {
     public static final String KEY_User_Document1 = "doc1";
+    public static final int READ_PERMISSION_CODE = 1000;
+    public static final int CAMERA_AND_WRITE_PERMISSION_CODE = 1001;
+    private final String Document_img1 = "";
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     ImageView imageView;
     Button uploadButton, returnButton;
     TextView title;
-
-    public static final int READ_PERMISSION_CODE = 1000;
-    public static final int CAMERA_AND_WRITE_PERMISSION_CODE = 1001;
-
-    private final String Document_img1 = "";
     private String courseName, courseId, courseDate;
-    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private IMyService iMyService;
     private int uploadCate = 0;
     private String picturePath;
@@ -98,20 +96,18 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
         });
     }
 
-    private void uploadButton(){
-        uploadButton.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
+    private void uploadButton() {
+        uploadButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
                 File f;
-                if (uploadCate == 0){
+                if (uploadCate == 0) {
                     return;
-                }
-                else if (uploadCate == 1){
+                } else if (uploadCate == 1) {
                     f = new ImageSaver(TeacherOperationTakePhoto.this).
                             setFileName("captureFullImage.png").
                             setDirectoryName("images").
                             createFile();
-                }
-                else {
+                } else {
                     f = new File(picturePath);
                 }
                 uploadCate = 0;
@@ -139,13 +135,13 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
         title.setText("\n" + courseName + "課程");
     }
 
-    private void openCamera(){
+    private void openCamera() {
         Intent intent = new Intent();
         intent.setClass(TeacherOperationTakePhoto.this, CameraCapture.class);
         startActivityForResult(intent, 1);
     }
 
-    private void openGallery(){
+    private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, 2);
     }
@@ -220,11 +216,12 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-        if (requestCode == 2){
+        if (requestCode == 2) {
             if (data != null) {
                 Uri selectedImage = data.getData();
                 String[] filePath = {MediaStore.Images.Media.DATA};
-                Cursor c = getContentResolver().query(selectedImage, filePath, null, null, null);
+                String[] whereArgs = {"image/jpeg", "image/png", "image/jpg"};
+                Cursor c = getContentResolver().query(selectedImage, filePath, null, whereArgs, null);
                 c.moveToFirst();
                 int columnIndex = c.getColumnIndex(filePath[0]);
                 picturePath = c.getString(columnIndex);

@@ -4,20 +4,15 @@ import sys
 import json
 from PIL import Image
 
-def detectFace(dataFace_dir, detectPicture):
+def detectFace(courseListPhoto_dir, detectPicture):
+    fileNames = courseListPhoto_dir
     known_faces = []
-    fileNames = []
     distance = []
     # import knownFaces to dlib
-    for filename in os.listdir(dataFace_dir):
-        if filename.endswith(".jpg") or filename.endswith(".png"):
-            currentFile = os.path.join(dataFace_dir, filename)
-            fileNames.append(filename)
-            knownFace = face_recognition.load_image_file(currentFile)
-            knownFace_encoding = face_recognition.face_encodings(knownFace)[0]
-            known_faces.append(knownFace_encoding)
-        else:
-            continue
+    for filename in fileNames:
+        knownFace = face_recognition.load_image_file(currentFile)
+        knownFace_encoding = face_recognition.face_encodings(knownFace)[0]
+        known_faces.append(knownFace_encoding)
     # import test picture
     unknownFace = face_recognition.load_image_file(detectPicture)
     unknownFace_encoding = face_recognition.face_encodings(unknownFace)[0]

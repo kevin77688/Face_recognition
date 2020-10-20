@@ -317,7 +317,6 @@ public class CameraCapture extends CameraActivity implements OnImageAvailableLis
                 mappedRecognitions.add(result);
                 if (getPhoto) {
                     if (crop != null) {
-                        // TODO return !
                         Intent returnIntent = new Intent();
                         new ImageSaver(this).
                                 setFileName("captureImage.png").

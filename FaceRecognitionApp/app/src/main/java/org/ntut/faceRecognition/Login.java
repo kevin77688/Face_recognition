@@ -33,11 +33,11 @@ import retrofit2.Retrofit;
 
 public class Login extends AppCompatActivity {
 
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private IMyService iMyService;
     private TextView txt_create_account;
     private MaterialEditText edt_login_email, edt_login_password;
     private Button btn_login;
-    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private String username, userId;
 
     @Override

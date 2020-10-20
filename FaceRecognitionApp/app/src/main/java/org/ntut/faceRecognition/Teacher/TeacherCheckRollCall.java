@@ -31,12 +31,12 @@ import retrofit2.Retrofit;
 
 public class TeacherCheckRollCall extends AppCompatActivity {
 
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private final ArrayList<Student> students = new ArrayList<>();
     private LinearLayout titleText, attendanceList;
     private Button confirmButton;
     private String courseName, courseDate, courseId;
     private IMyService iMyService;
-    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private final ArrayList<Student> students = new ArrayList<>();
     private boolean attendanceRecord;
 
     @Override

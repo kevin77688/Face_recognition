@@ -36,7 +36,6 @@
         <activity android:name=".Login" />
         <activity android:name=".Student.StudentOperation" />
         <activity android:name=".Student.StudentCheckRollCall" />
-        <activity android:name=".Student.StudentUpload" />
         <activity android:name=".Teacher.TeacherClass" />
         <activity android:name=".Teacher.TeacherClassDate" />
         <activity android:name=".Teacher.TeacherOperation" />
