@@ -456,6 +456,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			])
 			console.log("after detection")
 			process.stdout.on('data', async(data)=>{
+				console.log("before data parsed");
 				const onlyOneFace = JSON.parse(data)
 				console.log(onlyOneFace)
 				if (onlyOneFace){
