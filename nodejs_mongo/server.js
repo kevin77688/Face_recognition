@@ -447,6 +447,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			var db = client.db(dbName);
 			var userResponse = {};
 			var imageName = request.file.originalname + ".png";
+			console.log("before require")
 			let spawn = require("child_process").spawn
 			console.log("before detection")
 			let process = spawn('python', [
