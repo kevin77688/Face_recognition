@@ -107,7 +107,7 @@ public class StudentUploadTest extends AppCompatActivity {
                 }
                 else if (uploadCate == 1){
                     f = new ImageSaver(StudentUploadTest.this).
-                            setFileName("captureImage.png").
+                            setFileName("captureFullImage.png").
                             setDirectoryName("images").
                             createFile();
                 }
@@ -209,7 +209,7 @@ public class StudentUploadTest extends AppCompatActivity {
         if (requestCode == 1) {
             try {
                 Bitmap bitmap = new ImageSaver(this).
-                        setFileName("captureImage.png").
+                        setFileName("captureFullImage.png").
                         setDirectoryName("images").
                         load();
                 bitmap = Bitmap.createScaledBitmap(bitmap, 600, 600, true);

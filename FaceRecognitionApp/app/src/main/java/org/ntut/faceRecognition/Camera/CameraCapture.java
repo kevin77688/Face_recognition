@@ -323,6 +323,10 @@ public class CameraCapture extends CameraActivity implements OnImageAvailableLis
                                 setFileName("captureImage.png").
                                 setDirectoryName("images").
                                 save(crop);
+                        new ImageSaver(this).
+                                setFileName("captureFullImage.png").
+                                setDirectoryName("images").
+                                save(rgbFrameBitmap);
                         setResult(Activity.RESULT_OK, returnIntent);
                         finish();
                     }

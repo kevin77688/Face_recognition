@@ -106,7 +106,7 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
                 }
                 else if (uploadCate == 1){
                     f = new ImageSaver(TeacherOperationTakePhoto.this).
-                            setFileName("captureImage.png").
+                            setFileName("captureFullImage.png").
                             setDirectoryName("images").
                             createFile();
                 }
