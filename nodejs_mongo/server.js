@@ -448,10 +448,12 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			var userResponse = {};
 			var imageName = request.file.originalname + ".png";
 			let spawn = require("child_process").spawn
+			console.log("before detection")
 			let process = spawn('python', [
 				"./detect.py",
 				request.body.userId,
 			])
+			console.log("after detection")
 			process.stdout.on('data', async(data)=>{
 				const onlyOneFace = JSON.parse(data)
 				console.log(onlyOneFace)
