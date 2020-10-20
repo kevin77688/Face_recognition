@@ -654,7 +654,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 				userResponse.status = 407;
 			}
 			else {
-				var hadJoined = await db.collection('studentCourse').find({studentId: student_id}).count();
+				var hadJoined = await db.collection('studentCourse').find({studentId: student_id, courseId: course_id}).count();
 				if (hadJoined){
 					userResponse.status = 206;
 					userResponse.course = course;
@@ -665,6 +665,18 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 				}
 			}
 			console.log(userResponse);
+			response.json(userResponse);
+		});
+		
+		//student join course
+		app.post('/studentAddCourse', async(request, response, next)=>{
+			var userResponse = {};
+			var post_data = request.body;
+			var student_id = post_data.studentId;
+			var course_id = post_data.courseId;
+			var db = client.db(dbName);
+			await db.collection('studentCourse').insertOne({studentId: student_id, courseId: course_id, score: -1, attendance: 0});
+			userResponse.status = 204;
 			response.json(userResponse);
 		});
 

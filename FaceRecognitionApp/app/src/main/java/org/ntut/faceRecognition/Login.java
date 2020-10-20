@@ -77,7 +77,7 @@ public class Login extends AppCompatActivity {
 
                 if (!Utils.isEmailValid(edt_login_email.getText().toString())) {
                     edt_login_email.setError("Email format error");
-                    isValid = false;
+//                    isValid = false;
                 }else
                     edt_login_email.setError(null);
                 if (TextUtils.isEmpty(edt_login_password.getText().toString())) {
