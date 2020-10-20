@@ -9,12 +9,11 @@ const multer = require('multer');
 const fs = require('fs');
 
 //收到大頭貼時存到uploads資料夾
-var imageName;
 var storage = multer.diskStorage(
     {
         destination: './uploads/',
         filename: function ( req, file, cb ) {
-			imageName = file.originalname + ".png";
+			var imageName = file.originalname + ".png";
 			cb(null, imageName);
         }
     }
@@ -24,7 +23,7 @@ var storage2 = multer.diskStorage(
     {
         destination: './teacherUploads/',
         filename: function ( req, file, cb ) {
-			imageName = file.originalname + ".png";
+			var imageName = file.originalname + ".png";
 			cb(null, imageName);
         }
     }
@@ -72,10 +71,10 @@ var MongoClient = mongodb.MongoClient;
 //Connection URL
 
 // remote
-var url = 'mongodb+srv://admin:BYvnxe7GKR7yTHF4@cluster0.bso7x.gcp.mongodb.net/nodejsTest?retryWrites=true&w=majority'
+// var url = 'mongodb+srv://admin:BYvnxe7GKR7yTHF4@cluster0.bso7x.gcp.mongodb.net/nodejsTest?retryWrites=true&w=majority'
 
 // localhost
-// var url = 'mongodb://localhost:27017'
+var url = 'mongodb://localhost:27017'
 
 var dbName = 'nodejsTest'
 
@@ -461,14 +460,27 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			console.log(request.file);
 			var db = client.db(dbName);
 			var userResponse = {};
-			db.collection('avatar').insertOne({'userId': request.body.userId, 'imageName': imageName}, function(error, res){
-				if (error){
-					userResponse.status = 406;
-					userResponse.description = "insert data failed";
+			var imageName = request.file.originalname + ".png";
+			let spawn = require("child_process").spawn
+			let process = spawn('python', [
+				"./detect.py",
+				request.body.userId,
+			])
+			process.stdout.on('data', async(data)=>{
+				const onlyOneFace = JSON.parse(data)
+				console.log(onlyOneFace)
+				if (onlyOneFace){
+					await db.collection('avatar').remove({userId: request.body.userId});
+					await db.collection('avatar').insertOne({'userId': request.body.userId, 'imageName': imageName})
+					userResponse.status = 208;
 				}
 				else {
-					userResponse.status = 204;
-					userResponse.description = "insert data success";
+					userResponse.status = 408;
+				}
+				try{	
+					fs.unlinkSync(__dirname + "/uploads/" + imageName);
+				} catch (err){
+					
 				}
 				console.log(userResponse);
 				response.json(userResponse);
@@ -487,7 +499,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 				response.json("avatar not exist");
 			}
 			else {
-				response.sendFile(__dirname + "/uploads/" + avatars[index].imageName);
+				response.sendFile(__dirname + "/data/" + avatars[index].imageName);
 			}
 		});
 		
@@ -513,8 +525,8 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			var db = client.db(dbName);
 			var avatars = await db.collection('avatar').find({userId: student_id}).toArray();
 			await db.collection('avatar').deleteOne({userId: student_id, imageName: avatars[index].imageName});
-			try{
-				fs.unlinkSync(__dirname + "/uploads/" + avatars[index].imageName);	
+			try{	
+				fs.unlinkSync(__dirname + "/data/" + avatars[index].imageName);	
 			} catch (err){
 				
 			}
@@ -604,13 +616,12 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			let testArray = [];
 			for (let i = 0; i < studentList.length; i++){
 				for (let j = 0; j < studentList[i].avatars.length; j++){
-					testArray.push(studentList[i].studentId);
-					testArray.push(studentList[i].avatars[j].imageName)
+					testArray.push("./data/" + studentList[i].studentId + ".png");
 				}
 			}
 			let testJson = {"name": "kenny"}
 			let process = spawn('python', [
-				"./test.py",
+				"./recognize.py",
 				course_id,
 				testArray
 			])
@@ -626,6 +637,12 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 					var filter = {courseId: course_id, date: date};
 					var updateValue = { $set: { isRecord: true } };
 					await db.collection('courseDate').updateOne(filter, updateValue);	
+				}
+				var imageName = request.file.originalname + ".png";
+				try{	
+					fs.unlinkSync(__dirname + "/uploads/" + imageName);
+				} catch (err){
+					
 				}
 				console.log(parsedstudentIdList)
 				response.json(parsedstudentIdList)

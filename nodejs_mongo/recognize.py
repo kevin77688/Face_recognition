@@ -37,7 +37,7 @@ def detectFace(dataFace_dir, detectPicture):
 def main():
     array = sys.argv[2].split(',')
     jsonParsed = json.dumps(array)
-    resultStack = detectFace("./uploads/", "./teacherUploads/" + sys.argv[1] + ".png")
+    resultStack = detectFace("./data/", "./teacherUploads/" + sys.argv[1] + ".png")
     print(json.dumps(resultStack))
     sys.stdout.flush()
 
