@@ -44,6 +44,18 @@ def main():
     except Exception as e:
         print(json.dumps[e])
     sys.stdout.flush()
+    
+def cropImage(imageWaitForDetectionPath, userId):
+    originalImage = face_recognition.load_image_file(imageWaitForDetectionPath)
+    face_location = face_recognition.face_location(originalImage)
+    if (len(face_location) != 1):
+        # detect multiple faces
+        originalImage.save(imageWaitForDetectionPath)
+        return
+    top, right, bottom, left = face_location[0]
+    cropImage = originalImage.crop(top, left, top - bottom, right - left)
+    
+    cropImage.save("./data/" + userId + ".png")
 
 if __name__ == '__main__':
     main()
