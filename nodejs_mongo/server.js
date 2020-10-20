@@ -459,7 +459,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 				console.log("before data parsed");
 				const faceAmount = JSON.parse(data)
 				console.log(faceAmount)
-				if (faceAmount != 1){
+				if (faceAmount == 1){
 					await db.collection('avatar').remove({userId: request.body.userId});
 					await db.collection('avatar').insertOne({'userId': request.body.userId, 'imageName': imageName})
 					userResponse.status = 208;
