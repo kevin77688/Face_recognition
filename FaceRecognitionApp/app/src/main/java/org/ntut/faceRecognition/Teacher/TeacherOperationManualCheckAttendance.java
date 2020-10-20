@@ -36,8 +36,8 @@ import retrofit2.Retrofit;
 
 public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
 
-    private IMyService iMyService;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private IMyService iMyService;
     private String courseName, courseDate, courseId;
     private ArrayList<Student> students;
 

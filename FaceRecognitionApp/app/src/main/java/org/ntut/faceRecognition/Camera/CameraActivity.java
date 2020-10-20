@@ -65,14 +65,14 @@ public abstract class CameraActivity extends AppCompatActivity
 
     private static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
     private static final String KEY_USE_FACING = "use_facing";
+    private final boolean debug = false;
+    private final byte[][] yuvBytes = new byte[3][];
     protected int previewWidth = 0;
     protected int previewHeight = 0;
-    private final boolean debug = false;
     private Handler handler;
     private HandlerThread handlerThread;
     private boolean useCamera2API;
     private boolean isProcessingFrame = false;
-    private final byte[][] yuvBytes = new byte[3][];
     private int[] rgbBytes = null;
     private int yRowStride;
     private Runnable postInferenceCallback;
@@ -401,10 +401,10 @@ public abstract class CameraActivity extends AppCompatActivity
                 }
 
                 useCamera2API = (
-                    (facing == CameraCharacteristics.LENS_FACING_EXTERNAL) ||
-                    (isHardwareLevelSupported(characteristics, CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LIMITED)) ||
-                    (isHardwareLevelSupported(characteristics, CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_FULL)) ||
-                    (isHardwareLevelSupported(characteristics, CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_3)));
+                        (facing == CameraCharacteristics.LENS_FACING_EXTERNAL) ||
+                                (isHardwareLevelSupported(characteristics, CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LIMITED)) ||
+                                (isHardwareLevelSupported(characteristics, CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_FULL)) ||
+                                (isHardwareLevelSupported(characteristics, CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_3)));
 
                 LOGGER.i("Camera API lv2?: %s", useCamera2API);
                 return cameraId;

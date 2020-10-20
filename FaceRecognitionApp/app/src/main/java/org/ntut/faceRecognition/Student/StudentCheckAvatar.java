@@ -1,8 +1,5 @@
 package org.ntut.faceRecognition.Student;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -11,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.json.JSONObject;
 import org.ntut.faceRecognition.R;
@@ -73,7 +72,7 @@ public class StudentCheckAvatar extends AppCompatActivity {
         iMyService = retrofitClient.create(IMyService.class);
     }
 
-    private void getTotalAvatar(){
+    private void getTotalAvatar() {
         compositeDisposable.add(iMyService.studentGetTotalAvatar(userId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -89,8 +88,8 @@ public class StudentCheckAvatar extends AppCompatActivity {
                 }));
     }
 
-    private void getAvatar(){
-        if (totalAvatar != 0 || totalAvatar > currentAvatar){
+    private void getAvatar() {
+        if (totalAvatar != 0 || totalAvatar > currentAvatar) {
             compositeDisposable.add(iMyService.studentCheckAvatar(userId, currentAvatar)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -104,10 +103,10 @@ public class StudentCheckAvatar extends AppCompatActivity {
         }
     }
 
-    private void setDeleteButton(){
-        deleteButton.setOnClickListener(new View.OnClickListener(){
+    private void setDeleteButton() {
+        deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 if (totalAvatar != 0 || totalAvatar > currentAvatar) {
                     compositeDisposable.add(iMyService.studentDeleteAvatar(userId, currentAvatar)
                             .subscribeOn(Schedulers.io())
@@ -116,7 +115,7 @@ public class StudentCheckAvatar extends AppCompatActivity {
                                 @Override
                                 public void accept(String responseBody) throws Exception {
                                     totalAvatar--;
-                                    if (currentAvatar == totalAvatar && totalAvatar != 0){
+                                    if (currentAvatar == totalAvatar && totalAvatar != 0) {
                                         currentAvatar--;
                                     }
                                     update();
@@ -129,11 +128,10 @@ public class StudentCheckAvatar extends AppCompatActivity {
         });
     }
 
-    private void setNextButton(){
+    private void setNextButton() {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO Student upload View entry point
                 currentAvatar++;
                 getAvatar();
                 update();
@@ -141,11 +139,10 @@ public class StudentCheckAvatar extends AppCompatActivity {
         });
     }
 
-    private void setBackButton(){
+    private void setBackButton() {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO Student upload View entry point
                 currentAvatar--;
                 getAvatar();
                 update();
@@ -153,18 +150,16 @@ public class StudentCheckAvatar extends AppCompatActivity {
         });
     }
 
-    private void update(){
-        if (currentAvatar >= (totalAvatar - 1)){
+    private void update() {
+        if (currentAvatar >= (totalAvatar - 1)) {
             nextButton.setVisibility(View.INVISIBLE);
-        }
-        else {
+        } else {
             nextButton.setVisibility(View.VISIBLE);
         }
 
-        if (currentAvatar == 0){
+        if (currentAvatar == 0) {
             backButton.setVisibility(View.INVISIBLE);
-        }
-        else{
+        } else {
             backButton.setVisibility(View.VISIBLE);
         }
         setTitle();
@@ -175,7 +170,7 @@ public class StudentCheckAvatar extends AppCompatActivity {
     }
 
     private void setTitle() {
-        if (totalAvatar == 0){
+        if (totalAvatar == 0) {
             title.setText("\n歡迎" + username + "學生" + "\n無照片");
         } else {
             title.setText("\n歡迎" + username + "學生" + "\n照片" + (currentAvatar + 1) + "/" + totalAvatar);

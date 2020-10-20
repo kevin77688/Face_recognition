@@ -2,8 +2,6 @@ package org.ntut.faceRecognition.Retrofit;
 
 import com.google.gson.JsonObject;
 
-import java.util.ArrayList;
-
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;

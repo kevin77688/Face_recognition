@@ -1,16 +1,13 @@
 package org.ntut.faceRecognition.Student;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -19,7 +16,6 @@ import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.json.JSONObject;
-import org.ntut.faceRecognition.Login;
 import org.ntut.faceRecognition.R;
 import org.ntut.faceRecognition.Retrofit.IMyService;
 import org.ntut.faceRecognition.Retrofit.RetrofitClient;
@@ -29,15 +25,14 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.ResponseBody;
 import retrofit2.Retrofit;
 
 public class StudentOperation extends AppCompatActivity {
 
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private String username, userId;
     private TextView title;
     private Button checkPhotoButton, uploadButton, checkAttendanceButton, returnButton, joinCourseButton;
-    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private IMyService iMyService;
 
     @Override
@@ -84,7 +79,6 @@ public class StudentOperation extends AppCompatActivity {
         checkPhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO student check photo view
                 gotoPage(StudentCheckAvatar.class);
             }
         });
@@ -94,7 +88,6 @@ public class StudentOperation extends AppCompatActivity {
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO Student upload View entry point
                 gotoPage(StudentUploadTest.class);
             }
         });
@@ -147,8 +140,7 @@ public class StudentOperation extends AppCompatActivity {
                         if (courseId.getText().toString().length() != 6) {
                             Utils.showToast("請輸入6位數課程編號", StudentOperation.this);
                             return;
-                        }
-                        else{
+                        } else {
                             compositeDisposable.add(iMyService.studentSearchCourse(courseId.getText().toString(), userId)
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
@@ -157,7 +149,7 @@ public class StudentOperation extends AppCompatActivity {
                                         public void accept(String response) throws Exception {
                                             JSONObject jsonObject = new JSONObject(response);
                                             int status = jsonObject.getInt("status");
-                                            switch (status){
+                                            switch (status) {
                                                 case 407:
                                                     Utils.showToast("查無此課程", StudentOperation.this);
                                                     break;
