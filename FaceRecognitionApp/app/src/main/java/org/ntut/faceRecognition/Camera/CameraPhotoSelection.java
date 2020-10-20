@@ -36,7 +36,7 @@ public class CameraPhotoSelection extends AppCompatActivity {
         if (requestCode == GET_PHOTO_FORM_CAMERA) {
             try {
                 Bitmap bitmap = new ImageSaver(this).
-                        setFileName("captureImage.png").
+                        setFileName("captureFullImage.png").
                         setDirectoryName("images").
                         load();
                 bitmap = Bitmap.createScaledBitmap(bitmap, 600, 600, true);
