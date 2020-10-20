@@ -63,7 +63,6 @@ public interface IMyService {
     Observable<ResponseBody> studentUpload(
             @Part("userId") RequestBody userId,
             @Part MultipartBody.Part image
-            // @Part("other") RequestBody other
     );
 
     @POST("uploadAttendanceList")
@@ -96,6 +95,14 @@ public interface IMyService {
     @POST("teacherUpload")
     @Multipart
     Observable<ResponseBody> teacherUpload(
-            @Part MultipartBody.Part image
+            @Part MultipartBody.Part image,
+            @Part("date") RequestBody date
+    );
+
+    @POST("studentSearchCourse")
+    @FormUrlEncoded
+    Observable<String> studentSearchCourse(
+            @Field("courseId") String courseId,
+            @Field("studentId") String studentId
     );
 }

@@ -28,6 +28,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Student.StudentJoinCourse"></activity>
         <activity android:name=".Student.StudentCheckAvatar" />
         <activity android:name=".Camera.CameraPhotoSelection" />
         <activity android:name=".Teacher.TeacherCheckRollCall" />

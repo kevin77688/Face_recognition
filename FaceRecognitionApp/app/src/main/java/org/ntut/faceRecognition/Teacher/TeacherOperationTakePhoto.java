@@ -51,7 +51,7 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
     public static final int CAMERA_AND_WRITE_PERMISSION_CODE = 1001;
 
     private final String Document_img1 = "";
-    private String courseName, courseId;
+    private String courseName, courseId, courseDate;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private IMyService iMyService;
     private int uploadCate = 0;
@@ -77,6 +77,7 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
         if (extras != null) {
             courseName = getIntent().getStringExtra("courseName");
             courseId = getIntent().getStringExtra("courseId");
+            courseDate = getIntent().getStringExtra("courseDate");
         } else
             throw new RuntimeException("Passing extras between activity failed !");
     }
@@ -116,7 +117,8 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
                 uploadCate = 0;
                 RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), f);
                 MultipartBody.Part body = MultipartBody.Part.createFormData("image", courseId, requestFile);
-                compositeDisposable.add(iMyService.teacherUpload(body)
+                RequestBody rbCourseDate = RequestBody.create(MediaType.parse("multipart/form-data"), courseDate);
+                compositeDisposable.add(iMyService.teacherUpload(body, rbCourseDate)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Consumer<ResponseBody>() {
