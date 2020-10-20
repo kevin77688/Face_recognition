@@ -21,7 +21,7 @@ def detectFace(courseListPhoto_dir, detectPicture):
     # distance = face_recognition.face_distance(known_faces, unknownFace_encoding)
     # for index in range(len(fileNames)):
         # print("{} : {}".format(fileNames[index], distance
-    results = face_recognition.compare_faces(known_faces, unknownFace_encoding, 0.45)
+    results = face_recognition.compare_faces(known_faces, unknownFace_encoding, 0.55)
     resultStack = []
     # print result
     for index in range(len(results)):

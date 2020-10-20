@@ -592,7 +592,6 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			process.stdout.on('data', async(data) => {
 				console.log("after recognize")
 				const parsedstudentIdList = JSON.parse(data)
-				const parsedString = data
 				insertDocs = [];
 				for (var i = 0; i < parsedstudentIdList.length; i++) {
 					insertDocs.push({studentId: parsedstudentIdList[i], date: date, courseId: course_id, attendance: "0"});
@@ -609,7 +608,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 				}
 				var imageName = request.file.originalname + ".png";
 				try{	
-					fs.unlinkSync(__dirname + "/uploads/" + imageName);
+					fs.unlinkSync(__dirname + "/teacherUploads/" + imageName);
 				} catch (err){
 					
 				}
