@@ -10,7 +10,7 @@ def detectFace(courseListPhoto_dir, detectPicture):
     distance = []
     # import knownFaces to dlib
     for filename in fileNames:
-        knownFace = face_recognition.load_image_file(currentFile)
+        knownFace = face_recognition.load_image_file(filename)
         knownFace_encoding = face_recognition.face_encodings(knownFace)[0]
         known_faces.append(knownFace_encoding)
     # import test picture
@@ -26,13 +26,13 @@ def detectFace(courseListPhoto_dir, detectPicture):
     # print result
     for index in range(len(results)):
         if results[index]:
-            resultStack.append(fileNames[index][0:-4])
+            resultStack.append(fileNames[index][7:-4])
     return resultStack
 
 def main():
     array = sys.argv[2].split(',')
     jsonParsed = json.dumps(array)
-    resultStack = detectFace("./data/", "./teacherUploads/" + sys.argv[1] + ".png")
+    resultStack = detectFace(array, "./teacherUploads/" + sys.argv[1] + ".png")
     print(json.dumps(resultStack))
     sys.stdout.flush()
 

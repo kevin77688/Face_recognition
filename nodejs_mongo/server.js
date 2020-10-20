@@ -71,10 +71,10 @@ var MongoClient = mongodb.MongoClient;
 //Connection URL
 
 // remote
-// var url = 'mongodb+srv://admin:BYvnxe7GKR7yTHF4@cluster0.bso7x.gcp.mongodb.net/nodejsTest?retryWrites=true&w=majority'
+var url = 'mongodb+srv://admin:BYvnxe7GKR7yTHF4@cluster0.bso7x.gcp.mongodb.net/nodejsTest?retryWrites=true&w=majority'
 
 // localhost
-var url = 'mongodb://localhost:27017'
+// var url = 'mongodb://localhost:27017'
 
 var dbName = 'nodejsTest'
 
@@ -246,35 +246,18 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			var courseDate = await GetCourseDateByIdAndDate(course_id, date);
 			var isRecorded = courseDate.isRecord;
 			var db = client.db(dbName);
-			if (!isRecorded){
-				userResponse.status = 204;
-				var insertDocs = [];
-				for (const [key, value] of Object.entries(studentList)) {
-					insertDocs.push({studentId: key, date: date, courseId: course_id, attendance: value.toString()});
-				}
-				userResponse.result = await db.collection('attendance').insertMany(insertDocs);
-				var filter = {courseId: course_id, date: date};
-				var updateValue = { $set: { isRecord: true } };
-				await db.collection('courseDate').updateOne(filter, updateValue);
+			if (isRecorded){
+				await db.collection('attendance').remove({courseId: course_id, date: date});
 			}
-			else{
-				userResponse.status = 205;
-				ops = [];
-				for (const [key, value] of Object.entries(studentList)) {
-					ops.push(
-						{
-							updateOne: {
-								filter: {studentId: key, date: date, courseId: course_id},
-								update: {
-									$set: {attendance: value.toString()}
-								},
-								upsert: true
-							}
-						}
-					)
-				}
-				userResponse.result = await db.collection('attendance').bulkWrite(ops, { ordered: false });				
+			userResponse.status = 204;
+			var insertDocs = [];
+			for (const [key, value] of Object.entries(studentList)) {
+				insertDocs.push({studentId: key, date: date, courseId: course_id, attendance: value.toString()});
 			}
+			userResponse.result = await db.collection('attendance').insertMany(insertDocs);
+			var filter = {courseId: course_id, date: date};
+			var updateValue = { $set: { isRecord: true } };
+			await db.collection('courseDate').updateOne(filter, updateValue);
 			console.log(userResponse);
 			response.json(userResponse);
         });
@@ -296,6 +279,8 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			//如果有點名，把有點名的人設為已存在值
 			if (isRecorded) {
 				var attendance = await FindAttendanceUsingDateAndCourseId(course_id, date);
+				console.log(date)
+				console.log(attendance)
 				for (let i = 0; i < attendance.length; i++){
 					userResponse.attendance[attendance[i].studentId] = {name: attendance[i].studentDetails[0].name, attendance: attendance[i].attendance}
 				}
@@ -349,7 +334,8 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 				{
 					'$match':
 					{
-						courseId: course_id
+						courseId: course_id,
+						date: date
 					}
 				}
 			]
@@ -611,19 +597,25 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			console.log(course_id);
 			var db = client.db(dbName);
 			var studentList = await FindStudentListWithAvatarUsingCourseId(course_id)
-			console.log(studentList)
+			console.log(studentList);
 			let spawn = require("child_process").spawn
-			let testArray = [];
+			let filePathList = [];
+			let noAvatar = true;
 			for (let i = 0; i < studentList.length; i++){
 				for (let j = 0; j < studentList[i].avatars.length; j++){
-					testArray.push("./data/" + studentList[i].studentId + ".png");
+					filePathList.push("./data/" + studentList[i].studentId + ".png");
+					noAvatar = false;
 				}
 			}
-			let testJson = {"name": "kenny"}
+			if (noAvatar){
+				console.log("[]");
+				response.json("[]");
+				return;
+			}
 			let process = spawn('python', [
 				"./recognize.py",
 				course_id,
-				testArray
+				filePathList
 			])
 			process.stdout.on('data', async(data) => {
 				const parsedstudentIdList = JSON.parse(data)
@@ -633,6 +625,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 					insertDocs.push({studentId: parsedstudentIdList[i], date: date, courseId: course_id, attendance: "0"});
 				}
 				if (insertDocs.length != 0){
+					await db.collection('attendance').remove({studentId: {'$in':parsedstudentIdList}, courseId: course_id, date: date});
 					await db.collection('attendance').insertMany(insertDocs);
 					var filter = {courseId: course_id, date: date};
 					var updateValue = { $set: { isRecord: true } };
