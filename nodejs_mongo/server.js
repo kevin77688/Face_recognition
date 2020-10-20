@@ -568,6 +568,18 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			})
 		});
 		
+		app.post('/testPython', (request, response, next)=>{
+			let spawn = require("child_process").spawn
+			let process = spawn('python', [
+				"./process.py",
+			])
+			process.stdout.on('data', (data) => {
+				const parsedString = JSON.parse(data)
+				console.log(parsedString)
+				response.json(parsedString)
+			})
+		});
+		
 		function FindStudentListWithAvatarUsingCourseId(course_id){
 			var db = client.db(dbName);
 			const pipeline = [
