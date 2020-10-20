@@ -13,6 +13,7 @@
     <string name="password_field">Password</string>
     <string name="name_field">Name</string>
     <string name="id_field">ID</string>
+    <string name="course_id_field">Course ID</string>
 
     // Title
     <string name="student_operation_title">歡迎同學</string>

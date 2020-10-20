@@ -2,6 +2,7 @@ package org.ntut.faceRecognition.Student;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -19,20 +20,24 @@ import org.json.JSONObject;
 import org.ntut.faceRecognition.R;
 import org.ntut.faceRecognition.Retrofit.IMyService;
 import org.ntut.faceRecognition.Retrofit.RetrofitClient;
+import org.ntut.faceRecognition.Teacher.TeacherOperationManualCheckAttendance;
 import org.ntut.faceRecognition.Utility.Utils;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class StudentOperation extends AppCompatActivity {
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private String username, userId;
-    private TextView title;
-    private Button checkPhotoButton, uploadButton, checkAttendanceButton, returnButton, joinCourseButton;
+    private String username, userId, currentCourseId;
+    private TextView title, courseIdText, courseNameText, courseCodeText, courseStageText, courseCreditText;
+    private Button checkPhotoButton, uploadButton, checkAttendanceButton, returnButton, joinCourseButton, addCourseButton;
     private IMyService iMyService;
 
     @Override
@@ -50,6 +55,7 @@ public class StudentOperation extends AppCompatActivity {
         returnButton();
         setJoinCourseButton();
         setTitle();
+        setAddCourseButton();
     }
 
     private void getExtras() {
@@ -73,6 +79,13 @@ public class StudentOperation extends AppCompatActivity {
         returnButton = findViewById(R.id.return_button);
         joinCourseButton = findViewById(R.id.join_course_button);
         title = findViewById(R.id.title_text);
+
+        courseIdText = findViewById(R.id.course_id_text);
+        courseNameText = findViewById(R.id.course_name_text);
+        courseCodeText = findViewById(R.id.course_code_text);
+        courseStageText = findViewById(R.id.course_stage_text);
+        courseCreditText = findViewById(R.id.course_credit_text);
+        addCourseButton = findViewById(R.id.student_confirm_course_button);
     }
 
     private void checkPhotoButton() {
@@ -119,28 +132,25 @@ public class StudentOperation extends AppCompatActivity {
                         .setDescription("請輸入課號")
                         .setCustomView(studentJoinCourseLayout)
                         .setNegativeText("取消")
+                        .autoDismiss(false)
                         .onNegative(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 dialog.dismiss();
-                            }
-                        })
-                        .setPositiveText("加入")
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                final boolean[] count = {false};
                             }
                         }).show();
                 Button searchButton = studentJoinCourseLayout.findViewById((R.id.student_search_button));
                 searchButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (courseId.getText().toString().length() != 6) {
-                            Utils.showToast("請輸入6位數課程編號", StudentOperation.this);
-                            return;
-                        } else {
+                        boolean isValid = true;
+                        addCourseButton.setEnabled(false);
+                        if (TextUtils.isEmpty(courseId.getText().toString())) {
+                            courseId.setError("請輸入6位數課程編號");
+                            isValid = false;
+                        }else
+                            courseId.setError(null);
+                        if (isValid){
                             compositeDisposable.add(iMyService.studentSearchCourse(courseId.getText().toString(), userId)
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
@@ -151,13 +161,20 @@ public class StudentOperation extends AppCompatActivity {
                                             int status = jsonObject.getInt("status");
                                             switch (status) {
                                                 case 407:
-                                                    Utils.showToast("查無此課程", StudentOperation.this);
+                                                    courseId.setError("查無此課程");
                                                     break;
                                                 case 206:
-                                                    Utils.showToast("已選此課程", StudentOperation.this);
+                                                    courseId.setError("已選此課程");
                                                     break;
                                                 case 207:
                                                     Utils.showToast("找到課程", StudentOperation.this);
+                                                    String id = jsonObject.getString("_id");
+                                                    String name = jsonObject.getString("name");
+                                                    String code = jsonObject.getString("code");
+                                                    String stage = jsonObject.getString("stage");
+                                                    String credit = jsonObject.getString("credit");
+                                                    currentCourseId = id;
+                                                    setAddCourseView(id, name, code, stage, credit);
                                                     break;
                                             }
                                         }
@@ -166,6 +183,32 @@ public class StudentOperation extends AppCompatActivity {
                     }
                 });
             }
+        });
+    }
+
+    private void setAddCourseView(String id, String courseName, String code, String stage, String credit){
+        courseIdText.setText("課程編號 : " + id);
+        courseNameText.setText("課程名稱 : " + courseName);
+        courseCodeText.setText("課程代碼 : " + code);
+        courseStageText.setText("階段 : " + stage);
+        courseCreditText.setText("學分 : " + credit);
+        addCourseButton.setEnabled(true);
+    }
+
+    private void setAddCourseButton(){
+        addCourseButton.setOnClickListener(v -> {
+            Call<String> call = iMyService.studentAddCourse(currentCourseId, userId);
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    Utils.showToast("加選成功", StudentOperation.this);
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+                    Utils.showToast("加選失敗", StudentOperation.this);
+                }
+            });
         });
     }
 

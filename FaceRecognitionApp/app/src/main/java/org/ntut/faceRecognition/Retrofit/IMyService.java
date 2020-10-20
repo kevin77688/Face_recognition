@@ -103,4 +103,11 @@ public interface IMyService {
             @Field("courseId") String courseId,
             @Field("studentId") String studentId
     );
+
+    @POST("studentAddCourse")
+    @FormUrlEncoded
+    Call<String> studentAddCourse(
+            @Field("courseId") String courseId,
+            @Field("studentId") String studentId
+    );
 }
