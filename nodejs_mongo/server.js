@@ -75,7 +75,7 @@ var MongoClient = mongodb.MongoClient;
 var url = 'mongodb+srv://admin:BYvnxe7GKR7yTHF4@cluster0.bso7x.gcp.mongodb.net/nodejsTest?retryWrites=true&w=majority'
 
 // localhost
-// var url = 'mongodb://localhost:27017'
+var url = 'mongodb://localhost:27017'
 
 var dbName = 'nodejsTest'
 
@@ -88,12 +88,15 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 	// 203 Get data success
 	// 204 insert data success
 	// 205 update data success
+	// 206 course found, had joined already
+	// 207 course found
     // 400 login password error
     // 401 register email exist
 	// 402 login email not exist
 	// 403 Get data failed
 	// 405 register id exist
 	// 406 insert data failed
+	// 407 course not found
     if (err)
         console.log('Unable to connect to MongoDB', err);
     else{
@@ -625,6 +628,30 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 				console.log(parsedstudentIdList)
 				response.json(parsedstudentIdList)
 			})
+		});
+		
+		// student search course
+		app.post('/studentSearchCourse', async(request, response, next)=>{
+			var userResponse = {};
+			var post_data = request.body;
+			var course_id = post_data.courseId;
+			var student_id = post_data.studentId;
+			var db = client.db(dbName);
+			var course = await db.collection('course').findOne({_id: course_id});
+			if (course == null){
+				userResponse.status = 407;
+			}
+			else {
+				var hadJoined = await db.collection('studentCourse').find({studentId: student_id});
+				if (hadJoined){
+					userResponse.status = 206;
+				}
+				else {
+					userResponse.status = 207;
+				}
+			}
+			console.log(userResponse);
+			response.json(userResponse);
 		});
 
         //Web server
