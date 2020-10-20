@@ -5,7 +5,6 @@ import json
 from PIL import Image
 
 def cropImage(imageWaitForDetectionPath, userId):
-    return "false";
     originalImage = face_recognition.load_image_file(imageWaitForDetectionPath)
     face_locations = face_recognition.face_locations(originalImage)
     if (len(face_locations) != 1):
