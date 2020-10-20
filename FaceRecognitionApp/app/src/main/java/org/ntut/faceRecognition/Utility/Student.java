@@ -38,6 +38,9 @@ public class Student {
     public String getAttendanceStatusString() {
         String statusString;
         switch (_attendanceStatus) {
+            case -1:
+                statusString = "未點名";
+                break;
             case 0:
                 statusString = "準時";
                 break;

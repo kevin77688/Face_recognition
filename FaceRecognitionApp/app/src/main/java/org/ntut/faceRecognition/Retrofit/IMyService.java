@@ -57,12 +57,6 @@ public interface IMyService {
             @Field("courseDate") String courseDate
     );
 
-    @POST("findStudentClass")
-    @FormUrlEncoded
-    Observable<String> findStudentClass(
-            @Field("id") String id
-    );
-
     //學生上傳圖片
     @Multipart
     @POST("studentUpload")
@@ -70,23 +64,6 @@ public interface IMyService {
             @Part("userId") RequestBody userId,
             @Part MultipartBody.Part image
             // @Part("other") RequestBody other
-    );
-
-    @POST
-    @FormUrlEncoded
-    Observable<String> attendanceUpdate(
-            @Field("courseId") String class_data,
-            @Field("student_data") String[] student_data,
-            @Field("roll_call_data") ArrayList<Integer> roll_call_data
-    );
-
-    @POST("rollCallUpdate")
-    @FormUrlEncoded
-    Observable<String> rollCallUpdate(
-            @Field("class_data") String class_data,
-            @Field("class_name") String class_name,
-            @Field("student_data") String[] student_data,
-            @Field("roll_call_data") ArrayList<Integer> roll_call_data
     );
 
     @POST("uploadAttendanceList")
