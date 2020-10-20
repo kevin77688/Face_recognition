@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
-import com.google.gson.JsonObject;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.json.JSONObject;
@@ -56,6 +55,7 @@ public class StudentOperation extends AppCompatActivity {
         returnButton();
         setJoinCourseButton();
         setTitle();
+        setAddCourseButton();
     }
 
     private void getExtras() {
@@ -79,6 +79,14 @@ public class StudentOperation extends AppCompatActivity {
         returnButton = findViewById(R.id.return_button);
         joinCourseButton = findViewById(R.id.join_course_button);
         title = findViewById(R.id.title_text);
+
+        View addCourseLayout = LayoutInflater.from(this).inflate(R.layout.activity_student_join_course,null);
+        courseIdText = addCourseLayout.findViewById(R.id.course_id_text);
+        courseNameText = addCourseLayout.findViewById(R.id.course_name_text);
+        courseCodeText = addCourseLayout.findViewById(R.id.course_code_text);
+        courseStageText = addCourseLayout.findViewById(R.id.course_stage_text);
+        courseCreditText = addCourseLayout.findViewById(R.id.course_credit_text);
+        addCourseButton = addCourseLayout.findViewById(R.id.student_confirm_course_button);
     }
 
     private void checkPhotoButton() {
@@ -119,13 +127,6 @@ public class StudentOperation extends AppCompatActivity {
                 final View studentJoinCourseLayout = LayoutInflater.from(StudentOperation.this)
                         .inflate(R.layout.activity_student_join_course, null);
                 MaterialEditText courseId = studentJoinCourseLayout.findViewById(R.id.course_id_text_input);
-                courseIdText = studentJoinCourseLayout.findViewById(R.id.course_id_text);
-                courseNameText = studentJoinCourseLayout.findViewById(R.id.course_name_text);
-                courseCodeText = studentJoinCourseLayout.findViewById(R.id.course_code_text);
-                courseStageText = studentJoinCourseLayout.findViewById(R.id.course_stage_text);
-                courseCreditText = studentJoinCourseLayout.findViewById(R.id.course_credit_text);
-                addCourseButton = studentJoinCourseLayout.findViewById(R.id.student_confirm_course_button);
-                setAddCourseButton();
 
                 MaterialStyledDialog dialog = new MaterialStyledDialog.Builder(StudentOperation.this)
                         .setTitle("加入課程")
@@ -203,6 +204,7 @@ public class StudentOperation extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
                     Utils.showToast("加選成功", StudentOperation.this);
+                    addCourseButton.setEnabled(false);
                 }
 
                 @Override
