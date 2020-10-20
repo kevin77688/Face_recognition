@@ -9,11 +9,11 @@ def cropImage(imageWaitForDetectionPath, userId):
     face_locations = face_recognition.face_locations(originalImage)
     if (len(face_locations) != 1):
         # detect multiple faces
-        return "false";
+        return len(face_locations);
     top, right, bottom, left = face_locations[0]
     cropImage = Image.open(imageWaitForDetectionPath).crop((left, top, right, bottom))
     cropImage.save("./data/" + userId + ".png")
-    return "true";
+    return len(face_locations);
     
 userId = sys.argv[1];
 print(cropImage("./uploads/" + userId + ".png", userId));

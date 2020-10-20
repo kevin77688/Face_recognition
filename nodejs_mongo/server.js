@@ -457,9 +457,9 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			console.log("after detection")
 			process.stdout.on('data', async(data)=>{
 				console.log("before data parsed");
-				const onlyOneFace = JSON.parse(data)
-				console.log(onlyOneFace)
-				if (onlyOneFace){
+				const faceAmount = JSON.parse(data)
+				console.log(faceAmount)
+				if (faceAmount != 1){
 					await db.collection('avatar').remove({userId: request.body.userId});
 					await db.collection('avatar').insertOne({'userId': request.body.userId, 'imageName': imageName})
 					userResponse.status = 208;
@@ -583,7 +583,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 				response.json("[]");
 				return;
 			}
-			let process = spawn('python', [
+			let process = spawn('python3', [
 				"./recognize.py",
 				course_id,
 				filePathList
