@@ -75,7 +75,7 @@ var MongoClient = mongodb.MongoClient;
 var url = 'mongodb+srv://admin:BYvnxe7GKR7yTHF4@cluster0.bso7x.gcp.mongodb.net/nodejsTest?retryWrites=true&w=majority'
 
 // localhost
-var url = 'mongodb://localhost:27017'
+// var url = 'mongodb://localhost:27017'
 
 var dbName = 'nodejsTest'
 
@@ -621,10 +621,12 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 				for (var i = 0; i < parsedstudentIdList.length; i++) {
 					insertDocs.push({studentId: parsedstudentIdList[i], date: date, courseId: course_id, attendance: "0"});
 				}
-				await db.collection('attendance').insertMany(insertDocs);
-				var filter = {courseId: course_id, date: date};
-				var updateValue = { $set: { isRecord: true } };
-				await db.collection('courseDate').updateOne(filter, updateValue);
+				if (insertDocs.length != 0){
+					await db.collection('attendance').insertMany(insertDocs);
+					var filter = {courseId: course_id, date: date};
+					var updateValue = { $set: { isRecord: true } };
+					await db.collection('courseDate').updateOne(filter, updateValue);	
+				}
 				console.log(parsedstudentIdList)
 				response.json(parsedstudentIdList)
 			})
@@ -645,9 +647,11 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 				var hadJoined = await db.collection('studentCourse').find({studentId: student_id});
 				if (hadJoined){
 					userResponse.status = 206;
+					userResponse.course = course;
 				}
 				else {
 					userResponse.status = 207;
+					userResponse.course = course;
 				}
 			}
 			console.log(userResponse);

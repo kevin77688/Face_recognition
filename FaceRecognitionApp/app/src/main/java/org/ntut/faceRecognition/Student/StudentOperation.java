@@ -162,10 +162,10 @@ public class StudentOperation extends AppCompatActivity {
                                                     Utils.showToast("查無此課程", StudentOperation.this);
                                                     break;
                                                 case 206:
-                                                    Utils.showToast("找到課程", StudentOperation.this);
+                                                    Utils.showToast("已選此課程", StudentOperation.this);
                                                     break;
                                                 case 207:
-                                                    Utils.showToast("已選此課程", StudentOperation.this);
+                                                    Utils.showToast("找到課程", StudentOperation.this);
                                                     break;
                                             }
                                         }
