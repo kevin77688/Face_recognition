@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
+import com.google.gson.JsonObject;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.json.JSONObject;
@@ -55,7 +56,6 @@ public class StudentOperation extends AppCompatActivity {
         returnButton();
         setJoinCourseButton();
         setTitle();
-        setAddCourseButton();
     }
 
     private void getExtras() {
@@ -79,13 +79,6 @@ public class StudentOperation extends AppCompatActivity {
         returnButton = findViewById(R.id.return_button);
         joinCourseButton = findViewById(R.id.join_course_button);
         title = findViewById(R.id.title_text);
-
-        courseIdText = findViewById(R.id.course_id_text);
-        courseNameText = findViewById(R.id.course_name_text);
-        courseCodeText = findViewById(R.id.course_code_text);
-        courseStageText = findViewById(R.id.course_stage_text);
-        courseCreditText = findViewById(R.id.course_credit_text);
-        addCourseButton = findViewById(R.id.student_confirm_course_button);
     }
 
     private void checkPhotoButton() {
@@ -125,7 +118,14 @@ public class StudentOperation extends AppCompatActivity {
             public void onClick(View v) {
                 final View studentJoinCourseLayout = LayoutInflater.from(StudentOperation.this)
                         .inflate(R.layout.activity_student_join_course, null);
-                MaterialEditText courseId = studentJoinCourseLayout.findViewById(R.id.course_id_text);
+                MaterialEditText courseId = studentJoinCourseLayout.findViewById(R.id.course_id_text_input);
+                courseIdText = studentJoinCourseLayout.findViewById(R.id.course_id_text);
+                courseNameText = studentJoinCourseLayout.findViewById(R.id.course_name_text);
+                courseCodeText = studentJoinCourseLayout.findViewById(R.id.course_code_text);
+                courseStageText = studentJoinCourseLayout.findViewById(R.id.course_stage_text);
+                courseCreditText = studentJoinCourseLayout.findViewById(R.id.course_credit_text);
+                addCourseButton = studentJoinCourseLayout.findViewById(R.id.student_confirm_course_button);
+                setAddCourseButton();
 
                 MaterialStyledDialog dialog = new MaterialStyledDialog.Builder(StudentOperation.this)
                         .setTitle("加入課程")
@@ -145,7 +145,7 @@ public class StudentOperation extends AppCompatActivity {
                     public void onClick(View view) {
                         boolean isValid = true;
                         addCourseButton.setEnabled(false);
-                        if (TextUtils.isEmpty(courseId.getText().toString())) {
+                        if (TextUtils.isEmpty(courseId.getText().toString()) || courseId.getText().toString().length() != 6) {
                             courseId.setError("請輸入6位數課程編號");
                             isValid = false;
                         }else
@@ -168,11 +168,12 @@ public class StudentOperation extends AppCompatActivity {
                                                     break;
                                                 case 207:
                                                     Utils.showToast("找到課程", StudentOperation.this);
-                                                    String id = jsonObject.getString("_id");
-                                                    String name = jsonObject.getString("name");
-                                                    String code = jsonObject.getString("code");
-                                                    String stage = jsonObject.getString("stage");
-                                                    String credit = jsonObject.getString("credit");
+                                                    JSONObject courseObject = jsonObject.getJSONObject("course");
+                                                    String id = courseObject.getString("_id");
+                                                    String name = courseObject.getString("name");
+                                                    String code = courseObject.getString("code");
+                                                    String stage = courseObject.getString("stage");
+                                                    String credit = courseObject.getString("credits");
                                                     currentCourseId = id;
                                                     setAddCourseView(id, name, code, stage, credit);
                                                     break;

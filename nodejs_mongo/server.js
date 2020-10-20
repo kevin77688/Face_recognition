@@ -654,7 +654,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 				userResponse.status = 407;
 			}
 			else {
-				var hadJoined = await db.collection('studentCourse').find({studentId: student_id});
+				var hadJoined = await db.collection('studentCourse').find({studentId: student_id}).count();
 				if (hadJoined){
 					userResponse.status = 206;
 					userResponse.course = course;
