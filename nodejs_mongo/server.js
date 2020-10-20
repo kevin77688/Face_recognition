@@ -450,7 +450,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			console.log("before require")
 			let spawn = require("child_process").spawn
 			console.log("before detection")
-			let process = spawn('python', [
+			let process = spawn('python3', [
 				"./detect.py",
 				request.body.userId,
 			])
@@ -570,7 +570,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 		
 		app.post('/testPython', (request, response, next)=>{
 			let spawn = require("child_process").spawn
-			let process = spawn('python', [
+			let process = spawn('python3', [
 				"./process.py",
 			])
 			process.stdout.on('data', (data) => {

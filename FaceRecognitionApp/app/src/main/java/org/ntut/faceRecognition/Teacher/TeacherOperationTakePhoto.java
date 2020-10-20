@@ -221,7 +221,7 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
                 Uri selectedImage = data.getData();
                 String[] filePath = {MediaStore.Images.Media.DATA};
                 String[] whereArgs = {"image/jpeg", "image/png", "image/jpg"};
-                Cursor c = getContentResolver().query(selectedImage, filePath, null, whereArgs, null);
+                Cursor c = getContentResolver().query(selectedImage, filePath, null, null, null);
                 c.moveToFirst();
                 int columnIndex = c.getColumnIndex(filePath[0]);
                 picturePath = c.getString(columnIndex);
