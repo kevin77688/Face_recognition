@@ -164,11 +164,11 @@ public class StudentOperation extends AppCompatActivity {
                                                 case 407:
                                                     courseId.setError("查無此課程");
                                                     break;
-                                                case 206:
-                                                    courseId.setError("已選此課程");
-                                                    break;
-                                                case 207:
-                                                    Utils.showToast("找到課程", StudentOperation.this);
+                                                case 206:case207:
+                                                    if (status == 206)
+                                                        courseId.setError("已選此課程");
+                                                    else
+                                                        Utils.showToast("找到課程", StudentOperation.this);
                                                     JSONObject courseObject = jsonObject.getJSONObject("course");
                                                     String id = courseObject.getString("_id");
                                                     String name = courseObject.getString("name");
@@ -183,7 +183,10 @@ public class StudentOperation extends AppCompatActivity {
                                                     courseCreditText = studentJoinCourseLayout.findViewById(R.id.course_credit_text);
                                                     addCourseButton = studentJoinCourseLayout.findViewById(R.id.student_confirm_course_button);
                                                     setAddCourseView(id, name, code, stage, credit);
-                                                    setAddCourseButton();
+                                                    if (status == 206)
+                                                        addCourseButton.setEnabled(false);
+                                                    else
+                                                        setAddCourseButton();
                                                     break;
                                             }
                                         }
