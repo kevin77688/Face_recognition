@@ -174,12 +174,7 @@ public class Login extends AppCompatActivity {
                     public void accept(String response) throws Exception {
                         JsonParser jsonParser = new JsonParser(response);
                         Utils.showToast(jsonParser.getDescription(), Login.this);
-                        switch (jsonParser.getStatus()) {
-                            case 202:
-                            case 401:
-                            case 405:
-                                break;
-                            default:
+                        if (jsonParser.getStatus() != 202 && jsonParser.getStatus() != 401 && jsonParser.getStatus() != 405) {
                                 throw new RuntimeException("Status code: " + jsonParser.getStatus() + " error !");
                         }
                     }

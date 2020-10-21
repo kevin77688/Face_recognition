@@ -116,8 +116,8 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
             var identification = "student";
 			if (_id[0] == 'a'){
 				identification = "teacher"
+				console.log("has identification");
 			}
-            console.log("has identification");
             var insertJson = {
                 'email': email,
                 'password': plaint_password, //改成不加密
@@ -128,13 +128,13 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
             };
 
             var db = client.db(dbName);
-			var numberOfSameEmail = await findUserExistenceUsingEmail();
+			var numberOfSameEmail = await findUserExistenceUsingEmail(email);
 			if (numberOfSameEmail != 0){
 				userResponse.description = "Register email exist";
 				userResponse.status = 401;
 				console.log('Email already exists');
 			}
-			var numberOfSameId = await findUserExistenceUsingId();
+			var numberOfSameId = await findUserExistenceUsingId(_id);
 			if (numberOfSameId != 0){
 				userResponse.description = "Register id exist";
 				userResponse.status = 405;
@@ -142,22 +142,14 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			}
 			if (numberOfSameEmail == 0 && numberOfSameId == 0){
 				// Insert Data
-				db.collection('user').insertOne(insertJson, function(error, res){
-					if (!error){
-						userResponse.username = name;
-						userResponse.userId = _id;
-						userResponse.description = "Register success";
-						userResponse.status = 202;
-						console.log('Registration success');
-					}
-					else {
-						userResponse.description = "insert data error";
-						userResponse.status = 406;
-						console.log("insert data error");
-					}
-				})
+				await db.collection('user').insertOne(insertJson);
+				userResponse.username = name;
+				userResponse.userId = _id;
+				userResponse.description = "Register success";
+				userResponse.status = 202;
+				console.log('Registration success');
 			}
-			
+			console.log(userResponse)
 			response.json(userResponse);
         });
 
@@ -451,6 +443,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			let spawn = require("child_process").spawn
 			console.log("before detection")
 			let process = spawn('python3', [
+			// let process = spawn('python', [
 				"./detect.py",
 				request.body.userId,
 			])
@@ -585,6 +578,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			}
 			console.log("before recognize");
 			let process = spawn('python3', [
+			// let process = spawn('python', [
 				"./recognize.py",
 				course_id,
 				filePathList

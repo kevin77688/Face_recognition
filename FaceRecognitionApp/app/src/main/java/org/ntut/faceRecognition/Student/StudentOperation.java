@@ -55,7 +55,7 @@ public class StudentOperation extends AppCompatActivity {
         returnButton();
         setJoinCourseButton();
         setTitle();
-        setAddCourseButton();
+//        setAddCourseButton();
     }
 
     private void getExtras() {
@@ -80,7 +80,7 @@ public class StudentOperation extends AppCompatActivity {
         joinCourseButton = findViewById(R.id.join_course_button);
         title = findViewById(R.id.title_text);
 
-        View addCourseLayout = LayoutInflater.from(this).inflate(R.layout.activity_student_join_course,null);
+        View addCourseLayout = LayoutInflater.from(StudentOperation.this).inflate(R.layout.activity_student_join_course, null);
         courseIdText = addCourseLayout.findViewById(R.id.course_id_text);
         courseNameText = addCourseLayout.findViewById(R.id.course_name_text);
         courseCodeText = addCourseLayout.findViewById(R.id.course_code_text);
@@ -176,7 +176,14 @@ public class StudentOperation extends AppCompatActivity {
                                                     String stage = courseObject.getString("stage");
                                                     String credit = courseObject.getString("credits");
                                                     currentCourseId = id;
+                                                    courseIdText = studentJoinCourseLayout.findViewById(R.id.course_id_text);
+                                                    courseNameText = studentJoinCourseLayout.findViewById(R.id.course_name_text);
+                                                    courseCodeText = studentJoinCourseLayout.findViewById(R.id.course_code_text);
+                                                    courseStageText = studentJoinCourseLayout.findViewById(R.id.course_stage_text);
+                                                    courseCreditText = studentJoinCourseLayout.findViewById(R.id.course_credit_text);
+                                                    addCourseButton = studentJoinCourseLayout.findViewById(R.id.student_confirm_course_button);
                                                     setAddCourseView(id, name, code, stage, credit);
+                                                    setAddCourseButton();
                                                     break;
                                             }
                                         }
