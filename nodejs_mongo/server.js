@@ -726,7 +726,8 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 					db.collection('courseDate').insertMany(courseDateInsertDocs);
 				}
 			}
-			console.log(userResponse)
+			
+			console.log(userResponse);
 			response.json(userResponse);
 		});
 
