@@ -40,15 +40,6 @@ def detectFace(courseListPhoto_dir, detectPicture):
                     exist = True
             if exist == False:
                 resultStack.append(fileNames[index][7:-4])
-    # compare with dataset
-    # distance = face_recognition.face_distance(known_faces, unknownFace_encoding)
-    # for index in range(len(fileNames)):
-        # print("{} : {}".format(fileNames[index], distance
-    # results = face_recognition.compare_faces(known_faces, unknownFace_encoding, 0.55)
-    # resultStack = []
-    # for index in range(len(results)):
-        # if results[index]:
-            # resultStack.append(fileNames[index][7:-4])
     return resultStack
 
 def main():
