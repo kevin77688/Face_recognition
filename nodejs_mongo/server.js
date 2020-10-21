@@ -686,41 +686,32 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 				userResponse.status = 210;
 				await db.collection('course').insertOne({_id: course_id, teacherId: teacher_id, name: course_name, code: course_code, stage: course_stage, credits: course_credit});
 				var courseDateInsertDocs = [];
-				if ((course_time+'').indexOf('1') > -1){
-					var nextWeek = new Date('September 14, 2020');
-					for (var i = 0; i < 18; i++){
-						courseDateInsertDocs.push({courseId: course_id, date: nextWeek.yyyymmdd() , isRecord: false})
-						nextWeek.setDate(nextWeek.getDate() + 7);
+				for (var i = 0; i < 18; i++){
+					if ((course_time+'').indexOf('1') > -1){
+						var newDate = new Date('September 14, 2020');
+						newDate.setDate(newDate.getDate() + 7 * i);
+						courseDateInsertDocs.push({courseId: course_id, date: newDate.yyyymmdd() , isRecord: false})
 					}
-				}
-				if ((course_time+'').indexOf('2') > -1){
-					var nextWeek = new Date('September 15, 2020');
-					for (var i = 0; i < 18; i++){
-						courseDateInsertDocs.push({courseId: course_id, date: nextWeek.yyyymmdd() , isRecord: false})
-						nextWeek.setDate(nextWeek.getDate() + 7);
+					if ((course_time+'').indexOf('2') > -1){
+						var newDate = new Date('September 15, 2020');
+						newDate.setDate(newDate.getDate() + 7 * i);
+						courseDateInsertDocs.push({courseId: course_id, date: newDate.yyyymmdd() , isRecord: false})
 					}
-				}
-				if ((course_time+'').indexOf('3') > -1){
-					var nextWeek = new Date('September 16, 2020');
-					for (var i = 0; i < 18; i++){
-						courseDateInsertDocs.push({courseId: course_id, date: nextWeek.yyyymmdd() , isRecord: false})
-						nextWeek.setDate(nextWeek.getDate() + 7);
+					if ((course_time+'').indexOf('3') > -1){
+						var newDate = new Date('September 16, 2020');
+						newDate.setDate(newDate.getDate() + 7 * i);
+						courseDateInsertDocs.push({courseId: course_id, date: newDate.yyyymmdd() , isRecord: false})
 					}
-				}
-				if ((course_time+'').indexOf('4') > -1){
-					var nextWeek = new Date('September 17, 2020');
-					for (var i = 0; i < 18; i++){
-						courseDateInsertDocs.push({courseId: course_id, date: nextWeek.yyyymmdd() , isRecord: false})
-						nextWeek.setDate(nextWeek.getDate() + 7);
+					if ((course_time+'').indexOf('4') > -1){
+						var newDate = new Date('September 17, 2020');
+						newDate.setDate(newDate.getDate() + 7 * i);
+						courseDateInsertDocs.push({courseId: course_id, date: newDate.yyyymmdd() , isRecord: false})			
 					}
-					
-				}
-				if ((course_time+'').indexOf('5') > -1){
-					var nextWeek = new Date('September 18, 2020');
-					for (var i = 0; i < 18; i++){
-						courseDateInsertDocs.push({courseId: course_id, date: nextWeek.yyyymmdd() , isRecord: false})
-						nextWeek.setDate(nextWeek.getDate() + 7);
-					}
+					if ((course_time+'').indexOf('5') > -1){
+						var newDate = new Date('September 18, 2020');
+						newDate.setDate(newDate.getDate() + 7 * i);
+						courseDateInsertDocs.push({courseId: course_id, date: newDate.yyyymmdd() , isRecord: false})
+					}	
 				}
 				if (courseDateInsertDocs.length > 0){
 					db.collection('courseDate').insertMany(courseDateInsertDocs);

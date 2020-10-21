@@ -164,7 +164,8 @@ public class StudentOperation extends AppCompatActivity {
                                                 case 407:
                                                     courseId.setError("查無此課程");
                                                     break;
-                                                case 206:case207:
+                                                case 206:
+                                                case 207:
                                                     if (status == 206)
                                                         courseId.setError("已選此課程");
                                                     else
