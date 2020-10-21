@@ -96,7 +96,7 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
         LinearLayout show_top_linear = findViewById(R.id.title_text);
 
         ArrayList<String> titles = new ArrayList<>(
-                Arrays.asList("姓名", "準時", "遲到", "缺席"));
+                Arrays.asList("學號", "姓名", "準時", "遲到", "缺席"));
         for (String title : titles) {
             TextView textView = new TextView(this);
             textView.setLayoutParams(new TableLayout.LayoutParams(
@@ -109,6 +109,14 @@ public class TeacherOperationManualCheckAttendance extends AppCompatActivity {
         for (Student student : students) {
             LinearLayout linearLayout = new LinearLayout(this);
             linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+            // Set student id
+            TextView textViewId = new TextView(this);
+            textViewId.setLayoutParams(new TableLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+            textViewId.setGravity(Gravity.CENTER);
+            textViewId.setText(student.getId());
+            linearLayout.addView(textViewId);
 
             // Set student name
             TextView textView = new TextView(this);
