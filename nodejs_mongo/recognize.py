@@ -2,6 +2,7 @@ import os
 import face_recognition
 import sys 
 import json
+import pickle
 from PIL import Image
 
 def detectFace(courseListPhoto_dir, detectPicture):
@@ -10,8 +11,15 @@ def detectFace(courseListPhoto_dir, detectPicture):
     distance = []
     # import knownFaces to dlib
     for filename in fileNames:
-        knownFace = face_recognition.load_image_file(filename)
-        knownFace_encoding = face_recognition.face_encodings(knownFace)[0]
+        studentId = filename[7:-4];
+        try:
+            with open('./encoding_data/'+studentId+'.dat', 'rb') as f:
+                knownFace_encoding = pickle.load(f)
+        except Exception as e: 
+            knownFace = face_recognition.load_image_file(filename)
+            knownFace_encoding = face_recognition.face_encodings(knownFace)[0]
+            with open('./encoding_data/'+studentId+'.dat', 'wb') as f:
+                pickle.dump(knownFace_encoding, f)
         known_faces.append(knownFace_encoding)
     # import test picture
     unknownFace = face_recognition.load_image_file(detectPicture)
