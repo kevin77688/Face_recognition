@@ -28,22 +28,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Student.StudentCheckAvatar" />
-        <activity android:name=".Camera.CameraPhotoSelection" />
-        <activity android:name=".Teacher.TeacherCheckRollCall" />
-        <activity android:name=".Student.StudentUploadTest" />
-        <activity android:name=".Login" />
-        <activity android:name=".Student.StudentOperation" />
-        <activity android:name=".Student.StudentCheckRollCall" />
-        <activity android:name=".Teacher.TeacherClass" />
-        <activity android:name=".Teacher.TeacherClassDate" />
-        <activity android:name=".Teacher.TeacherOperation" />
-        <activity android:name=".Teacher.TeacherOperationManualCheckAttendance" />
-        <activity android:name=".Teacher.TeacherOperationTakePhoto" />
+        <activity android:name=".Student.StudentCheckAvatar" android:screenOrientation="portrait" />
+        <activity android:name=".Camera.CameraPhotoSelection" android:screenOrientation="portrait" />
+        <activity android:name=".Teacher.TeacherCheckRollCall" android:screenOrientation="portrait" />
+        <activity android:name=".Student.StudentUploadTest" android:screenOrientation="portrait" />
+        <activity android:name=".Login" android:screenOrientation="portrait" />
+        <activity android:name=".Student.StudentOperation" android:screenOrientation="portrait" />
+        <activity android:name=".Student.StudentCheckRollCall" android:screenOrientation="portrait" />
+        <activity android:name=".Teacher.TeacherClass" android:screenOrientation="portrait" />
+        <activity android:name=".Teacher.TeacherClassDate" android:screenOrientation="portrait" />
+        <activity android:name=".Teacher.TeacherOperation" android:screenOrientation="portrait" />
+        <activity android:name=".Teacher.TeacherOperationManualCheckAttendance" android:screenOrientation="portrait" />
+        <activity android:name=".Teacher.TeacherOperationTakePhoto" android:screenOrientation="portrait" />
         <activity android:name=".Camera.CameraCapture" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
