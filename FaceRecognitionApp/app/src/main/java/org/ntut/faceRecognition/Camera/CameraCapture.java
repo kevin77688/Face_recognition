@@ -13,6 +13,7 @@ import android.graphics.RectF;
 import android.hardware.camera2.CameraCharacteristics;
 import android.media.ImageReader.OnImageAvailableListener;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Size;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -24,6 +25,7 @@ import com.google.mlkit.vision.face.FaceDetectorOptions;
 
 import org.ntut.faceRecognition.Camera.customview.OverlayView;
 import org.ntut.faceRecognition.Camera.env.ImageUtils;
+import org.ntut.faceRecognition.Camera.env.Logger;
 import org.ntut.faceRecognition.Camera.tflite.SimilarityClassifier;
 import org.ntut.faceRecognition.Camera.tflite.TFLiteObjectDetectionAPIModel;
 import org.ntut.faceRecognition.Camera.tracking.MultiBoxTracker;
@@ -287,6 +289,11 @@ public class CameraCapture extends CameraActivity implements OnImageAvailableLis
                 float confidence = -1f;
                 Integer color = Color.BLUE;
                 Bitmap crop = null;
+
+                Log.e("FaceBB left : ", Integer.toString((int)faceBB.left));
+                Log.e("FaceBB top : ", Integer.toString((int)faceBB.top));
+                Log.e("FaceBB width : ", Integer.toString((int)faceBB.width()));
+                Log.e("FaceBB height : ", Integer.toString((int)faceBB.height()));
 
                 if (add) {
                     crop = Bitmap.createBitmap(portraitBmp,
