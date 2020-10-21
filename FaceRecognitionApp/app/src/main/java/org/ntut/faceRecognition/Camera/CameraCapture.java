@@ -129,6 +129,11 @@ public class CameraCapture extends CameraActivity implements OnImageAvailableLis
             targetW = previewWidth;
             targetH = previewHeight;
         }
+        if (sensorOrientation == 0)
+            sensorOrientation = 180;
+        else if (sensorOrientation == 180)
+            sensorOrientation = 0;
+
         int cropW = (int) (targetW / 8.0);
         int cropH = (int) (targetH / 8.0);
 

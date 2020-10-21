@@ -208,7 +208,7 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
         if (requestCode == 1) {
             try {
                 Bitmap bitmap = new ImageSaver(this).
-                        setFileName("captureImage.png").
+                        setFileName("captureFullImage.png").
                         setDirectoryName("images").
                         load();
                 bitmap = Bitmap.createScaledBitmap(bitmap, 600, 600, true);
