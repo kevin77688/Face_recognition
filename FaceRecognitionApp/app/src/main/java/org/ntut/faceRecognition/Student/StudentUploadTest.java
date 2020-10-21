@@ -214,7 +214,8 @@ public class StudentUploadTest extends AppCompatActivity {
                         setFileName("captureFullImage.png").
                         setDirectoryName("images").
                         load();
-                bitmap = Bitmap.createScaledBitmap(bitmap, 600, 600, true);
+//                bitmap = Bitmap.createScaledBitmap(bitmap, 600, 600, true);
+                bitmap = Utils.resize(bitmap, 600, 600);
                 imageView.setImageBitmap(bitmap);
                 imageView.invalidate();
                 uploadCate = 1;
