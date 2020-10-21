@@ -442,8 +442,8 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			console.log("before require")
 			let spawn = require("child_process").spawn
 			console.log("before detection")
-			let process = spawn('python3', [
-			// let process = spawn('python', [
+			// let process = spawn('python3', [
+			let process = spawn('python', [
 				"./detect.py",
 				request.body.userId,
 			])
@@ -456,11 +456,11 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 					await db.collection('avatar').remove({userId: request.body.userId});
 					await db.collection('avatar').insertOne({'userId': request.body.userId, 'imageName': imageName})
 					userResponse.status = 208;
-					userResponse.description = "上傳成功";
+					userResponse.description = "upload success";
 				}
 				else {
 					userResponse.status = 408;
-					userResponse.description = "上傳失敗，照片中偵測到" + faceAmount + "張人臉。";
+					userResponse.description = "upload failed, there are " + faceAmount + " face in the picture";
 				}
 				try{	
 					fs.unlinkSync(__dirname + "/uploads/" + imageName);
@@ -580,8 +580,8 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 				return;
 			}
 			console.log("before recognize");
-			let process = spawn('python3', [
-			// let process = spawn('python', [
+			// let process = spawn('python3', [
+			let process = spawn('python', [
 				"./recognize.py",
 				course_id,
 				filePathList

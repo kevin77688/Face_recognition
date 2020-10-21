@@ -58,7 +58,7 @@ public interface IMyService {
     //學生上傳圖片
     @Multipart
     @POST("studentUpload")
-    Observable<ResponseBody> studentUpload(
+    Observable<String> studentUpload(
             @Part("userId") RequestBody userId,
             @Part MultipartBody.Part image
     );
@@ -92,7 +92,7 @@ public interface IMyService {
 
     @POST("teacherUpload")
     @Multipart
-    Observable<ResponseBody> teacherUpload(
+    Observable<String> teacherUpload(
             @Part MultipartBody.Part image,
             @Part("date") RequestBody date
     );

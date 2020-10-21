@@ -22,6 +22,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.JsonObject;
+
+import org.json.JSONObject;
 import org.ntut.faceRecognition.Camera.CameraCapture;
 import org.ntut.faceRecognition.R;
 import org.ntut.faceRecognition.Retrofit.IMyService;
@@ -117,10 +120,12 @@ public class StudentUploadTest extends AppCompatActivity {
                 compositeDisposable.add(iMyService.studentUpload(fullName, body)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Consumer<ResponseBody>() {
+                        .subscribe(new Consumer<String>() {
                             @Override
-                            public void accept(ResponseBody responseBody) throws Exception {
-                                Utils.showToast(new JsonParser(responseBody.toString()).getDescription(), StudentUploadTest.this);
+                            public void accept(String responseBody) throws Exception {
+                                Log.i("responseString", responseBody.toString());
+                                JSONObject jsonObject = new JSONObject(responseBody.toString());
+                                Utils.showToast(jsonObject.getString("description"), StudentUploadTest.this);
                                 returnButton.callOnClick();
                             }
                         }));

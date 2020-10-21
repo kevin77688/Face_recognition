@@ -118,9 +118,9 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
                 compositeDisposable.add(iMyService.teacherUpload(body, rbCourseDate)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Consumer<ResponseBody>() {
+                        .subscribe(new Consumer<String>() {
                             @Override
-                            public void accept(ResponseBody responseBody) throws Exception {
+                            public void accept(String responseBody) throws Exception {
                                 JsonParser jsonParser = new JsonParser(responseBody.toString());
                                 Utils.showToast(jsonParser.getDescription(), TeacherOperationTakePhoto.this);
                                 returnButton.callOnClick();
