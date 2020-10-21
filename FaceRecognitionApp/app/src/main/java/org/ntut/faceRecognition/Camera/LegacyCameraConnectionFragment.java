@@ -1,12 +1,17 @@
 package org.ntut.faceRecognition.Camera;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.res.Configuration;
+import android.graphics.Matrix;
+import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -40,6 +45,7 @@ public class LegacyCameraConnectionFragment extends Fragment {
   private int facing;
   /** The layout identifier to inflate for this Fragment. */
   private int layout;
+  private Size previewSize;
   /** An {@link AutoFitTextureView} for camera preview. */
   private AutoFitTextureView textureView;
   /**
@@ -68,9 +74,17 @@ public class LegacyCameraConnectionFragment extends Fragment {
             for (Camera.Size size : cameraSizes) {
               sizes[i++] = new Size(size.width, size.height);
             }
-            Size previewSize =
+            previewSize =
                 CameraConnectionFragment.chooseOptimalSize(
                     sizes, desiredSize.getWidth(), desiredSize.getHeight());
+            final int orientation = getResources().getConfiguration().orientation;
+            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+              textureView.setAspectRatio(previewSize.getWidth(), previewSize.getHeight());
+            } else {
+              textureView.setAspectRatio(previewSize.getHeight(), previewSize.getWidth());
+            }
+            Log.e("Width : ", Integer.toString(desiredSize.getWidth()));
+            Log.e("Height : ", Integer.toString(desiredSize.getHeight()));
             parameters.setPreviewSize(previewSize.getWidth(), previewSize.getHeight());
             camera.setDisplayOrientation(90);
             camera.setParameters(parameters);
@@ -82,15 +96,18 @@ public class LegacyCameraConnectionFragment extends Fragment {
           camera.setPreviewCallbackWithBuffer(imageListener);
           Camera.Size s = camera.getParameters().getPreviewSize();
           camera.addCallbackBuffer(new byte[ImageUtils.getYUVByteSize(s.height, s.width)]);
+          configureTransform(width, height);
 
-          textureView.setAspectRatio(s.height, s.width);
+//          textureView.setAspectRatio(s.height, s.width);
 
           camera.startPreview();
         }
 
         @Override
         public void onSurfaceTextureSizeChanged(
-            final SurfaceTexture texture, final int width, final int height) {}
+            final SurfaceTexture texture, final int width, final int height) {
+          configureTransform(width, height);
+        }
 
         @Override
         public boolean onSurfaceTextureDestroyed(final SurfaceTexture texture) {
@@ -192,5 +209,31 @@ public class LegacyCameraConnectionFragment extends Fragment {
       if (ci.facing == this.facing) return i;
     }
     return -1; // No camera found
+  }
+
+  private void configureTransform(final int viewWidth, final int viewHeight) {
+    final Activity activity = getActivity();
+    if (null == textureView || null == previewSize || null == activity) {
+      return;
+    }
+    final int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+    final Matrix matrix = new Matrix();
+    final RectF viewRect = new RectF(0, 0, viewWidth, viewHeight);
+    final RectF bufferRect = new RectF(0, 0, previewSize.getHeight(), previewSize.getWidth());
+    final float centerX = viewRect.centerX();
+    final float centerY = viewRect.centerY();
+    if (Surface.ROTATION_90 == rotation || Surface.ROTATION_270 == rotation) {
+      bufferRect.offset(centerX - bufferRect.centerX(), centerY - bufferRect.centerY());
+      matrix.setRectToRect(viewRect, bufferRect, Matrix.ScaleToFit.FILL);
+      final float scale =
+              Math.max(
+                      (float) viewHeight / previewSize.getHeight(),
+                      (float) viewWidth / previewSize.getWidth());
+      matrix.postScale(scale, scale, centerX, centerY);
+      matrix.postRotate(90 * (rotation - 2), centerX, centerY);
+    } else if (Surface.ROTATION_180 == rotation) {
+      matrix.postRotate(180, centerX, centerY);
+    }
+    textureView.setTransform(matrix);
   }
 }
