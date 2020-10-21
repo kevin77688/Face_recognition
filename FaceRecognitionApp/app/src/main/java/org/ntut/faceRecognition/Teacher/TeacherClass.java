@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -102,8 +103,9 @@ public class TeacherClass extends AppCompatActivity {
             final String courseName = courses.get(courseId);
             Button btn = new Button(this);
             btn.setTextSize(30);
-            btn.setWidth(250);   //設定寬度
-            btn.setHeight(150);
+//            btn.setWidth(250);   //設定寬度
+//            btn.setHeight(150);
+            btn.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             btn.setGravity(Gravity.CENTER);
             btn.setText(courseName);
             btn.setOnClickListener(new View.OnClickListener() {
