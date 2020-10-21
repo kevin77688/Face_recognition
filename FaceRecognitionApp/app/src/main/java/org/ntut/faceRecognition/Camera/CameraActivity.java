@@ -405,7 +405,6 @@ public abstract class CameraActivity extends AppCompatActivity
                                 (isHardwareLevelSupported(characteristics, CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LIMITED)) ||
                                 (isHardwareLevelSupported(characteristics, CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_FULL)) ||
                                 (isHardwareLevelSupported(characteristics, CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_3)));
-
                 LOGGER.i("Camera API lv2?: %s", useCamera2API);
                 return cameraId;
             }
@@ -438,9 +437,18 @@ public abstract class CameraActivity extends AppCompatActivity
             fragment = camera2Fragment;
             getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
         } else {
-            Utils.showToast("Sorry, your device does not support Camera2 API", CameraActivity.this);
-            finish();
+            Utils.showToast("Sorry, your device does not support Camera2 API\n" +
+                    "Some feature may have some bugs", CameraActivity.this);
+            int facing = (useFacing == CameraCharacteristics.LENS_FACING_BACK) ?
+                    Camera.CameraInfo.CAMERA_FACING_BACK :
+                    Camera.CameraInfo.CAMERA_FACING_FRONT;
+            LegacyCameraConnectionFragment frag = new LegacyCameraConnectionFragment(this,
+                    getLayoutId(),
+                    getDesiredPreviewFrameSize(), facing);
+            fragment = frag;
+//            finish();
         }
+        getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
 
     }
 
