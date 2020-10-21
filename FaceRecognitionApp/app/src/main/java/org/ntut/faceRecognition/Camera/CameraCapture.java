@@ -251,6 +251,7 @@ public class CameraCapture extends CameraActivity implements OnImageAvailableLis
                 targetW,
                 targetH,
                 sensorOrientation);
+
         final Canvas cv = new Canvas(portraitBmp);
 
         // draws the original image in portrait mode.
@@ -325,7 +326,7 @@ public class CameraCapture extends CameraActivity implements OnImageAvailableLis
                         new ImageSaver(this).
                                 setFileName("captureFullImage.png").
                                 setDirectoryName("images").
-                                save(rgbFrameBitmap);
+                                save(portraitBmp);
                         setResult(Activity.RESULT_OK, returnIntent);
                         finish();
                     }
