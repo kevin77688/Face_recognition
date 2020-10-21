@@ -442,8 +442,8 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			console.log("before require")
 			let spawn = require("child_process").spawn
 			console.log("before detection")
-			// let process = spawn('python3', [
-			let process = spawn('python', [
+			let process = spawn('python3', [
+			// let process = spawn('python', [
 				"./detect.py",
 				request.body.userId,
 			])
@@ -580,7 +580,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 				return;
 			}
 			console.log("before recognize");
-			// let process = spawn('python3', [
+			let process = spawn('python3', [
 			let process = spawn('python', [
 				"./recognize.py",
 				course_id,
