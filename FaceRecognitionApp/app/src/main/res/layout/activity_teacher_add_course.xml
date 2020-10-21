@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/course_id_text_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="課程編號(6碼)"
+        android:inputType="textEmailAddress"
+        app:met_baseColor="@color/wordColor"
+        app:met_iconPadding="0dp"
+        app:met_primaryColor="@color/wordColor"
+        app:met_textColor="@color/wordColor" />
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/course_name_text_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="課程名稱"
+        android:inputType="textEmailAddress"
+        app:met_baseColor="@color/wordColor"
+        app:met_iconPadding="0dp"
+        app:met_primaryColor="@color/wordColor"
+        app:met_textColor="@color/wordColor" />
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/course_code_text_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="課程編碼(7碼)"
+        android:inputType="textEmailAddress"
+        app:met_baseColor="@color/wordColor"
+        app:met_iconPadding="0dp"
+        app:met_primaryColor="@color/wordColor"
+        app:met_textColor="@color/wordColor" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/course_stage_text_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="課程階段(ex: 1、2、3...)"
+        app:met_baseColor="@color/wordColor"
+        app:met_iconPadding="0dp"
+        app:met_primaryColor="@color/wordColor"
+        app:met_textColor="@color/wordColor" />
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/course_credit_text_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="課程學分數"
+        app:met_baseColor="@color/wordColor"
+        app:met_iconPadding="0dp"
+        app:met_primaryColor="@color/wordColor"
+        app:met_textColor="@color/wordColor" />
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/course_time_text_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="上課時段(ex: 12表示周一周二)"
+        app:met_baseColor="@color/wordColor"
+        app:met_iconPadding="0dp"
+        app:met_primaryColor="@color/wordColor"
+        app:met_textColor="@color/wordColor" />
+    <Button
+        android:id="@+id/add_course_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_white"
+        android:text="新增" />
+</LinearLayout>

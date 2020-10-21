@@ -655,6 +655,80 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			userResponse.status = 204;
 			response.json(userResponse);
 		});
+		
+		Date.prototype.yyyymmdd = function() {
+			var mm = this.getMonth() + 1; // getMonth() is zero-based
+			var dd = this.getDate();
+			return [this.getFullYear(),
+				(mm>9 ? '' : '0') + mm,
+				(dd>9 ? '' : '0') + dd
+			].join('-');
+		};
+		
+		//teacher add course
+		app.post('/teacherAddCourse', async(request, response, next)=>{
+			var userResponse = {};
+			console.log(request.body);
+			var post_data = request.body;
+			var teacher_id = post_data._id;
+			var course_id = post_data.courseId;
+			var course_name = post_data.courseName;
+			var course_code = post_data.courseCode;
+			var course_stage = post_data.courseStage;
+			var course_credit = post_data.courseCredit;
+			var course_time = post_data.courseTime;
+			var db = client.db(dbName);
+			var courseExistence = await db.collection('course').find({_id: course_id}).count();
+			if (courseExistence){
+				userResponse.status = 410;
+			}
+			else {
+				userResponse.status = 210;
+				await db.collection('course').insertOne({_id: course_id, teacherId: teacher_id, name: course_name, code: course_code, stage: course_stage, credits: course_credit});
+				var courseDateInsertDocs = [];
+				if ((course_time+'').indexOf('1') > -1){
+					var nextWeek = new Date('September 14, 2020');
+					for (var i = 0; i < 18; i++){
+						courseDateInsertDocs.push({courseId: course_id, date: nextWeek.yyyymmdd() , isRecord: false})
+						nextWeek.setDate(nextWeek.getDate() + 7);
+					}
+				}
+				if ((course_time+'').indexOf('2') > -1){
+					var nextWeek = new Date('September 15, 2020');
+					for (var i = 0; i < 18; i++){
+						courseDateInsertDocs.push({courseId: course_id, date: nextWeek.yyyymmdd() , isRecord: false})
+						nextWeek.setDate(nextWeek.getDate() + 7);
+					}
+				}
+				if ((course_time+'').indexOf('3') > -1){
+					var nextWeek = new Date('September 16, 2020');
+					for (var i = 0; i < 18; i++){
+						courseDateInsertDocs.push({courseId: course_id, date: nextWeek.yyyymmdd() , isRecord: false})
+						nextWeek.setDate(nextWeek.getDate() + 7);
+					}
+				}
+				if ((course_time+'').indexOf('4') > -1){
+					var nextWeek = new Date('September 17, 2020');
+					for (var i = 0; i < 18; i++){
+						courseDateInsertDocs.push({courseId: course_id, date: nextWeek.yyyymmdd() , isRecord: false})
+						nextWeek.setDate(nextWeek.getDate() + 7);
+					}
+					
+				}
+				if ((course_time+'').indexOf('5') > -1){
+					var nextWeek = new Date('September 18, 2020');
+					for (var i = 0; i < 18; i++){
+						courseDateInsertDocs.push({courseId: course_id, date: nextWeek.yyyymmdd() , isRecord: false})
+						nextWeek.setDate(nextWeek.getDate() + 7);
+					}
+				}
+				if (courseDateInsertDocs.length > 0){
+					db.collection('courseDate').insertMany(courseDateInsertDocs);
+				}
+			}
+			console.log(userResponse)
+			response.json(userResponse);
+		});
 
         //Web server
         app.listen(3000, ()=>{

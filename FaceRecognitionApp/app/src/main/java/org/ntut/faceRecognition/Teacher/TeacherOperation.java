@@ -2,14 +2,29 @@ package org.ntut.faceRecognition.Teacher;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
+import com.rengwuxian.materialedittext.MaterialEditText;
+
+import org.json.JSONObject;
 import org.ntut.faceRecognition.R;
+import org.ntut.faceRecognition.Student.StudentOperation;
 import org.ntut.faceRecognition.Utility.Utils;
+import org.w3c.dom.Text;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class TeacherOperation extends AppCompatActivity {
     private String courseName, courseId, courseDate;
@@ -78,7 +93,6 @@ public class TeacherOperation extends AppCompatActivity {
             }
         });
     }
-
 
     private void setReturnButton() {
         Button button = findViewById(R.id.return_button);

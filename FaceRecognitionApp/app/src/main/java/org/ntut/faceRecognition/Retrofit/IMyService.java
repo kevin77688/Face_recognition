@@ -110,4 +110,16 @@ public interface IMyService {
             @Field("courseId") String courseId,
             @Field("studentId") String studentId
     );
+
+    @POST("teacherAddCourse")
+    @FormUrlEncoded
+    Observable<String> teacherAddCourse(
+            @Field("_id") String _id,
+            @Field("courseId") String courseId,
+            @Field("courseName") String courseName,
+            @Field("courseCode") String courseCode,
+            @Field("courseStage") int courseStage,
+            @Field("courseCredit") int courseCredit,
+            @Field("courseTime") int courseTime
+    );
 }
