@@ -581,7 +581,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			}
 			console.log("before recognize");
 			let process = spawn('python3', [
-			let process = spawn('python', [
+			// let process = spawn('python', [
 				"./recognize.py",
 				course_id,
 				filePathList
