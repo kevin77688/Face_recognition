@@ -721,6 +721,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			console.log(userResponse);
 			response.json(userResponse);
 		});
+		
 
         //Web server
         app.listen(3000, ()=>{
