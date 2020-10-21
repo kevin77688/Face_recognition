@@ -23,19 +23,20 @@ def detectFace(courseListPhoto_dir, detectPicture):
         known_faces.append(knownFace_encoding)
     # import test picture
     unknownFace = face_recognition.load_image_file(detectPicture)
-    unknownFace_encoding = face_recognition.face_encodings(unknownFace)[0]
+    unknownFaceLocation = face_recognition.face_locations(unknownFace)
+    unknownFaces_encoding = face_recognition.face_encodings(unknownFace, unknownFaceLocation)
     
     # compare with dataset
-    # distance = face_recognition.face_distance(known_faces, unknownFace_encoding)
-    # for index in range(len(fileNames)):
-        # print("{} : {}".format(fileNames[index], distance
-    results = face_recognition.compare_faces(known_faces, unknownFace_encoding, 0.55)
     resultStack = []
-    # print result
-    for index in range(len(results)):
-        if results[index]:
-            resultStack.append(fileNames[index][7:-4])
-    return resultStack
+    name = null
+    for face_encoding in face_encodings:
+        matches = face_recognition.compare_faces(known_faces, face_encoding, 0.55)
+        face_distances = face_recognition.face_distance(known_faces, face_encoding)
+            best_match_index = np.argmin(face_distances)
+            if matches[best_match_index]:
+                name = fileNames[best_match_index][7:-4]
+        if name is not null:
+            resultStack.append(name)
 
 def main():
     array = sys.argv[2].split(',')
