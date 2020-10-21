@@ -39,12 +39,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void setContactButton() {
         // TODO remember to delete this
-        contact_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gotoPage(CameraPhotoSelection.class);
-            }
-        });
+//        contact_button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                gotoPage(CameraPhotoSelection.class);
+//            }
+//        });
     }
 
     private void gotoPage(Class c) {
