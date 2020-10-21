@@ -58,7 +58,7 @@ public class TeacherClass extends AppCompatActivity {
         setupConnection();
         findView();
 
-        setCourseDateView();
+        setCourseDateView(false);
 
         setTeacherAddCourseButton();
         setReturnButton();
@@ -96,9 +96,13 @@ public class TeacherClass extends AppCompatActivity {
         title.setText("\n歡迎" + teacherName + "教授");
     }
 
-    private void setCourseDateView() {
+    private void setCourseDateView(boolean newCourse) {
         LinearLayout mainLinerLayout = this.findViewById(R.id.teacher_class_layout);
         for (final String courseId : coursesId) {
+            if (newCourse){
+                if (courseId != coursesId.get(coursesId.size() - 1))
+                    continue;
+            }
             Log.i("courseId", courseId);
             final String courseName = courses.get(courseId);
             Button btn = new Button(this);
@@ -199,6 +203,9 @@ public class TeacherClass extends AppCompatActivity {
                                                     break;
                                                 case 210:
                                                     Utils.showToast("新增成功", TeacherClass.this);
+                                                    courses.put(courseId.getText().toString(), courseName.getText().toString());
+                                                    coursesId.add(courseId.getText().toString());
+                                                    setCourseDateView(true);
                                                     dialog.dismiss();
                                                     break;
                                             }
