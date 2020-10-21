@@ -27,6 +27,7 @@ import org.ntut.faceRecognition.R;
 import org.ntut.faceRecognition.Retrofit.IMyService;
 import org.ntut.faceRecognition.Retrofit.RetrofitClient;
 import org.ntut.faceRecognition.Utility.ImageSaver;
+import org.ntut.faceRecognition.Utility.JsonParser;
 import org.ntut.faceRecognition.Utility.Utils;
 
 import java.io.File;
@@ -120,6 +121,8 @@ public class TeacherOperationTakePhoto extends AppCompatActivity {
                         .subscribe(new Consumer<ResponseBody>() {
                             @Override
                             public void accept(ResponseBody responseBody) throws Exception {
+                                JsonParser jsonParser = new JsonParser(responseBody.toString());
+                                Utils.showToast(jsonParser.getDescription(), TeacherOperationTakePhoto.this);
                                 returnButton.callOnClick();
                             }
                         }));

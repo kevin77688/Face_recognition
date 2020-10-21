@@ -456,9 +456,11 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 					await db.collection('avatar').remove({userId: request.body.userId});
 					await db.collection('avatar').insertOne({'userId': request.body.userId, 'imageName': imageName})
 					userResponse.status = 208;
+					userResponse.description = "上傳成功";
 				}
 				else {
 					userResponse.status = 408;
+					userResponse.description = "上傳失敗，照片中偵測到" + faceAmount + "張人臉。";
 				}
 				try{	
 					fs.unlinkSync(__dirname + "/uploads/" + imageName);
@@ -565,6 +567,7 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 			let spawn = require("child_process").spawn
 			let filePathList = [];
 			let noAvatar = true;
+			userResponse = {};
 			for (let i = 0; i < studentList.length; i++){
 				for (let j = 0; j < studentList[i].avatars.length; j++){
 					filePathList.push("./data/" + studentList[i].studentId + ".png");
@@ -590,7 +593,11 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 				for (var i = 0; i < parsedstudentIdList.length; i++) {
 					insertDocs.push({studentId: parsedstudentIdList[i], date: date, courseId: course_id, attendance: "0"});
 				}
+				userResponse.status = 409;
+				userResponse.description = "無人點名";
 				if (insertDocs.length != 0){
+					userResponse.status = 209;
+					userResponse.description = parsedstudentIdList + "已點名";
 					console.log("before delete data");
 					await db.collection('attendance').remove({studentId: {'$in':parsedstudentIdList}, courseId: course_id, date: date});
 					console.log("before insert data");
@@ -606,8 +613,8 @@ MongoClient.connect(url, {useNewParser: true}, function(err, client){
 				} catch (err){
 					
 				}
-				console.log(parsedstudentIdList)
-				response.json(parsedstudentIdList)
+				console.log(userResponse)
+				response.json(userResponse)
 			})
 		});
 		

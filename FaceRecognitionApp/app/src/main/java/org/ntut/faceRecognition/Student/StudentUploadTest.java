@@ -27,6 +27,7 @@ import org.ntut.faceRecognition.R;
 import org.ntut.faceRecognition.Retrofit.IMyService;
 import org.ntut.faceRecognition.Retrofit.RetrofitClient;
 import org.ntut.faceRecognition.Utility.ImageSaver;
+import org.ntut.faceRecognition.Utility.JsonParser;
 import org.ntut.faceRecognition.Utility.Utils;
 
 import java.io.File;
@@ -119,6 +120,7 @@ public class StudentUploadTest extends AppCompatActivity {
                         .subscribe(new Consumer<ResponseBody>() {
                             @Override
                             public void accept(ResponseBody responseBody) throws Exception {
+                                Utils.showToast(new JsonParser(responseBody.toString()).getDescription(), StudentUploadTest.this);
                                 returnButton.callOnClick();
                             }
                         }));
